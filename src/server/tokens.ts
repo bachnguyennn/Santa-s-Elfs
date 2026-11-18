@@ -97,3 +97,8 @@ export async function authenticateOrganizer(db: Db, raw: string | undefined, gro
   }
   return { groupId };
 }
+
+/** Hash format for emergency one-time codes (bound to the challenge id). Shared by the email worker and verifier. */
+export function emergencyCodeHash(challengeId: string, code: string): string {
+  return sha256(`${challengeId}:${code}`);
+}
