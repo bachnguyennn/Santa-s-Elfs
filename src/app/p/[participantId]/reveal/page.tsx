@@ -46,7 +46,7 @@ export default async function RevealPage({ params }: PageProps<"/p/[participantI
   const view = home.assignment.state === "revealed" ? await getRecipientView(db, ctx) : null;
 
   return (
-    <PageShell>
+    <PageShell className="overflow-x-clip">
       <Link href={`/p/${participantId}`} className="-ml-2 inline-flex min-h-11 items-center gap-1.5 rounded-lg px-2 text-sm font-bold text-pine-600 hover:bg-cream-100">
         <ArrowLeft className="size-4" aria-hidden /> {home.group.name}
       </Link>

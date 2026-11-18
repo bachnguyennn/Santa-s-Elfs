@@ -67,8 +67,17 @@ test.describe("accessibility & responsive sanity", () => {
           expect(res?.status(), p).toBeLessThan(400);
           await page.waitForLoadState("networkidle");
           for (const v of await seriousViolations(page)) failures.push(`[${width}px ${p}] ${v}`);
-          const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
-          if (overflow > 0) failures.push(`[${width}px ${p}] horizontal overflow of ${overflow}px`);
+          const overflow = await page.evaluate(() => {
+            const px = document.documentElement.scrollWidth - window.innerWidth;
+            if (px <= 0) return null;
+            // Name the widest offender so failures are actionable.
+            const el = [...document.querySelectorAll<HTMLElement>("body *")].reduce<HTMLElement | null>(
+              (worst, e) => (e.getBoundingClientRect().right > (worst?.getBoundingClientRect().right ?? window.innerWidth) ? e : worst),
+              null,
+            );
+            return { px, el: el ? `${el.tagName.toLowerCase()}.${[...el.classList].slice(0, 4).join(".")}` : "unknown" };
+          });
+          if (overflow) failures.push(`[${width}px ${p}] horizontal overflow of ${overflow.px}px (${overflow.el})`);
         }
       }
     };
