@@ -1,0 +1,52 @@
+@import "tailwindcss";
+
+/* SantaElf design tokens. OWNER: design agent (values may change; names are the contract). */
+@theme {
+  --color-pine-950: #0d2a1f;
+  --color-pine-900: #123828;
+  --color-pine-800: #174a34;
+  --color-pine-700: #1d5c41;
+  --color-pine-100: #dde9e1;
+  --color-cream-50: #fdfaf3;
+  --color-cream-100: #f8f1e3;
+  --color-cream-200: #efe3cb;
+  --color-berry-700: #8f2a2a;
+  --color-berry-600: #a83434;
+  --color-berry-100: #f6dcd8;
+  --color-gold-500: #c79a3b;
+  --color-gold-200: #f0dfb2;
+  --color-ink-900: #1f1a14;
+  --color-ink-700: #4a4136;
+  --color-ink-500: #6f6457;
+  --color-line: #e3d7bf;
+
+  --font-sans: var(--font-body), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-display), ui-serif, Georgia, serif;
+
+  --radius-card: 1.25rem;
+}
+
+:root {
+  color-scheme: light;
+}
+
+body {
+  background: var(--color-cream-50);
+  color: var(--color-ink-900);
+}
+
+:focus-visible {
+  outline: 3px solid var(--color-gold-500);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
