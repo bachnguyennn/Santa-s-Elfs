@@ -12,13 +12,13 @@ import { Button } from "@/components/ui/button";
 import { SiteFooter, SkipLink } from "@/components/ui/page-shell";
 
 export const metadata: Metadata = {
-  title: { absolute: "SantaElf — free Secret Santa, drawn by elves" },
+  title: { absolute: "SantaElf: free Secret Santa, drawn by elves" },
 };
 
 const STEPS = [
   {
     title: "Start a group",
-    body: "Give it a name, a budget and an exchange date. You get a private organizer link. No password to make up.",
+    body: "Give your group a name, set a budget and choose an exchange date. We’ll email you a private organizer link.",
     tilt: -2,
   },
   {
@@ -42,7 +42,7 @@ const ALIASES = ["Rudolph", "Dasher", "Tinsel", "Sugarplum", "Cocoa", "Northstar
 
 const PROMISES = [
   { icon: KeyRound, title: "Your link is your key", body: "Each person gets a private link by email. Lost it? We send a fresh one to the same address." },
-  { icon: Users, title: "Free, for 3 to 20 people", body: "No accounts, no app to install, no paid tier." },
+  { icon: Users, title: "Free, for 3 to 20 people", body: "Use SantaElf in your browser for free, without signing up or installing an app. There’s no paid tier." },
   {
     icon: ShieldCheck,
     title: "The organizer can’t peek",
@@ -89,8 +89,8 @@ export default function Home() {
                 Secret Santa, drawn by <span className="text-berry-600">elves</span>.
               </h1>
               <p className="mt-5 max-w-[34rem] text-lg leading-relaxed text-ink-700 sm:text-xl">
-                Invite your group with one link. The elves draw names, give every Santa a secret Christmas alias, and keep
-                who-has-whom off everyone’s screen. The organizer’s too.
+                Invite your group with one link. The elves draw names and give every Santa a secret Christmas alias.
+                Each person sees their own recipient; the organizer can’t see the full list.
               </p>
               <div className="mt-7 flex flex-col gap-4 sm:flex-row sm:items-center">
                 <Button asChild variant="festive" size="lg" className="w-full sm:w-auto">
@@ -118,7 +118,7 @@ export default function Home() {
             <h2 id="how-title" className="font-display text-[clamp(2rem,5vw,3rem)] leading-[1.05] font-extrabold tracking-[-0.03em] text-pine-900">
               How it works
             </h2>
-            <p className="mt-3 text-lg text-ink-700">Four steps, and the elves do the fiddly one.</p>
+            <p className="mt-3 text-lg text-ink-700">Set up your group, invite everyone and let the elves draw names.</p>
           </div>
 
           <ol className="relative mt-10 grid gap-6 pl-10 sm:pl-12 lg:mt-16 lg:grid-cols-4 lg:gap-5 lg:pt-6 lg:pl-0">
@@ -174,7 +174,7 @@ export default function Home() {
         <div className="mx-auto grid max-w-6xl items-center gap-12 px-4 py-16 sm:px-6 sm:py-24 lg:grid-cols-2 lg:gap-16">
           <div>
             <h2 id="reveal-title" className="font-display text-[clamp(2rem,5vw,3rem)] leading-[1.05] font-extrabold tracking-[-0.03em]">
-              No spreadsheet. A card with your name on it.
+              Open your Christmas card
             </h2>
             <p className="mt-4 max-w-xl text-lg leading-relaxed text-pine-200">
               When the names are drawn, everyone gets an email. Their link opens a sealed Christmas card: who they’re buying for,
@@ -221,13 +221,13 @@ export default function Home() {
           <div className="grid gap-10 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-16">
             <div>
               <h2 id="promise-title" className="font-display text-[clamp(2rem,5vw,3rem)] leading-[1.05] font-extrabold tracking-[-0.03em] text-pine-900">
-                No accounts. No passwords. Just your link.
+                Your private link gets you in
               </h2>
               <PaperSlip tilt={-1} className="mt-8 max-w-md p-5">
-                <p className="font-display text-lg font-bold text-pine-900">An honest note about secrets</p>
+                <p className="font-display text-lg font-bold text-pine-900">People may still guess</p>
                 <p className="mt-2 leading-relaxed text-ink-700">
-                  SantaElf never shows your name to the person you’re buying for. But in a small group, people can still
-                  guess: from how you write, what you give, or a knowing smile at dinner.
+                  The person you’re buying for sees your secret alias. In a small group, they may still
+                  guess who you are from your messages or gift.
                 </p>
               </PaperSlip>
             </div>
@@ -249,9 +249,9 @@ export default function Home() {
         <div className="mx-auto flex max-w-3xl flex-col items-center px-4 py-16 text-center sm:px-6 sm:py-20">
           <Elf pose="wave" className="h-32 sm:h-36" />
           <h2 id="close-title" className="mt-4 font-display [text-wrap:balance] text-[clamp(2rem,5vw,3rem)] leading-[1.05] font-extrabold tracking-[-0.03em]">
-            The elves are ready when you are.
+            Start your Secret Santa group
           </h2>
-          <p className="mt-3 max-w-md text-lg text-pine-200">Set up your group now and send the link tonight.</p>
+          <p className="mt-3 max-w-md text-lg text-pine-200">Choose your dates and share the invite link when you’re ready.</p>
           <Button asChild variant="festive" size="lg" className="mt-8 w-full sm:w-auto">
             <Link href="/new">Start a group</Link>
           </Button>

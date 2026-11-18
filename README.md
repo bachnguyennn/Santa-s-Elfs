@@ -1,6 +1,6 @@
-# SantaElf 🎁
+# SantaElf
 
-A free, accountless Secret Santa web app for groups of 3–20. The organizer shares one link, the elves draw names, everyone unwraps their assignment through an animated Christmas card, and recipients can chat with their Santa — who appears only under a secret Christmas alias.
+SantaElf is a free Secret Santa web app for groups of 3 to 20 people. The organizer shares an invite link, and the elves draw names. Each person opens a Christmas card to see their recipient and can chat with their own Santa under a secret Christmas alias. Access is through private links sent by email.
 
 ## Features
 
@@ -14,7 +14,7 @@ A free, accountless Secret Santa web app for groups of 3–20. The organizer sha
 - **Animated Christmas-card reveal** (skippable, reduced-motion aware) that never redraws.
 - **Anonymous messaging** between each Santa and their recipient, with mute and report.
 - **Audited emergency reveal** of one participant's assignment, protected by an emailed one-time code.
-- **Email notifications** via Resend with a durable queue, retries and duplicate protection — or simulated locally.
+- **Email notifications** via Resend with a durable queue, retries and duplicate protection. Emails can also be simulated locally.
 - **Privacy by default:** hashed tokens, strict response DTOs, no-referrer/no-index private pages, privacy-preserving audit log, automatic data deletion after the exchange. See [SECURITY.md](SECURITY.md).
 
 ## Tech stack
@@ -23,7 +23,7 @@ Next.js 16 (App Router) · React 19 · TypeScript · Tailwind CSS v4 · Radix pr
 
 One Next.js app; Postgres is also the job queue and rate limiter. See [ARCHITECTURE.md](ARCHITECTURE.md), [PRODUCT.md](PRODUCT.md) and [DESIGN.md](DESIGN.md).
 
-## Run it locally (demo mode — no accounts or keys needed)
+## Run it locally (demo mode, no accounts or keys needed)
 
 Requirements: Node.js 20.9+ (22 recommended).
 
@@ -35,7 +35,7 @@ npm run dev
 Open http://localhost:3000. With no environment variables set, SantaElf runs in **local demo mode**:
 
 - Data lives in an embedded Postgres (PGlite) under `.data/pglite` — delete that folder to reset.
-- **Emails are simulated, not sent.** Every email (including private links and emergency codes) appears at **http://localhost:3000/dev/outbox**. The outbox page is disabled whenever real email is configured, and in production builds (`next start`, deployments) unless `ENABLE_DEV_OUTBOX=true` — so a deployment that forgot `RESEND_API_KEY` doesn't publish everyone's private links.
+- **Emails are simulated.** Every email (including private links and emergency codes) appears at **http://localhost:3000/dev/outbox**. The outbox page is disabled whenever real email is configured, and in production builds (`next start`, deployments) unless `ENABLE_DEV_OUTBOX=true` — so a deployment that forgot `RESEND_API_KEY` doesn't publish everyone's private links.
 - Scheduled drawings run when the cron endpoint is called: `curl http://localhost:3000/api/cron/tick` (allowed without a secret only outside production).
 
 Tip: to try several participants on one machine, use separate browser profiles or private windows — each private link sets a cookie for that participant.

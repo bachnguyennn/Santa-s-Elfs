@@ -37,11 +37,11 @@ export function Layout({ preview, heading, children, privateLink = true }: { pre
           <Section style={{ padding: "0 28px 24px" }}>
             {privateLink && (
               <Text style={{ margin: "0 0 8px", fontSize: 13, lineHeight: "20px", color: palette.red, fontWeight: 600 }}>
-                This button is your private key — please don&apos;t forward this email.
+                This link opens your private page. Please don&apos;t forward this email.
               </Text>
             )}
             <Text style={{ margin: 0, fontSize: 12, lineHeight: "18px", color: palette.inkSoft }}>
-              Sent by SantaElf, the accountless Secret Santa helper. Replies to this email are not monitored.
+              Sent by SantaElf. You don’t need an account to take part. Replies to this email are not monitored.
             </Text>
           </Section>
         </Container>

@@ -2,7 +2,7 @@
 
 ## Overview
 
-A single **Next.js (App Router) + TypeScript** application backed by **PostgreSQL**.
+SantaElf is a single Next.js (App Router) application written in TypeScript, backed by PostgreSQL.
 
 ```
 Browser ──► Next.js pages (server components read via services)
@@ -14,7 +14,7 @@ Cron (GitHub Actions / Supabase pg_cron / Vercel cron) ──► GET /api/cron/t
                                                             └─ retention purge
 ```
 
-No Redis, no queues-as-a-service, no microservices: Postgres is the queue (`email_jobs`), the rate limiter (`rate_limits`) and the lock manager (`SELECT … FOR UPDATE` on the group row).
+Postgres handles the email queue (`email_jobs`), rate limits (`rate_limits`) and locks (`SELECT … FOR UPDATE` on the group row). The app does not need Redis or a separate queue service.
 
 ## Modules
 

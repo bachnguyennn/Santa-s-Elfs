@@ -10,7 +10,7 @@ Please open a private security advisory on the GitHub repository (Security → R
 
 | Asset | Who may see it |
 |---|---|
-| Who gives to whom (assignment) | The giver sees **their own** recipient only. The organizer can reveal **one** participant's recipient through the audited emergency flow. Nobody else, ever. |
+| Who gives to whom (assignment) | The giver sees **their own** recipient only. The organizer can reveal **one** participant's recipient through the audited emergency flow. No other users have access. |
 | A Santa's alias ↔ real identity | The Santa themself. Recipients see the alias only. |
 | Profiles & wishlists | The participant; after the drawing, their own Santa. |
 | Participant emails | The participant and the organizer. |
@@ -26,11 +26,11 @@ Please open a private security advisory on the GitHub repository (Security → R
 
 ## Anonymity guarantees (and limits)
 
-- Messages store only `sender_role` (`santa` / `recipient`) on the assignment pair — never a sender participant id. The recipient's thread API returns the Santa's alias and message text only; tests assert the Santa's name, email and id are absent from the recipient's responses.
+- Messages store only `sender_role` (`santa` / `recipient`) on the assignment pair. They never store a sender participant id. The recipient's thread API returns the Santa's alias and message text only; tests assert the Santa's name, email and id are absent from the recipient's responses.
 - Aliases are assigned server-side at draw time from a 20-name pool with a cryptographically secure shuffle, unique per group, immutable (database trigger).
 - Assignment emails never contain the recipient's name; message notification emails never contain message text or names, and have no Reply-To (so email replies can't bypass anonymity).
 - The organizer dashboard shows, per participant, whether they opened their card and the status of their latest *membership/assignment* email. It deliberately omits message notifications: their timing would let an organizer who also takes part reply to their Santa and watch whose "last email" changes.
-- Audit events and logs contain ids and event types only — never names, emails, tokens, message bodies or assignment targets. The emergency-reveal audit records which participant was revealed, not who they drew.
+- Audit events and logs contain ids and event types only. They never contain names, emails, tokens, message bodies or assignment targets. The emergency-reveal audit records which participant was revealed, not who they drew.
 - **Limits:** in small groups, people can sometimes guess their Santa from writing style, timing or the gift itself. SantaElf does not and cannot promise mathematically guaranteed anonymity. The organizer's emergency reveal is a deliberate, logged exception.
 
 ## Accountless enrollment: impersonation & unwanted email
@@ -65,7 +65,7 @@ Groups and all associated personal data are deleted automatically 60 days after 
 
 ## Local demo outbox
 
-In simulate mode every email is stored in `dev_outbox` and shown at `/dev/outbox` — including private links and emergency codes. The page is therefore only served outside production builds, or with the explicit `ENABLE_DEV_OUTBOX=true` opt-in (used by E2E tests). A production deployment that forgot `RESEND_API_KEY` silently simulates email but does **not** publish the outbox.
+In simulate mode every email is stored in `dev_outbox` and shown at `/dev/outbox`, including private links and emergency codes. The page is therefore only served outside production builds, or with the explicit `ENABLE_DEV_OUTBOX=true` opt-in (used by E2E tests). A production deployment that forgot `RESEND_API_KEY` silently simulates email but does **not** publish the outbox.
 
 ## Secrets
 

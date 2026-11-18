@@ -27,7 +27,7 @@ export default async function ExpiredPage({ searchParams }: PageProps<"/expired"
       }
     >
       {rateLimited ? (
-        <p>The elves paused this link for a few minutes to keep your group safe. Wait a little, then open it again.</p>
+        <p>There have been too many attempts to open this link. Wait a few minutes, then try again.</p>
       ) : (
         <>
           <p>Private links stop working after a while, or once a newer link has replaced them.</p>

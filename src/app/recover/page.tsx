@@ -20,14 +20,14 @@ export default async function RecoverPage() {
       <div className="flex items-end gap-4">
         <div className="min-w-0 flex-1">
           <h1 className="font-display text-[clamp(2rem,6vw,2.75rem)] leading-[1.05] font-extrabold tracking-[-0.03em] text-pine-900 [text-wrap:balance]">
-            Lost your link? The elves will send it again.
+            Get a new private link
           </h1>
         </div>
         <Elf pose="wave" className="hidden h-28 shrink-0 sm:block" />
       </div>
       <p className="mt-4 text-lg leading-relaxed text-ink-700">
-        SantaElf has no passwords. Your private link is your key. Enter the email you used and we’ll send a fresh link for every
-        group you’re in, whether you organize it or take part.
+        Enter the email you used and we’ll send a fresh private link for every group you’re in,
+        whether you organize it or take part.
       </p>
 
       <Card className="mt-8">

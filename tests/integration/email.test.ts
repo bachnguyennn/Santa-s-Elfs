@@ -75,9 +75,9 @@ describe("email worker (simulate mode)", () => {
       }
       expect(part).not.toContain("Alias");
     }
-    expect(mail.html).toContain("Unwrap My Secret Santa");
+    expect(mail.html).toContain("Open my Christmas card");
     expect(mail.text).toContain("The elves have finished drawing names!");
-    expect(mail.text).toContain("This button is your private key");
+    expect(mail.text).toContain("This link opens your private page");
     const token = mail.text.match(/https:\/\/santa\.test\/a\/([A-Za-z0-9_-]+)/)![1];
     expect(await resolveToken(db, token)).toEqual({ kind: "participant", groupId, participantId: ids[0] });
   });

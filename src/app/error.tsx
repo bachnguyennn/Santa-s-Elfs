@@ -8,7 +8,7 @@ export default function Error({ error, retry }: { error: unknown; retry: () => v
   const digest = error instanceof Error && "digest" in error ? String((error as Error & { digest?: string }).digest ?? "") : "";
   return (
     <StatusPage
-      title="Oops, an elf tripped over a ribbon"
+      title="We couldn’t load this page"
       actions={
         <>
           <Button variant="primary" onClick={() => retry()}>
