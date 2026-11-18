@@ -72,6 +72,37 @@ Integration tests run against a real migrated database. To run them against a re
 TEST_DATABASE_URL=postgres://postgres:postgres@localhost:5432/postgres npm test
 ```
 
+## Automated deployment checks
+
+`npm run verify` runs typecheck, lint, unit/integration tests, a production build and the full Playwright suite. Install Chromium once with `npx playwright install chromium`. The existing **CI** GitHub workflow runs these checks on pushes to `main` and pull requests, including a separate real-Postgres test run. You can also start CI from **Actions → CI → Run workflow**.
+
+The **Deployment check** workflow runs read-only checks after GitHub receives a successful Production deployment event. Set the repository secret `SANTAELF_URL` to your stable website URL, such as `https://santa-s-elfs.vercel.app`. It checks public pages, security headers, the disabled development outbox, cron authentication, a database-backed invite lookup and rejection of anonymous private-API requests. It does not send emails or create groups. If your hosting integration does not emit deployment events, use **Actions → Deployment check → Run workflow**.
+
+Run the same read-only check locally:
+
+```bash
+SANTAELF_URL=https://santa-s-elfs.vercel.app npm run test:deployment
+```
+
+For a complete rehearsal, add two more **GitHub repository secrets**:
+
+| Secret | Value |
+|---|---|
+| `SANTAELF_TEST_EMAILS` | Three distinct, comma-separated email addresses you control. Use dedicated test inboxes or aliases. |
+| `SANTAELF_RESEND_READ_KEY` | A Resend API key with permission to list and retrieve sent emails for the same Resend team as the app. A sending-only key is insufficient. |
+
+Select **Actions → Deployment check → Run workflow** and enable **rehearsal**. This is manual because it creates a temporary group and sends real email. It checks three participants, wishlist persistence, organizer access from an emailed link, an actual scheduled draw, assignment emails and private links, stable reveals, anonymous messages and replies, role isolation, and access recovery. It never calls cron itself, so a passing draw verifies the configured scheduler. Allow up to 20 minutes for the draw, plus email delivery time. Keep the existing scheduler enabled with its `SANTAELF_URL` and `CRON_SECRET` secrets.
+
+The rehearsal checks Resend's delivery event, which means acceptance by the recipient mail server. It cannot establish inbox-versus-spam placement; inspect the three inboxes separately. It uses the HTTP API and rendered page responses; the existing Playwright suite covers browser interactions. Successful writes exercise the deployed database schema but do not certify backups, capacity or every migration.
+
+For a local rehearsal, put those three variables in a git-ignored `.env.deployment.local`, then run:
+
+```bash
+node --env-file=.env.deployment.local --import tsx scripts/check-deployment.ts rehearsal
+```
+
+The rehearsal prints fixed progress messages without identities, assignments, tokens, message bodies or HTTP dumps. It deletes its own group on success and on ordinary failures, retrying deletion three times. If the process is forcibly killed or cleanup fails, use the organizer email for the group named **Deployment check** to delete it before rerunning. Delivered emails remain in the test inboxes and provider records. Each rehearsal normally sends about 11 emails and uses normal rate limits; rerunning consumes additional email quota. Avoid running it alongside a real exchange near the daily cap.
+
 ## Email & scheduled drawings
 
 - **Email:** create a free [Resend](https://resend.com) account, verify a sending domain, set `RESEND_API_KEY` and `EMAIL_FROM`. Emails are queued in the `email_jobs` table, sent right after each action, and retried with backoff (up to 5 attempts) by the cron tick. Resend idempotency keys prevent double delivery on retries.

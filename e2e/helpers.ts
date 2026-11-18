@@ -109,7 +109,12 @@ export async function joinViaUi(page: Page, inviteUrlOrCode: string, name: strin
 export async function cronTick(req: APIRequestContext) {
   const res = await req.get("/api/cron/tick", { headers: CRON_AUTH });
   expect(res.status()).toBe(200);
-  return (await res.json()) as { draws: { drawn: number; failed: number }; emails: { sent: number } };
+  const body = await res.json();
+  for (const step of ["draws", "emails", "purged", "rateLimits"]) {
+    expect(body[step], `cron step ${step}`).toBeDefined();
+    expect(body[step], `cron step ${step}`).not.toHaveProperty("error");
+  }
+  return body as { draws: { drawn: number; failed: number }; emails: { sent: number } };
 }
 
 export interface OutboxEmail {

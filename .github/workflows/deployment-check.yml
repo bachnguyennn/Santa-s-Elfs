@@ -1,0 +1,49 @@
+name: Deployment check
+
+on:
+  deployment_status:
+  workflow_dispatch:
+    inputs:
+      rehearsal:
+        description: Create a temporary three-person group and send real emails to the configured test inboxes
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: production-deployment-check
+  cancel-in-progress: false
+
+jobs:
+  check:
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.deployment_status.state == 'success' &&
+       (github.event.deployment.environment == 'Production' || github.event.deployment.environment == 'production'))
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      # Always use trusted default-branch code, never a deployment/PR's ref or URL.
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Read-only deployment check
+        if: ${{ github.event_name != 'workflow_dispatch' || !inputs.rehearsal }}
+        env:
+          SANTAELF_URL: ${{ secrets.SANTAELF_URL }}
+        run: npm run test:deployment
+      - name: Three-person production rehearsal
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.rehearsal }}
+        env:
+          SANTAELF_URL: ${{ secrets.SANTAELF_URL }}
+          SANTAELF_TEST_EMAILS: ${{ secrets.SANTAELF_TEST_EMAILS }}
+          SANTAELF_RESEND_READ_KEY: ${{ secrets.SANTAELF_RESEND_READ_KEY }}
+        run: npm run test:deployment -- rehearsal
+      # No traces, screenshots, or HTTP dumps: they could expose private links.
