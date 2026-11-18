@@ -104,13 +104,21 @@ export default function Home() {
                   Free · No accounts · <span className="whitespace-nowrap">3 to 20 people</span>
                 </p>
               </div>
-              <p className="mt-5 border-t border-dashed border-line-strong pt-4 text-sm text-ink-700">
-                Invited by someone? Open the link they shared with you, or{" "}
-                <Link href="/recover" className="font-bold text-pine-600 underline underline-offset-4 hover:text-pine-800">
-                  get it sent again
-                </Link>
-                .
-              </p>
+              <div className="mt-5 border-t border-dashed border-line-strong pt-4 text-ink-700">
+                <p>
+                  <strong className="text-pine-900">Joining someone’s group?</strong> Use the invite link your organizer
+                  shared.
+                </p>
+                <p className="mt-1 flex flex-wrap items-center gap-x-1.5">
+                  Already joined?
+                  <Link
+                    href="/recover"
+                    className="-mx-1 inline-flex min-h-11 items-center rounded-lg px-1 font-bold text-pine-600 underline underline-offset-4 hover:text-pine-800"
+                  >
+                    Email me my private link
+                  </Link>
+                </p>
+              </div>
             </PaperSlip>
 
             <HatDraw className="mx-auto mb-6 w-full max-w-[19rem] sm:max-w-md lg:mx-0 lg:mb-10 lg:max-w-none" />
