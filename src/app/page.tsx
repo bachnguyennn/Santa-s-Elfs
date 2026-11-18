@@ -1,12 +1,12 @@
-import { CalendarClock, KeyRound, Link2, ShieldCheck, Trash2, Users } from "lucide-react";
+import { CalendarClock, Link2 } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ChristmasCardReveal } from "@/components/brand/christmas-card";
 import { Elf } from "@/components/brand/elf";
+import { HatDraw } from "@/components/brand/hat-draw";
 import { GiftBox } from "@/components/brand/gift-box";
 import { Logo } from "@/components/brand/logo";
 import { Holly, Sparkle, Star, Thread } from "@/components/brand/motifs";
-import { NameHat } from "@/components/brand/name-hat";
 import { HandName, PaperSlip } from "@/components/brand/paper-slip";
 import { Button } from "@/components/ui/button";
 import { SiteFooter, SkipLink } from "@/components/ui/page-shell";
@@ -40,16 +40,21 @@ const STEPS = [
 
 const ALIASES = ["Rudolph", "Dasher", "Tinsel", "Sugarplum", "Cocoa", "Northstar"];
 
-const PROMISES = [
-  { icon: KeyRound, title: "Your link is your key", body: "Each person gets a private link by email. Lost it? We send a fresh one to the same address." },
-  { icon: Users, title: "Free, for 3 to 20 people", body: "Use SantaElf in your browser for free, without signing up or installing an app. There’s no paid tier." },
-  {
-    icon: ShieldCheck,
-    title: "The organizer can’t peek",
-    body: "Organizers run the group but never see the pairings. If someone vanishes, they can look up that one person’s match with a code sent to their email, and it’s logged.",
-  },
-  { icon: Trash2, title: "Gone after the gifts", body: "Groups and everything in them are deleted automatically 60 days after the exchange." },
+const RULES = [
+  { title: "Your link is your key", body: "Each person gets a private link by email. Lost it? We send a fresh one to the same address." },
+  { title: "Nobody sees the full list", body: "Organizers run the group but never see the pairings. If someone vanishes, they can look up that one person’s match with a code sent to their email, and it’s logged." },
+  { title: "Free, for 3 to 20 people", body: "Use SantaElf in your browser without signing up or installing an app. There’s no paid tier." },
+  { title: "Gone after the gifts", body: "Groups and everything in them are deleted automatically 60 days after the exchange." },
 ] as const;
+
+/** A hand-drawn tick for the house rules. */
+function Tick({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} aria-hidden focusable="false">
+      <path d="M3.5 13.5c2.6 1.3 4.3 3.4 5.4 6.2C11.6 12.6 15.4 7.6 20.5 4" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
 
 export default function Home() {
   return (
@@ -76,9 +81,9 @@ export default function Home() {
             className="relative mx-auto grid max-w-6xl gap-6 px-4 pt-6 pb-0 sm:px-6 sm:pt-10 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:items-end lg:gap-4 lg:pt-14"
           >
             {/* scattered stars on the felt */}
-            <Star className="absolute top-4 right-[8%] size-4 text-gold-400 motion-safe:animate-twinkle" />
-            <Sparkle className="absolute top-[30%] right-[44%] hidden size-3 text-gold-400/80 lg:block" />
-            <Star className="absolute bottom-[38%] left-[2%] hidden size-3 text-gold-400/70 sm:block" />
+            <Star className="absolute top-4 right-[8%] size-5 text-gold-400 motion-safe:animate-twinkle" />
+            <Sparkle className="absolute top-[30%] right-[44%] hidden size-5 text-gold-400 lg:block" />
+            <Star className="absolute bottom-[38%] left-[2%] hidden size-4 text-gold-400 sm:block" />
 
             <PaperSlip tilt={-1.5} className="relative z-10 mb-2 max-w-2xl p-6 sm:p-9 lg:mb-16">
               <span aria-hidden className="absolute -top-3 left-8 h-6 w-16 -rotate-3 rounded-sm bg-gold-200/90 shadow-sm" />
@@ -90,7 +95,6 @@ export default function Home() {
               </h1>
               <p className="mt-5 max-w-[34rem] text-lg leading-relaxed text-ink-700 sm:text-xl">
                 Invite your group with one link. The elves draw names and give every Santa a secret Christmas alias.
-                Each person sees their own recipient; the organizer can’t see the full list.
               </p>
               <div className="mt-7 flex flex-col gap-4 sm:flex-row sm:items-center">
                 <Button asChild variant="festive" size="lg" className="w-full sm:w-auto">
@@ -100,14 +104,16 @@ export default function Home() {
                   Free · No accounts · <span className="whitespace-nowrap">3 to 20 people</span>
                 </p>
               </div>
+              <p className="mt-5 border-t border-dashed border-line-strong pt-4 text-sm text-ink-700">
+                Invited by someone? Open the link they shared with you, or{" "}
+                <Link href="/recover" className="font-bold text-pine-600 underline underline-offset-4 hover:text-pine-800">
+                  get it sent again
+                </Link>
+                .
+              </p>
             </PaperSlip>
 
-            <div className="relative mx-auto -mt-2 w-full max-w-md lg:mx-0 lg:mt-0 lg:max-w-none" aria-hidden>
-              <div className="relative ml-auto w-[88%] translate-y-[8%] lg:w-full lg:translate-y-[6%]">
-                <NameHat />
-              </div>
-              <Elf pose="hold" className="absolute bottom-[6%] left-[-2%] h-[58%] lg:left-[-14%]" />
-            </div>
+            <HatDraw className="mx-auto mb-6 w-full max-w-[19rem] sm:max-w-md lg:mx-0 lg:mb-10 lg:max-w-none" />
           </section>
         </div>
 
@@ -195,17 +201,18 @@ export default function Home() {
 
             {/* sample chat */}
             <figure className="mt-10 max-w-md">
-              <figcaption className="text-sm font-bold text-pine-300">Then ask anything, anonymously</figcaption>
+              <figcaption className="text-sm font-bold text-pine-300">Then ask your person anything, as Dasher</figcaption>
               <div className="mt-3 space-y-2">
-                <p className="w-fit max-w-[85%] rounded-2xl rounded-bl-sm bg-cream-50 px-4 py-2.5 text-ink-900">
-                  <span className="block text-xs font-bold text-berry-700">Dasher · your Secret Santa</span>
+                <p className="ml-auto w-fit max-w-[85%] rounded-2xl rounded-br-sm bg-pine-100 px-4 py-2.5 text-ink-900">
+                  <span className="block text-xs font-bold text-pine-800">You, signed as Dasher</span>
                   Is your mug collection complete, or is there room for one more?
                 </p>
-                <p className="ml-auto w-fit max-w-[85%] rounded-2xl rounded-br-sm bg-pine-700 px-4 py-2.5 text-cream-50">
-                  <span className="block text-xs font-bold text-gold-200">You</span>
+                <p className="w-fit max-w-[85%] rounded-2xl rounded-bl-sm bg-cream-50 px-4 py-2.5 text-ink-900">
+                  <span className="block text-xs font-bold text-berry-700">Grandma Rosie</span>
                   Always room. Something green, please!
                 </p>
               </div>
+              <p className="mt-3 text-sm text-pine-200">Grandma Rosie only ever sees “Dasher”.</p>
             </figure>
           </div>
 
@@ -215,15 +222,18 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ───────── Promise: honest privacy ───────── */}
+      {/* ───────── Promise: the house rules, on paper ───────── */}
       <section aria-labelledby="promise-title" className="bg-cream-100">
         <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-24">
-          <div className="grid gap-10 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-16">
+          <div className="grid gap-10 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:items-start lg:gap-16">
             <div>
-              <h2 id="promise-title" className="font-display text-[clamp(2rem,5vw,3rem)] leading-[1.05] font-extrabold tracking-[-0.03em] text-pine-900">
-                Your private link gets you in
+              <h2 id="promise-title" className="font-display text-[clamp(2rem,5vw,3rem)] leading-[1.05] font-extrabold tracking-[-0.03em] text-pine-900 [text-wrap:balance]">
+                Private by design, honest about it
               </h2>
-              <PaperSlip tilt={-1} className="mt-8 max-w-md p-5">
+              <p className="mt-4 max-w-md text-lg leading-relaxed text-ink-700">
+                No accounts and no passwords. A few simple rules keep each draw between the elves and the Santa.
+              </p>
+              <PaperSlip tilt={-2} className="mt-8 max-w-sm bg-gold-200 p-5 [background-image:none]">
                 <p className="font-display text-lg font-bold text-pine-900">People may still guess</p>
                 <p className="mt-2 leading-relaxed text-ink-700">
                   The person you’re buying for sees your secret alias. In a small group, they may still
@@ -231,15 +241,23 @@ export default function Home() {
                 </p>
               </PaperSlip>
             </div>
-            <ul className="grid gap-x-10 gap-y-8 sm:grid-cols-2">
-              {PROMISES.map(({ icon: Icon, title, body }) => (
-                <li key={title} className="border-t-2 border-pine-800/15 pt-5">
-                  <Icon className="size-6 text-berry-600" aria-hidden />
-                  <h3 className="mt-3 font-display text-lg font-bold tracking-[-0.01em] text-pine-900">{title}</h3>
-                  <p className="mt-1.5 leading-relaxed text-ink-700">{body}</p>
-                </li>
-              ))}
-            </ul>
+
+            <PaperSlip tilt={1} className="relative p-6 sm:p-9">
+              <span aria-hidden className="absolute -top-3 left-10 h-6 w-16 -rotate-3 rounded-sm bg-gold-200/90 shadow-sm" />
+              <span aria-hidden className="absolute -top-3 right-10 h-6 w-16 rotate-2 rounded-sm bg-gold-200/90 shadow-sm" />
+              <p className="font-display text-xl font-bold tracking-[-0.015em] text-pine-900">The house rules</p>
+              <ul className="mt-4">
+                {RULES.map(({ title, body }) => (
+                  <li key={title} className="flex gap-4 border-t border-dashed border-line-strong py-5 last:pb-0">
+                    <Tick className="mt-0.5 size-7 shrink-0 text-pine-600" />
+                    <div>
+                      <h3 className="font-display text-lg font-bold tracking-[-0.01em] text-pine-900">{title}</h3>
+                      <p className="mt-1 max-w-prose leading-relaxed text-ink-700">{body}</p>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </PaperSlip>
           </div>
         </div>
       </section>
@@ -249,9 +267,11 @@ export default function Home() {
         <div className="mx-auto flex max-w-3xl flex-col items-center px-4 py-16 text-center sm:px-6 sm:py-20">
           <Elf pose="wave" className="h-32 sm:h-36" />
           <h2 id="close-title" className="mt-4 font-display [text-wrap:balance] text-[clamp(2rem,5vw,3rem)] leading-[1.05] font-extrabold tracking-[-0.03em]">
-            Start your Secret Santa group
+            The elves are ready when you are
           </h2>
-          <p className="mt-3 max-w-md text-lg text-pine-200">Choose your dates and share the invite link when you’re ready.</p>
+          <p className="mt-3 max-w-md text-lg text-pine-200 [text-wrap:balance]">
+            Setting up takes about two minutes. Invite people now and draw names whenever you like.
+          </p>
           <Button asChild variant="festive" size="lg" className="mt-8 w-full sm:w-auto">
             <Link href="/new">Start a group</Link>
           </Button>
@@ -260,7 +280,7 @@ export default function Home() {
 
       </main>
 
-      <SiteFooter />
+      <SiteFooter showHome={false} />
     </>
   );
 }

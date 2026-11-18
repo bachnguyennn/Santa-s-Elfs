@@ -58,7 +58,7 @@ export function SiteHeader({ action, tone = "light" }: { action?: React.ReactNod
   );
 }
 
-export function SiteFooter({ tone = "light" }: { tone?: "light" | "felt" }) {
+export function SiteFooter({ tone = "light", showHome = true }: { tone?: "light" | "felt"; showHome?: boolean }) {
   const felt = tone === "felt";
   return (
     <footer className={cn("mt-auto", felt ? "felt on-pine text-pine-200" : "border-t border-line bg-cream-100 text-ink-700")}>
@@ -71,11 +71,13 @@ export function SiteFooter({ tone = "light" }: { tone?: "light" | "felt" }) {
         </div>
         <nav aria-label="Footer" className="shrink-0">
           <ul className="flex flex-wrap gap-x-5">
-            <li>
-              <Link href="/" className={cn("inline-flex min-h-11 items-center underline", felt ? "text-cream-50" : "text-pine-800")}>
-                Home
-              </Link>
-            </li>
+            {showHome ? (
+              <li>
+                <Link href="/" className={cn("inline-flex min-h-11 items-center underline", felt ? "text-cream-50" : "text-pine-800")}>
+                  Home
+                </Link>
+              </li>
+            ) : null}
             <li>
               <Link href="/recover" className={cn("inline-flex min-h-11 items-center underline", felt ? "text-cream-50" : "text-pine-800")}>
                 Lost your link?

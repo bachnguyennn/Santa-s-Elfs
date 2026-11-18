@@ -35,6 +35,7 @@ export function ChristmasCardReveal({
 }) {
   const [open, setOpen] = React.useState(defaultOpen);
   const headingRef = React.useRef<HTMLParagraphElement>(null);
+  const sealRef = React.useRef<HTMLButtonElement>(null);
   const headingId = React.useId();
 
   function handleOpen() {
@@ -44,14 +45,16 @@ export function ChristmasCardReveal({
     window.setTimeout(() => headingRef.current?.focus({ preventScroll: true }), 50);
   }
 
+  function handleReseal() {
+    setOpen(false);
+    window.setTimeout(() => sealRef.current?.focus({ preventScroll: true }), 50);
+  }
+
   return (
     <div className={cn("relative mx-auto w-full max-w-[22rem] pt-[36%]", className)} data-open={open || undefined}>
       {/* Reserved space above the envelope: the card rises into it. */}
       {!open && (
-        <p className="pointer-events-none absolute inset-x-0 top-[6%] text-center font-hand text-lg font-semibold text-current">
-          {label ? <span className="mb-1 block text-xs font-normal tracking-wide uppercase opacity-80">{label}</span> : null}
-          Psst… press the seal
-        </p>
+        <p className="pointer-events-none absolute inset-x-0 top-[22%] text-center font-bold text-current">Psst… press the seal</p>
       )}
 
       <div className="relative aspect-[4/3] [perspective:1000px]">
@@ -104,6 +107,7 @@ export function ChristmasCardReveal({
         {/* wax seal */}
         {!open && (
           <button
+            ref={sealRef}
             type="button"
             onClick={handleOpen}
             aria-label={label ? `Open the ${label.toLowerCase()}` : "Open your card"}
@@ -131,6 +135,22 @@ export function ChristmasCardReveal({
           </div>
         )}
       </div>
+
+      {/* An example card stays labelled as one, and can be sealed again to replay. */}
+      {label ? (
+        <p className="mt-4 flex min-h-11 items-center justify-center gap-3 text-sm text-pine-200">
+          <span className="font-bold tracking-wide uppercase">{label}</span>
+          {open ? (
+            <button
+              type="button"
+              onClick={handleReseal}
+              className="inline-flex min-h-11 items-center rounded-lg px-1 font-bold text-cream-50 underline decoration-gold-400 underline-offset-4"
+            >
+              Seal it again
+            </button>
+          ) : null}
+        </p>
+      ) : null}
     </div>
   );
 }

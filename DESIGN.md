@@ -63,6 +63,12 @@ typography:
     fontSize: "0.9375rem"
     fontWeight: 700
     lineHeight: 1.4
+  wordmark:
+    fontFamily: "Bricolage Grotesque, ui-sans-serif, system-ui, sans-serif"
+    fontSize: "1.375rem"
+    fontWeight: 800
+    lineHeight: 1
+    letterSpacing: "-0.02em"
   hand:
     fontFamily: "Shantell Sans, ui-rounded, sans-serif"
     fontSize: "1.125rem"
@@ -191,6 +197,7 @@ Use the chunky display face for headings and the body face for legibility, inclu
 - **Title** (700, 1.25rem, lh 1.2, tracking -0.015em): card/dialog titles, step names.
 - **Body** (400, 1rem/1.625; lead paragraphs 1.125 to 1.25rem): measure ≤ 65ch (`max-w-[34rem]`–`max-w-xl`).
 - **Label** (700, 0.9375rem): form labels. Hints 0.875rem `ink-500`.
+- **Wordmark** (800, 1.375rem, lh 1, tracking -0.02em): the "SantaElf" logotype only (`Logo`), sized to sit beside the 36px hat mark. Not a text style.
 - **Hand** (600 to 700, 1.125 to 2.25rem): participant names, aliases, the step numerals on the landing page. Never for sentences or UI labels.
 
 ### Named Rules
