@@ -1,46 +1,219 @@
 @import "tailwindcss";
 
-/* SantaElf design tokens. OWNER: design agent (values may change; names are the contract). */
+/*
+ * SantaElf design tokens. OWNER: design agent.
+ * Token NAMES are the contract (pine/cream/berry/gold/ink/line, font-display, font-sans, radius-card).
+ * See DESIGN.md for roles. Contrast pairs noted below are measured (WCAG 2.1).
+ */
 @theme {
-  --color-pine-950: #0d2a1f;
-  --color-pine-900: #123828;
-  --color-pine-800: #174a34;
-  --color-pine-700: #1d5c41;
-  --color-pine-100: #dde9e1;
-  --color-cream-50: #fdfaf3;
-  --color-cream-100: #f8f1e3;
-  --color-cream-200: #efe3cb;
-  --color-berry-700: #8f2a2a;
-  --color-berry-600: #a83434;
-  --color-berry-100: #f6dcd8;
-  --color-gold-500: #c79a3b;
-  --color-gold-200: #f0dfb2;
-  --color-ink-900: #1f1a14;
-  --color-ink-700: #4a4136;
-  --color-ink-500: #6f6457;
-  --color-line: #e3d7bf;
+  /* Pine: felt green. Grounds, primary actions, body text on light. */
+  --color-pine-950: #0b2a1e;
+  --color-pine-900: #103826; /* cream-50 on it: 12.4:1 */
+  --color-pine-800: #164a33; /* cream-50 on it: 9.7:1 (primary button) */
+  --color-pine-700: #1c5c40;
+  --color-pine-600: #2a7253; /* on cream-50: 5.5:1, links */
+  --color-pine-300: #9fc3ad; /* secondary text on pine-900: 6.7:1 */
+  --color-pine-200: #c4dccd; /* body text on pine-900: 9.0:1 */
+  --color-pine-100: #e1ede5;
 
+  /* Cream: paper. Page ground, slips, cards. */
+  --color-cream-50: #fdf9f0;
+  --color-cream-100: #f8f0df;
+  --color-cream-200: #efe2c6;
+  --color-cream-300: #e4d2ad;
+
+  /* Berry: muted festive red. The hat, the one primary CTA, errors. */
+  --color-berry-800: #6f1f22;
+  --color-berry-700: #8e2b2c; /* on berry-100: 6.5:1 */
+  --color-berry-600: #a8383a; /* cream-50 on it: 6.1:1 (festive button) */
+  --color-berry-500: #c24e4c;
+  --color-berry-100: #f6dedb;
+
+  /* Gold: thread, string, stars, focus. Never body text except gold-700. */
+  --color-gold-700: #7a5a17; /* on cream-50: 6.0:1 */
+  --color-gold-600: #b07f26; /* focus ring: 3.4:1 on cream, 3.7:1 on pine-900 */
+  --color-gold-500: #c99a3a; /* decorative only */
+  --color-gold-400: #ddb65a; /* stars/string on pine: 6.7:1 */
+  --color-gold-200: #f1e1b4;
+
+  /* Ink: warm near-black text. */
+  --color-ink-900: #1e1a14;
+  --color-ink-700: #4a4136;
+  --color-ink-500: #6b6052; /* on cream-50: 5.8:1, on cream-100: 5.4:1 */
+  --color-line: #e3d5b8;
+  --color-line-strong: #cdb98f;
+
+  /* next/font sets --font-display / --font-body / --font-hand on <html>. */
   --font-sans: var(--font-body), ui-sans-serif, system-ui, sans-serif;
-  --font-display: var(--font-display), ui-serif, Georgia, serif;
+  --font-display: var(--font-display), ui-sans-serif, system-ui, sans-serif;
+  --font-hand: var(--font-hand), "Comic Sans MS", ui-rounded, sans-serif;
 
   --radius-card: 1.25rem;
+  --radius-slip: 0.375rem;
+
+  /* Paper depth: offset + soft blur, tinted from pine. */
+  --shadow-paper: 0 1px 1px rgb(11 42 30 / 0.08), 0 6px 16px -6px rgb(11 42 30 / 0.22);
+  --shadow-lifted: 0 2px 2px rgb(11 42 30 / 0.1), 0 18px 36px -12px rgb(11 42 30 / 0.38);
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
+
+  --animate-unfold: unfold 700ms var(--ease-out-expo) both;
+  --animate-rise: rise 600ms var(--ease-out-expo) both;
+  --animate-twinkle: twinkle 2.4s ease-in-out 3;
+  --animate-spin-slow: spin 0.9s linear infinite;
+
+  @keyframes unfold {
+    from {
+      opacity: 0;
+      transform: perspective(900px) rotateX(-70deg) translateY(-8px);
+      transform-origin: top center;
+    }
+    to {
+      opacity: 1;
+      transform: perspective(900px) rotateX(0) translateY(0);
+      transform-origin: top center;
+    }
+  }
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(14px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  @keyframes twinkle {
+    0%,
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.55;
+      transform: scale(0.82);
+    }
+  }
+}
+
+/* Christmas-card reveal: rise out of the envelope behind the pocket, then come forward and settle. */
+@keyframes card-out {
+  0% {
+    transform: translateY(0);
+    z-index: 10;
+  }
+  55% {
+    transform: translateY(-58%);
+    z-index: 10;
+  }
+  56% {
+    transform: translateY(-58%);
+    z-index: 30;
+  }
+  100% {
+    transform: translateY(-38%);
+    z-index: 30;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes dialog-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.98);
+  }
+}
+
+@keyframes sparkle {
+  0% {
+    opacity: 0;
+    transform: scale(0.3) rotate(0deg);
+  }
+  35% {
+    opacity: 1;
+    transform: scale(1.15) rotate(20deg);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.8) translateY(-8px) rotate(45deg);
+  }
 }
 
 :root {
   color-scheme: light;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
   background: var(--color-cream-50);
   color: var(--color-ink-900);
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: var(--color-gold-200);
+  color: var(--color-ink-900);
+}
+
+.on-pine ::selection,
+.on-pine::selection {
+  background: var(--color-gold-400);
+  color: var(--color-pine-950);
 }
 
 :focus-visible {
-  outline: 3px solid var(--color-gold-500);
+  outline: 3px solid var(--color-gold-600);
   outline-offset: 2px;
 }
 
+@layer base {
+  a {
+    text-underline-offset: 0.2em;
+    text-decoration-thickness: 1px;
+  }
+}
+
+@layer components {
+  /* Felt: a faint woven texture for pine grounds. Pure CSS, no raster. */
+  .felt {
+    background-color: var(--color-pine-900);
+    background-image:
+      radial-gradient(rgb(255 255 255 / 0.035) 1px, transparent 1.2px),
+      radial-gradient(rgb(0 0 0 / 0.08) 1px, transparent 1.2px);
+    background-size: 7px 7px, 11px 11px;
+    background-position: 0 0, 3px 4px;
+  }
+
+  /* Paper slip: cream sheet with a soft horizontal fold crease. */
+  .slip {
+    background-color: var(--color-cream-50);
+    background-image: linear-gradient(
+      to bottom,
+      transparent calc(50% - 1px),
+      rgb(30 26 20 / 0.06) 50%,
+      rgb(255 255 255 / 0.6) calc(50% + 1px),
+      transparent calc(50% + 2px)
+    );
+    border-radius: var(--radius-slip);
+    box-shadow: var(--shadow-paper);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
   *,
   *::before,
   *::after {

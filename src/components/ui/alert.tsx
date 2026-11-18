@@ -1,7 +1,12 @@
+import { CircleAlert, CircleCheck, Info, TriangleAlert } from "lucide-react";
 import * as React from "react";
 import { cn } from "@/lib/utils";
 
-/** OWNER: design agent. tone: info | success | warning | error. */
+/**
+ * OWNER: design agent. Inline message. tone: info | success | warning | error.
+ * role: error -> "alert" (announced immediately); others -> "status".
+ * Copy rule: title names what happened, body says what to do next.
+ */
 export function Alert({
   tone = "info",
   title,
@@ -14,15 +19,23 @@ export function Alert({
   className?: string;
 }) {
   const tones = {
-    info: "border-pine-100 bg-pine-100/50 text-pine-900",
-    success: "border-pine-100 bg-pine-100 text-pine-900",
-    warning: "border-gold-200 bg-gold-200/50 text-ink-900",
-    error: "border-berry-100 bg-berry-100 text-berry-700",
+    info: { box: "border-pine-200 bg-pine-100/60 text-pine-900", icon: Info, iconCls: "text-pine-700" },
+    success: { box: "border-pine-200 bg-pine-100 text-pine-900", icon: CircleCheck, iconCls: "text-pine-700" },
+    warning: { box: "border-gold-500/50 bg-gold-200/60 text-ink-900", icon: TriangleAlert, iconCls: "text-gold-700" },
+    error: { box: "border-berry-500/40 bg-berry-100 text-berry-800", icon: CircleAlert, iconCls: "text-berry-700" },
   };
+  const t = tones[tone];
+  const Icon = t.icon;
   return (
-    <div role={tone === "error" ? "alert" : "status"} className={cn("rounded-xl border px-4 py-3 text-sm", tones[tone], className)}>
-      {title && <p className="font-semibold">{title}</p>}
-      {children && <div className={title ? "mt-1" : undefined}>{children}</div>}
+    <div
+      role={tone === "error" ? "alert" : "status"}
+      className={cn("flex gap-3 rounded-xl border px-4 py-3 text-sm leading-relaxed", t.box, className)}
+    >
+      <Icon className={cn("mt-0.5 size-[1.15rem] shrink-0", t.iconCls)} aria-hidden />
+      <div className="min-w-0">
+        {title && <p className="font-bold">{title}</p>}
+        {children && <div className={title ? "mt-0.5" : undefined}>{children}</div>}
+      </div>
     </div>
   );
 }
