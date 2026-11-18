@@ -85,7 +85,7 @@ export default function Home() {
             <Sparkle className="absolute top-[30%] right-[44%] hidden size-5 text-gold-400 lg:block" />
             <Star className="absolute bottom-[38%] left-[2%] hidden size-4 text-gold-400 sm:block" />
 
-            <PaperSlip tilt={-1.5} className="relative z-10 mb-2 max-w-2xl p-6 sm:p-9 lg:mb-16">
+            <PaperSlip tilt={-0.75} crease={false} className="relative z-10 mb-2 max-w-2xl p-6 sm:p-9 lg:mb-16">
               <span aria-hidden className="absolute -top-3 left-8 h-6 w-16 -rotate-3 rounded-sm bg-gold-200/90 shadow-sm" />
               <h1
                 id="hero-title"
@@ -146,6 +146,7 @@ export default function Home() {
                 <span aria-hidden className="absolute top-[1.45rem] -left-[2.45rem] size-3 rounded-full border-2 border-gold-500 bg-cream-50 sm:-left-[2.95rem] lg:-top-4 lg:left-[2.2rem]" />
                 <PaperSlip
                   tilt={s.tilt}
+                  crease={false}
                   className={`h-full p-5 transition-[rotate] duration-300 ease-[var(--ease-out-quint)] hover:rotate-0 ${i % 2 ? "lg:mt-8" : ""}`}
                 >
                   <p className="font-hand text-2xl font-bold text-berry-600" aria-hidden>
@@ -245,7 +246,7 @@ export default function Home() {
               <p className="mt-4 max-w-md text-lg leading-relaxed text-ink-700">
                 No accounts and no passwords. A few simple rules keep each draw between the elves and the Santa.
               </p>
-              <PaperSlip tilt={-2} className="mt-8 max-w-sm bg-gold-200 p-5 [background-image:none]">
+              <PaperSlip tilt={-2} crease={false} className="mt-8 max-w-sm bg-gold-200 p-5">
                 <p className="font-display text-lg font-bold text-pine-900">People may still guess</p>
                 <p className="mt-2 leading-relaxed text-ink-700">
                   The person you’re buying for sees your secret alias. In a small group, they may still
@@ -254,7 +255,7 @@ export default function Home() {
               </PaperSlip>
             </div>
 
-            <PaperSlip tilt={1} className="relative p-6 sm:p-9">
+            <PaperSlip tilt={1} crease={false} className="relative p-6 sm:p-9">
               <span aria-hidden className="absolute -top-3 left-10 h-6 w-16 -rotate-3 rounded-sm bg-gold-200/90 shadow-sm" />
               <span aria-hidden className="absolute -top-3 right-10 h-6 w-16 rotate-2 rounded-sm bg-gold-200/90 shadow-sm" />
               <p className="font-display text-xl font-bold tracking-[-0.015em] text-pine-900">The house rules</p>

@@ -213,6 +213,11 @@ body {
     border-radius: var(--radius-slip);
     box-shadow: var(--shadow-paper);
   }
+
+  /* A slip without the fold line, for slips that carry paragraphs. */
+  .slip.slip-plain {
+    background-image: none;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

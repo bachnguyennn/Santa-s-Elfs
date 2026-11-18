@@ -52,7 +52,7 @@ export function HatDraw({ className }: { className?: string }) {
         <div
           role="group"
           aria-label="Example draw"
-          className="slip absolute top-[2%] left-[10%] z-20 w-[min(18rem,84%)] -rotate-3 animate-rise p-5 text-center sm:p-6"
+          className="slip slip-plain absolute top-[2%] left-[10%] z-20 w-[min(18rem,84%)] -rotate-3 animate-rise p-5 text-center sm:p-6"
         >
           <span aria-hidden className="absolute -top-3 left-1/2 h-6 w-14 -translate-x-1/2 rotate-2 rounded-sm bg-gold-200/90 shadow-sm" />
           <p className="text-xs font-bold tracking-wide text-ink-500 uppercase">Example</p>
