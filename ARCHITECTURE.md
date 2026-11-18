@@ -31,6 +31,7 @@ No Redis, no queues-as-a-service, no microservices: Postgres is the queue (`emai
 | `src/server/services/*` | Groups, enrollment, profiles, exclusions, participant/reveal, messaging, emergency |
 | `src/server/draw/*` | Matching engine (pure), alias assignment, `drawGroup` (atomic), scheduled draws |
 | `src/server/email/*` | Queue, worker (retry/backoff/limits), templates (React Email), provider |
+| `src/server/cron.ts`, `src/server/retention.ts` | Cron tick (auth + isolated steps), data retention purge |
 | `src/components/ui/*` | Design-system primitives |
 
 ## Access model (accountless)
@@ -66,7 +67,7 @@ Organizer selects one participant → server creates a challenge and emails a 6-
 
 ## Email
 
-`enqueueEmail()` inside the same transaction as the state change. Worker claims jobs with `FOR UPDATE SKIP LOCKED`, mints access links at send time, sends via Resend REST API (or writes to `dev_outbox` in simulate mode), retries with exponential backoff (max 5 attempts), and respects a daily cap (`EMAIL_DAILY_LIMIT`) and per-second pacing.
+`enqueueEmail()` inside the same transaction as the state change. Worker claims jobs with `FOR UPDATE SKIP LOCKED`, mints access links at send time, sends via Resend REST API (or writes to `dev_outbox` in simulate mode), retries with exponential backoff (max 5 attempts; Resend `Idempotency-Key` = job id, and a 409 idempotency conflict means an earlier attempt was accepted), and respects a daily cap (`EMAIL_DAILY_LIMIT`) and per-second pacing.
 
 ## Retention
 
