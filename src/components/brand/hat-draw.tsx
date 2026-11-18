@@ -1,14 +1,15 @@
 "use client";
 
+import { ArrowDown } from "lucide-react";
 import * as React from "react";
 import { cn } from "@/lib/utils";
 import { Elf } from "./elf";
 import { NameHat } from "./name-hat";
-import { HandName } from "./paper-slip";
 
 /**
  * The landing hero's signature interaction: a folded slip sticks out of the hat; pressing it
- * draws the slip and unfolds it into an example result. "Put it back" returns the slip.
+ * draws the slip, which stays folded and points to the example card below, where the name is
+ * revealed. The hero builds anticipation; only the card reveals. "Put it back" returns the slip.
  * Example content only. Under reduced motion the global rule makes the unfold instant.
  */
 export function HatDraw({ className }: { className?: string }) {
@@ -44,30 +45,37 @@ export function HatDraw({ className }: { className?: string }) {
           className="slip group absolute top-[33%] left-[44%] z-10 inline-flex min-h-12 -translate-x-1/2 -rotate-12 items-center gap-2 px-4 py-2 font-bold whitespace-nowrap text-pine-900 transition-[translate,rotate] duration-300 ease-[var(--ease-out-quint)] hover:-translate-y-2 hover:-rotate-6 active:translate-y-0"
         >
           <span aria-hidden className="block h-4 w-0.5 rounded-full bg-gold-500" />
-          Draw a name
+          Try a draw
           <span className="sr-only"> (example)</span>
         </button>
       ) : (
         <div
           role="group"
           aria-label="Example draw"
-          className="slip absolute top-0 left-[6%] z-20 w-[min(19rem,88%)] -rotate-2 animate-unfold p-5 text-center sm:p-6"
+          className="slip absolute top-[2%] left-[10%] z-20 w-[min(18rem,84%)] -rotate-3 animate-rise p-5 text-center sm:p-6"
         >
           <span aria-hidden className="absolute -top-3 left-1/2 h-6 w-14 -translate-x-1/2 rotate-2 rounded-sm bg-gold-200/90 shadow-sm" />
           <p className="text-xs font-bold tracking-wide text-ink-500 uppercase">Example</p>
-          <p ref={resultRef} tabIndex={-1} className="mt-1 text-ink-700 outline-none">
-            You drew <HandName className="block text-[2rem] leading-tight font-bold text-berry-700">Grandma Rosie</HandName>
+          <p ref={resultRef} tabIndex={-1} className="mt-1 font-display text-xl leading-tight font-bold tracking-[-0.015em] text-pine-900">
+            You drew a name.
           </p>
-          <p className="mt-1 text-sm text-ink-700">
-            Your secret alias: <span className="font-display font-bold text-pine-800">Dasher</span>
-          </p>
-          <button
-            type="button"
-            onClick={() => toggle(false)}
-            className="mt-3 inline-flex min-h-11 items-center rounded-lg px-2 text-sm font-bold text-pine-700 underline decoration-gold-500 underline-offset-4 hover:text-pine-900"
-          >
-            Put it back
-          </button>
+          <p className="mt-1 text-sm leading-relaxed text-ink-700">It stays folded until your Christmas card opens.</p>
+          <div className="mt-2 flex flex-col items-center">
+            <a
+              href="#example-card"
+              className="inline-flex min-h-11 items-center gap-1.5 rounded-lg px-2 text-sm font-bold text-pine-700 underline decoration-gold-500 underline-offset-4 hover:text-pine-900"
+            >
+              Open the example card
+              <ArrowDown className="size-4" aria-hidden />
+            </a>
+            <button
+              type="button"
+              onClick={() => toggle(false)}
+              className="inline-flex min-h-11 items-center rounded-lg px-2 text-sm text-ink-700 underline decoration-line-strong underline-offset-4 hover:text-pine-900"
+            >
+              Put it back
+            </button>
+          </div>
         </div>
       )}
     </div>

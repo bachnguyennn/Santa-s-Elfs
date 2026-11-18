@@ -8,7 +8,7 @@ const SLIPS: { x: number; y: number; r: number; name: string }[] = [
   { x: 58, y: 204, r: -10, name: "Maya" },
   { x: 146, y: 224, r: 5, name: "Jonas" },
   { x: 222, y: 222, r: -4, name: "Priya" },
-  { x: 292, y: 230, r: 9, name: "Oma" },
+  { x: 292, y: 230, r: 9, name: "Rosie" },
 ];
 
 /**

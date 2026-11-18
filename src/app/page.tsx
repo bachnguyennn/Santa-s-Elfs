@@ -216,7 +216,7 @@ export default function Home() {
             </figure>
           </div>
 
-          <div className="text-gold-200">
+          <div id="example-card" tabIndex={-1} className="scroll-mt-8 text-gold-200">
             <ChristmasCardReveal recipientName="Grandma Rosie" alias="Dasher" label="Example card" />
           </div>
         </div>
