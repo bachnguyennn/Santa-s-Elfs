@@ -106,8 +106,8 @@ export async function decideParticipant(
   if (!isUuid(participantId)) throw notFound();
   try {
     await db.tx(async (t) => {
-      const [p] = await t.query<{ email: string; status: string }>(
-        `select email, status from participants where id = $1 and group_id = $2`,
+      const [p] = await t.query<{ email: string; status: string; decided_at: Date | string | null }>(
+        `select email, status, decided_at from participants where id = $1 and group_id = $2 for update`,
         [participantId, ctx.groupId],
       );
       if (!p) throw notFound();
@@ -116,10 +116,13 @@ export async function decideParticipant(
       // Trigger enforces allowed transitions, capacity and the post-draw lock.
       await t.query(`update participants set status = $2, decided_at = now() where id = $1`, [participantId, next]);
       if (action === "remove") await revokeParticipantTokens(t, participantId);
+      // One email per decision: keyed by the previous decision, so a later re-approval
+      // (after a removal or rejection) still sends a fresh private link.
+      const cycle = p.decided_at ? new Date(p.decided_at).toISOString() : "initial";
       if (action === "approve") {
-        await enqueueEmail(t, p.email, { template: "join_approved", groupId: ctx.groupId, participantId }, `join_approved:${participantId}`);
+        await enqueueEmail(t, p.email, { template: "join_approved", groupId: ctx.groupId, participantId }, `join_approved:${participantId}:${cycle}`);
       } else if (action === "reject") {
-        await enqueueEmail(t, p.email, { template: "join_rejected", groupId: ctx.groupId, participantId }, `join_rejected:${participantId}`);
+        await enqueueEmail(t, p.email, { template: "join_rejected", groupId: ctx.groupId, participantId }, `join_rejected:${participantId}:${cycle}`);
       }
       await audit(t, {
         groupId: ctx.groupId,

@@ -149,3 +149,28 @@ describe("resendParticipantLink", () => {
     expect(jobs[0].participant_id).toBe(p);
   });
 });
+
+describe("re-approval after removal", () => {
+  it("queues a fresh join_approved email for each approval cycle", async () => {
+    const db = await createTestDb();
+    try {
+      const g = await insertGroup(db, { requiresApproval: true });
+      const [{ id }] = await db.query<{ id: string }>(
+        `insert into participants (group_id, name, email, status) values ($1, 'Rae', 'rae@example.com', 'pending') returning id`,
+        [g.id],
+      );
+      const ctx = { groupId: g.id };
+      await decideParticipant(db, ctx, id, { action: "approve" });
+      await decideParticipant(db, ctx, id, { action: "approve" }); // idempotent: no second email
+      await decideParticipant(db, ctx, id, { action: "remove" });
+      await decideParticipant(db, ctx, id, { action: "approve" });
+      const rows = await db.query<{ n: number }>(
+        `select count(*)::int as n from email_jobs where participant_id = $1 and template = 'join_approved'`,
+        [id],
+      );
+      expect(rows[0].n).toBe(2);
+    } finally {
+      await db.close();
+    }
+  });
+});

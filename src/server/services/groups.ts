@@ -221,8 +221,10 @@ export async function loadOrganizerParticipants(db: Db, groupId: string, partici
      from participants p
      left join assignments a on a.group_id = p.group_id and a.giver_id = p.id
      left join lateral (
+       -- new_message notifications are excluded: their timing would let the organizer
+       -- correlate a recipient's reply with the Santa it notifies (who drew whom).
        select ej.template, ej.status, ej.sent_at, ej.created_at from email_jobs ej
-        where ej.participant_id = p.id and ej.to_email = p.email
+        where ej.participant_id = p.id and ej.to_email = p.email and ej.template <> 'new_message'
         order by ej.created_at desc limit 1
      ) e on true
      where p.group_id = $1 and ($2::uuid is null or p.id = $2::uuid)

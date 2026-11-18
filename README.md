@@ -35,7 +35,7 @@ npm run dev
 Open http://localhost:3000. With no environment variables set, SantaElf runs in **local demo mode**:
 
 - Data lives in an embedded Postgres (PGlite) under `.data/pglite` — delete that folder to reset.
-- **Emails are simulated, not sent.** Every email (including private links and emergency codes) appears at **http://localhost:3000/dev/outbox**. The outbox page is disabled whenever real email is configured.
+- **Emails are simulated, not sent.** Every email (including private links and emergency codes) appears at **http://localhost:3000/dev/outbox**. The outbox page is disabled whenever real email is configured, and in production builds (`next start`, deployments) unless `ENABLE_DEV_OUTBOX=true` — so a deployment that forgot `RESEND_API_KEY` doesn't publish everyone's private links.
 - Scheduled drawings run when the cron endpoint is called: `curl http://localhost:3000/api/cron/tick` (allowed without a secret only outside production).
 
 Tip: to try several participants on one machine, use separate browser profiles or private windows — each private link sets a cookie for that participant.
@@ -53,6 +53,8 @@ Copy `.env.example` to `.env.local` and fill in what you need:
 | `EMAIL_MODE` | Force `simulate` even with a key (useful for staging) |
 | `EMAIL_DAILY_LIMIT` | Daily send cap (default 100, matching Resend's free tier) |
 | `CRON_SECRET` | Bearer secret for `GET /api/cron/tick` (`openssl rand -hex 32`) |
+| `TRUSTED_IP_HEADER` | Header with the real client IP for per-IP rate limits. Must be one your platform/proxy **overwrites** (clients can forge anything else, e.g. `X-Forwarded-For`). Default: `x-real-ip` on Vercel; elsewhere unset, so all clients share one rate-limit bucket. `none` disables it. |
+| `ENABLE_DEV_OUTBOX` | `true` exposes `/dev/outbox` in a production build (E2E only). Never on a real deployment. |
 
 ## Tests
 

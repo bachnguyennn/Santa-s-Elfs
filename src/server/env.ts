@@ -21,6 +21,14 @@ export const env = {
   get cronSecret() {
     return process.env.CRON_SECRET ?? "";
   },
+  /**
+   * /dev/outbox shows every simulated email, i.e. every private link and code.
+   * Available in simulate mode outside production; production builds (E2E,
+   * private demos) need the explicit opt-in ENABLE_DEV_OUTBOX=true.
+   */
+  get devOutboxAvailable() {
+    return this.emailMode === "simulate" && (!this.isProduction || process.env.ENABLE_DEV_OUTBOX === "true");
+  },
   get isProduction() {
     return process.env.NODE_ENV === "production";
   },

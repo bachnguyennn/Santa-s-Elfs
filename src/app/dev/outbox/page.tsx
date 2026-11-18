@@ -21,7 +21,7 @@ interface OutboxRow {
 /** Local demo only: emails "sent" in simulate mode, so testers can follow private links. */
 export default async function OutboxPage() {
   await connection();
-  if (env.emailMode !== "simulate") notFound();
+  if (!env.devOutboxAvailable) notFound();
   const db = await getDb();
   const emails = await db.query<OutboxRow>(
     `select id, to_email, subject, html, text, created_at from dev_outbox order by created_at desc limit 50`,

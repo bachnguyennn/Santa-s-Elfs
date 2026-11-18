@@ -19,10 +19,28 @@ export async function rateLimit(db: Db, key: string, limit: number, windowSecond
   }
 }
 
-/** Best-effort client identifier for rate limiting. */
+/**
+ * The one request header that carries the client IP and that clients cannot forge.
+ * Only a header your hosting platform overwrites is trustworthy: `TRUSTED_IP_HEADER`
+ * if set ("none" disables), else `x-real-ip` on Vercel (which overwrites it), else none.
+ */
+export function trustedIpHeader(): string | null {
+  const configured = process.env.TRUSTED_IP_HEADER?.trim().toLowerCase();
+  if (configured) return configured === "none" ? null : configured;
+  return process.env.VERCEL ? "x-real-ip" : null;
+}
+
+/**
+ * Client identifier for rate limiting. Without a trusted header every client
+ * shares one bucket: no per-IP separation, but limits can't be bypassed by
+ * spoofing X-Forwarded-For. For list-valued headers the last entry (added by
+ * the nearest proxy) is used, never a client-supplied first entry.
+ */
 export function clientKey(req: Request): string {
-  const fwd = req.headers.get("x-forwarded-for");
-  return (fwd?.split(",")[0] ?? req.headers.get("x-real-ip") ?? "local").trim();
+  const header = trustedIpHeader();
+  if (!header) return "shared";
+  const value = req.headers.get(header)?.split(",").pop()?.trim();
+  return value ? `${header}:${value}` : "unknown";
 }
 
 /** Delete expired windows (called from the cron tick). */

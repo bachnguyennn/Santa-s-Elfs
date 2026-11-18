@@ -144,7 +144,7 @@ export function Roster({
                   onClick={() => resend(p)}
                   loading={busy === `resend:${p.id}`}
                   disabled={!!busy || status === "closed"}
-                  aria-label={`Resend private link to ${p.name}`}
+                  aria-label={`Resend link to ${p.name}`}
                 >
                   Resend link
                 </Button>

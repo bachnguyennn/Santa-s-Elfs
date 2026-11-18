@@ -37,7 +37,11 @@ function assertSameOrigin(req: Request) {
   if (req.method === "GET" || req.method === "HEAD") return;
   const origin = req.headers.get("origin");
   const host = req.headers.get("x-forwarded-host") ?? req.headers.get("host");
-  if (!origin || !host || new URL(origin).host !== host) {
+  let originHost: string | null = null;
+  try {
+    originHost = origin ? new URL(origin).host : null; // "null" (sandboxed/opaque origins) fails to parse
+  } catch {}
+  if (!originHost || !host || originHost !== host) {
     throw new AppError("FORBIDDEN", "Cross-site request blocked.");
   }
 }
