@@ -1,3 +1,4 @@
+import { mkdir } from "node:fs/promises";
 import { PGlite, type Transaction } from "@electric-sql/pglite";
 import { migrate } from "./migrate";
 import type { Db } from "./types";
@@ -20,6 +21,7 @@ function wrap(conn: Queryable, root: PGlite): Db {
 
 /** Create a migrated PGlite database. `dataDir` undefined = in-memory (tests). */
 export async function createPgliteDb(dataDir?: string): Promise<Db> {
+  if (dataDir) await mkdir(dataDir, { recursive: true });
   const pg = await PGlite.create(dataDir);
   await migrate(
     (sql) => pg.exec(sql),
