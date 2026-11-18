@@ -6,7 +6,7 @@ import "./globals.css";
 // Display: warm, chunky grotesque with optical sizes. Body: built for low-vision legibility
 // (many once-a-year, non-technical users on phones). Hand: names on paper slips and aliases.
 const display = Bricolage_Grotesque({ variable: "--font-display", subsets: ["latin"], axes: ["opsz"] });
-const body = Atkinson_Hyperlegible_Next({ variable: "--font-body", subsets: ["latin"] });
+const body = Atkinson_Hyperlegible_Next({ variable: "--font-body", subsets: ["latin"], adjustFontFallback: false });
 const hand = Shantell_Sans({ variable: "--font-hand", subsets: ["latin"] });
 
 export const metadata: Metadata = {

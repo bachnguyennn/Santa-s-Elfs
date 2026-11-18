@@ -18,7 +18,7 @@ export function Stepper({ steps, current, className }: { steps: string[]; curren
           const state = i < current ? "done" : i === current ? "current" : "todo";
           return (
             <li key={label} className="flex flex-1 items-center last:flex-none" aria-current={state === "current" ? "step" : undefined}>
-              <span className="flex items-center gap-2">
+              <span className="flex min-w-0 items-center gap-2">
                 <span
                   className={cn(
                     "grid size-8 shrink-0 place-items-center rounded-full border-2 text-sm font-bold transition-colors",
@@ -31,7 +31,7 @@ export function Stepper({ steps, current, className }: { steps: string[]; curren
                 </span>
                 <span
                   className={cn(
-                    "hidden text-sm whitespace-nowrap sm:inline",
+                    "hidden text-sm leading-tight sm:inline",
                     state === "current" ? "font-bold text-pine-900" : "text-ink-500",
                   )}
                 >
@@ -40,7 +40,7 @@ export function Stepper({ steps, current, className }: { steps: string[]; curren
                 </span>
               </span>
               {i < steps.length - 1 && (
-                <span aria-hidden className={cn("mx-2 h-0.5 flex-1 rounded-full sm:mx-3", i < current ? "bg-gold-500" : "bg-line")} />
+                <span aria-hidden className={cn("mx-2 h-0.5 min-w-4 flex-1 rounded-full sm:mx-3", i < current ? "bg-gold-500" : "bg-line")} />
               )}
             </li>
           );
