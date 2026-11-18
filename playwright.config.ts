@@ -31,6 +31,12 @@ export default defineConfig({
       EMAIL_MODE: "simulate",
       PGLITE_DIR: ".data/e2e",
       CRON_SECRET: "e2e-cron-secret",
+      // The outbox is off in production builds unless opted in; E2E reads private links from it.
+      ENABLE_DEV_OUTBOX: "true",
+      // Simulated emails count toward the daily cap; the full suite sends a few hundred.
+      EMAIL_DAILY_LIMIT: "10000",
+      // No proxy in E2E: trusting X-Forwarded-For lets tests deliberately simulate distinct clients.
+      TRUSTED_IP_HEADER: "x-forwarded-for",
     },
   },
 });
