@@ -54,7 +54,7 @@ export function ChristmasCardReveal({
     <div className={cn("relative mx-auto w-full max-w-[22rem] pt-[36%]", className)} data-open={open || undefined}>
       {/* Reserved space above the envelope: the card rises into it. */}
       {!open && (
-        <p className="pointer-events-none absolute inset-x-0 top-[22%] text-center font-bold text-current">Psst… press the seal</p>
+        <p className="pointer-events-none absolute inset-x-0 top-[17%] text-center font-bold text-current">Psst… press the seal</p>
       )}
 
       <div className="relative aspect-[4/3] [perspective:1000px]">

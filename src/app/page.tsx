@@ -185,8 +185,9 @@ export default function Home() {
 
       {/* ───────── The reveal: try the card ───────── */}
       <section aria-labelledby="reveal-title" className="felt on-pine text-cream-50">
-        <div className="mx-auto grid max-w-6xl items-center gap-12 px-4 py-16 sm:px-6 sm:py-24 lg:grid-cols-2 lg:gap-16">
-          <div>
+        {/* Phones: intro, then the envelope, then aliases and chat. Desktop: text left, envelope right. */}
+        <div className="mx-auto grid max-w-6xl gap-10 px-4 py-16 sm:px-6 sm:py-24 lg:grid-cols-2 lg:gap-x-16 lg:gap-y-10">
+          <div className="lg:col-start-1 lg:row-start-1">
             <h2 id="reveal-title" className="font-display text-[clamp(2rem,5vw,3rem)] leading-[1.05] font-extrabold tracking-[-0.03em]">
               Open your Christmas card
             </h2>
@@ -194,11 +195,18 @@ export default function Home() {
               When the names are drawn, everyone gets an email. Their link opens a sealed Christmas card: who they’re buying for,
               and the alias they’ll sign messages with.
             </p>
-            <div className="mt-8">
+          </div>
+
+          <div id="example-card" tabIndex={-1} className="-mt-[8%] scroll-mt-8 text-gold-200 lg:col-start-2 lg:mt-0 lg:row-span-2 lg:row-start-1 lg:self-center">
+            <ChristmasCardReveal recipientName="Grandma Rosie" alias="Dasher" label="Example card" />
+          </div>
+
+          <div className="lg:col-start-1 lg:row-start-2">
+            <div>
               <p className="text-sm font-bold text-pine-300">Each Santa gets one of 20 aliases, like</p>
               <ul className="mt-3 flex flex-wrap gap-2" aria-label="Example aliases">
                 {ALIASES.map((a, i) => (
-                  <li key={a}>
+                  <li key={a} className={i >= 4 ? "hidden sm:block" : undefined}>
                     <PaperSlip tilt={i % 2 ? 2 : -2} className="px-3 py-1.5">
                       <HandName className="text-lg text-pine-900">{a}</HandName>
                     </PaperSlip>
@@ -222,10 +230,6 @@ export default function Home() {
               </div>
               <p className="mt-3 text-sm text-pine-200">Grandma Rosie only ever sees “Dasher”.</p>
             </figure>
-          </div>
-
-          <div id="example-card" tabIndex={-1} className="scroll-mt-8 text-gold-200">
-            <ChristmasCardReveal recipientName="Grandma Rosie" alias="Dasher" label="Example card" />
           </div>
         </div>
       </section>
