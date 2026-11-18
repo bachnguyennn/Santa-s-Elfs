@@ -1,0 +1,34 @@
+# Calls the SantaElf cron endpoint every 10 minutes (scheduled draws, email
+# retries, retention). Configure repository secrets SANTAELF_URL (e.g.
+# https://santaelf.example.com, no trailing slash) and CRON_SECRET.
+# GitHub may delay scheduled runs; a daily Vercel cron (vercel.json) is the backstop.
+name: cron-tick
+
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+  workflow_dispatch:
+
+permissions: {}
+
+concurrency:
+  group: cron-tick
+  cancel-in-progress: false
+
+jobs:
+  tick:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Call /api/cron/tick
+        env:
+          SANTAELF_URL: ${{ secrets.SANTAELF_URL }}
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+        run: |
+          if [ -z "$SANTAELF_URL" ] || [ -z "$CRON_SECRET" ]; then
+            echo "::notice::SANTAELF_URL or CRON_SECRET secret is not set; skipping cron tick."
+            exit 0
+          fi
+          curl --fail-with-body --silent --show-error --max-time 120 --retry 2 --retry-delay 10 \
+            -H "Authorization: Bearer ${CRON_SECRET}" \
+            "${SANTAELF_URL%/}/api/cron/tick"
