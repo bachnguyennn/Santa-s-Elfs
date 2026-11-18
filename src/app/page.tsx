@@ -283,7 +283,7 @@ export default function Home() {
             The elves are ready when you are
           </h2>
           <p className="mt-3 max-w-md text-lg text-pine-200 [text-wrap:balance]">
-            Setting up takes about two minutes. Invite people now and draw names whenever you like.
+            No account needed. Invite people now and draw names whenever you like.
           </p>
           <Button asChild variant="festive" size="lg" className="mt-8 w-full sm:w-auto">
             <Link href="/new">Start a group</Link>
