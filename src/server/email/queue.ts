@@ -28,7 +28,7 @@ export async function enqueueEmail(db: Db, toEmail: string, job: EmailJob, dedup
   const participantId = "participantId" in job ? job.participantId : null;
   await db.query(
     `insert into email_jobs (group_id, participant_id, to_email, template, payload, dedupe_key)
-     values ($1, $2, $3, $4, $5, $6)
+     values ($1, $2, $3, $4, $5::text::jsonb, $6)
      on conflict (dedupe_key) do nothing`,
     [job.groupId, participantId, toEmail, job.template, JSON.stringify(job), dedupeKey ?? null],
   );
