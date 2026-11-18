@@ -78,14 +78,14 @@ export default function Home() {
         <div className="felt on-pine relative -mt-px overflow-hidden text-cream-50">
           <section
             aria-labelledby="hero-title"
-            className="relative mx-auto grid max-w-6xl gap-6 px-4 pt-6 pb-0 sm:px-6 sm:pt-10 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:items-end lg:gap-4 lg:pt-14"
+            className="relative mx-auto grid max-w-6xl gap-6 px-4 pt-6 pb-0 sm:px-6 sm:pt-10 md:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] md:items-end md:gap-4 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:pt-14"
           >
             {/* scattered stars on the felt */}
             <Star className="absolute top-4 right-[8%] size-5 text-gold-400 motion-safe:animate-twinkle" />
             <Sparkle className="absolute top-[30%] right-[44%] hidden size-5 text-gold-400 lg:block" />
             <Star className="absolute bottom-[38%] left-[2%] hidden size-4 text-gold-400 sm:block" />
 
-            <PaperSlip tilt={-0.75} crease={false} className="relative z-10 mb-2 max-w-2xl p-6 sm:p-9 lg:mb-16">
+            <PaperSlip tilt={-0.75} crease={false} className="relative z-10 mb-2 max-w-2xl p-6 sm:p-9 md:mb-12 lg:mb-16">
               <span aria-hidden className="absolute -top-3 left-8 h-6 w-16 -rotate-3 rounded-sm bg-gold-200/90 shadow-sm" />
               <h1
                 id="hero-title"
@@ -121,7 +121,7 @@ export default function Home() {
               </div>
             </PaperSlip>
 
-            <HatDraw className="mx-auto mb-6 w-full max-w-[19rem] sm:max-w-md lg:mx-0 lg:mb-10 lg:max-w-none" />
+            <HatDraw className="mx-auto mb-6 w-full max-w-[19rem] sm:max-w-md md:mx-0 md:mb-8 md:max-w-none lg:mb-10" />
           </section>
         </div>
 
