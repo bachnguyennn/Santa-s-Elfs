@@ -76,6 +76,7 @@ function warmThreshold() {
   img.sizes = "(min-width: 1100px) 1100px, 100vw";
   img.srcset = artSrcSet("workshop-threshold");
   img.src = "/art/workshop-threshold-1024.webp";
+  new Image().src = "/art/workshop-door-leaf.webp";
 }
 
 /**
@@ -86,14 +87,14 @@ function warmThreshold() {
 export function Doorway({
   className,
   doorRef,
-  knobRef,
+  glintRef,
   lightRef,
   cameraRef,
   priority,
 }: {
   className?: string;
   doorRef?: React.Ref<HTMLDivElement>;
-  knobRef?: React.Ref<HTMLSpanElement>;
+  glintRef?: React.Ref<HTMLSpanElement>;
   lightRef?: React.Ref<HTMLDivElement>;
   cameraRef?: React.Ref<HTMLDivElement>;
   priority?: boolean;
@@ -106,18 +107,8 @@ export function Doorway({
         className="absolute top-[27.8%] left-[36%] h-[63%] w-[28%] bg-[radial-gradient(ellipse_at_50%_60%,rgb(255_214_140/0.85),rgb(255_170_80/0.35)_55%,transparent_80%)] opacity-0 mix-blend-screen"
       />
       <div className="absolute top-[27.8%] left-[36%] h-[63%] w-[28%] [perspective:900px]">
-        <div
-          ref={doorRef}
-          className="absolute inset-0 origin-left rounded-[2px] border-[3px] border-[#873824] bg-[repeating-linear-gradient(90deg,transparent_0_19%,#88382266_19.4%_20%),linear-gradient(105deg,#df7950,#c45a39_52%,#a7462f)] shadow-[inset_2px_0_3px_#ec9a68,inset_-4px_0_6px_#893a29,inset_0_0_14px_#793420] [backface-visibility:hidden]"
-        >
-          {/* raised panels */}
-          <i className="absolute inset-x-[14%] top-[8%] h-[34%] rounded-[3px] border border-[#a7462f] shadow-[inset_1px_1px_0_#ec9a6855,inset_-1px_-1px_0_#7a2f1f55]" />
-          <i className="absolute inset-x-[14%] top-[50%] h-[40%] rounded-[3px] border border-[#a7462f] shadow-[inset_1px_1px_0_#ec9a6855,inset_-1px_-1px_0_#7a2f1f55]" />
-          {/* brass knob + latch plate */}
-          <span
-            ref={knobRef}
-            className="absolute top-[52%] right-[6%] block aspect-square w-[9%] origin-[30%_50%] rounded-full bg-[radial-gradient(at_30%_24%,#fff1a7,#cc913d_62%,#724316)] shadow-[1px_2px_3px_rgb(60_20_10/0.6)]"
-          />
+        <div ref={doorRef} className="absolute inset-0 origin-left bg-[#c45a39] bg-[url('/art/workshop-door-leaf.webp')] bg-size-[100%_100%] [backface-visibility:hidden]">
+          <span ref={glintRef} className="absolute left-[85%] top-[58%] size-[2%] rounded-full bg-[#fff1ad] opacity-0 blur-[1px]" />
         </div>
       </div>
     </div>
@@ -135,7 +126,7 @@ const prefersReducedMotion = () => typeof window !== "undefined" && window.match
 export function DoorArrival({ onOpened }: { onOpened: (how: "played" | "skipped" | "direct") => void }) {
   const [state, setState] = React.useState<"checking" | "playing" | "done">("checking");
   const doorRef = React.useRef<HTMLDivElement>(null);
-  const knobRef = React.useRef<HTMLSpanElement>(null);
+  const glintRef = React.useRef<HTMLSpanElement>(null);
   const lightRef = React.useRef<HTMLDivElement>(null);
   const cameraRef = React.useRef<HTMLDivElement>(null);
   const rootRef = React.useRef<HTMLDivElement>(null);
@@ -188,7 +179,7 @@ export function DoorArrival({ onOpened }: { onOpened: (how: "played" | "skipped"
     });
     function play() {
     anims = [
-      knobRef.current?.animate([{ transform: "rotate(0deg)" }, { transform: "rotate(12deg)" }], { duration: 300, easing: EASE, fill: "forwards" }),
+      glintRef.current?.animate([{ opacity: 0 }, { opacity: 1, offset: 0.45 }, { opacity: 0 }], { duration: 300, easing: EASE }),
       lightRef.current?.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 300, easing: EASE, fill: "forwards" }),
       doorRef.current?.animate([{ transform: "rotateY(0deg)" }, { transform: "rotateY(95deg)" }], {
         duration: 700,
@@ -230,7 +221,7 @@ export function DoorArrival({ onOpened }: { onOpened: (how: "played" | "skipped"
       <p role="status" className="sr-only">
         Opening the Workshop door. Your form is ready below.
       </p>
-      <Doorway priority cameraRef={cameraRef} doorRef={doorRef} knobRef={knobRef} lightRef={lightRef} className="w-[175vw] max-w-none shrink-0 sm:w-full sm:max-w-[min(100vw,1100px,160vh)]" />
+      <Doorway priority cameraRef={cameraRef} doorRef={doorRef} glintRef={glintRef} lightRef={lightRef} className="w-[175vw] max-w-none shrink-0 sm:w-full sm:max-w-[min(100vw,1100px,160vh)]" />
       <button
         ref={skipRef}
         type="button"

@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { cn } from "@/lib/utils";
+import { FrostedWindow } from "./frosted-window";
 import { ArtImage } from "./art";
 
 const EASE = "cubic-bezier(0.22, 1, 0.36, 1)";
@@ -85,6 +86,7 @@ export function WorkshopScene({ className, children }: { className?: string; chi
   return (
     <div className={cn("relative aspect-[1672/941]", className)}>
       <ArtImage name="workshop-plate" priority sizes="(min-width: 1280px) 100vw, 120vw" className="absolute inset-0 size-full" />
+      <FrostedWindow />
       <svg viewBox="0 0 1672 941" className="pointer-events-none absolute inset-0 size-full" aria-hidden focusable="false">
         <defs>
           <linearGradient id="ribbon-brass" x1="0" y1="0" x2="0" y2="1">

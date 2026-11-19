@@ -1,6 +1,6 @@
 "use client";
 
-import { Lock } from "lucide-react";
+import { ArrowLeft, ArrowRight, Lock } from "lucide-react";
 import Link from "next/link";
 import * as React from "react";
 import { SnowLayer } from "@/components/village/snow";
@@ -43,7 +43,7 @@ const reduced = () => typeof window !== "undefined" && window.matchMedia("(prefe
  * tilts 12°; 65–90% an elf steps out and catches it; by 100% the Post Office door is lit. It reverses
  * on upward scroll, never locks scrolling, and only listens while the scene is on screen. Reduced
  * motion shows the scene still. Buildings are real links with HTML signs. On phones the painting is wider
- * than the screen and pans to keep the active landmark centred; large sign-style links follow below.
+ * than the screen; arrow controls move the view and the guide between houses.
  */
 export function VillageRoute({ stops = PUBLIC_STOPS, heading, intro }: { stops?: StreetStop[]; heading: React.ReactNode; intro?: React.ReactNode }) {
   const trackRef = React.useRef<HTMLDivElement>(null);
@@ -51,7 +51,14 @@ export function VillageRoute({ stops = PUBLIC_STOPS, heading, intro }: { stops?:
   const parcelRef = React.useRef<SVGGElement>(null);
   const bellRef = React.useRef<HTMLSpanElement>(null);
   const elfRef = React.useRef<HTMLImageElement>(null);
-  const boxRef = React.useRef<HTMLDivElement>(null);
+  const [stopIndex, setStopIndex] = React.useState(0);
+  const [goingRight, setGoingRight] = React.useState(true);
+  const selected = stops[stopIndex];
+
+  function step(direction: -1 | 1) {
+    setGoingRight(direction === 1);
+    setStopIndex((current) => Math.max(0, Math.min(stops.length - 1, current + direction)));
+  }
   const [lit, setLit] = React.useState(false);
   // Below 768px the sign tiles are the way in: the painted hotspots (partly off-screen while the
   // street pans) leave the tab order and the accessibility tree, so nothing is announced twice.
@@ -68,7 +75,7 @@ export function VillageRoute({ stops = PUBLIC_STOPS, heading, intro }: { stops?:
   React.useEffect(() => {
     const track = trackRef.current;
     const path = pathRef.current;
-    if (!track || !path) return;
+    if (!track || !path || tilesOnly) return;
     const length = path.getTotalLength();
     let frame = 0;
     let active = false;
@@ -93,20 +100,6 @@ export function VillageRoute({ stops = PUBLIC_STOPS, heading, intro }: { stops?:
         elfRef.current.style.transform = `translateX(${((1 - catchT) * 30).toFixed(1)}%)`;
       }
       setLit(p >= 0.98);
-      // Phones: the painting is wider than the screen; keep the active landmark centred
-      // (Workshop at 19% → Post Office at 54% while the parcel rides, then hold on the Post Office).
-      const box = boxRef.current;
-      if (box) {
-        const vw = box.parentElement?.clientWidth ?? window.innerWidth;
-        const bw = box.offsetWidth;
-        if (bw > vw + 1) {
-          const focus = 19 + (54 - 19) * ride;
-          const x = Math.max(-(bw - vw), Math.min(0, vw / 2 - (focus / 100) * bw));
-          box.style.transform = `translateX(${x.toFixed(1)}px)`;
-        } else {
-          box.style.transform = "";
-        }
-      }
     };
     const onScroll = () => {
       if (active && !frame) frame = requestAnimationFrame(render);
@@ -125,12 +118,12 @@ export function VillageRoute({ stops = PUBLIC_STOPS, heading, intro }: { stops?:
       window.removeEventListener("resize", onScroll);
       if (frame) cancelAnimationFrame(frame);
     };
-  }, []);
+  }, [tilesOnly]);
 
   return (
     <section aria-labelledby="street-title" className="on-dark relative bg-oxblood text-buttercream">
-      <div ref={trackRef} className="relative h-[140vh] sm:h-[150vh] motion-reduce:h-auto">
-        <div className="sticky top-0 flex min-h-[100svh] flex-col justify-start gap-6 overflow-hidden py-10 sm:justify-center motion-reduce:static motion-reduce:min-h-0">
+      <div ref={trackRef} className="relative md:h-[150vh] motion-reduce:h-auto">
+        <div className="md:sticky top-0 flex md:min-h-[100svh] flex-col justify-start gap-6 overflow-hidden py-10 sm:justify-center motion-reduce:static motion-reduce:min-h-0">
           <div className="mx-auto w-full max-w-6xl px-4 sm:px-8">
             <h2 id="street-title" className="font-display text-[clamp(2.5rem,6vw,4.5rem)] leading-[0.95] font-bold">
               {heading}
@@ -140,9 +133,12 @@ export function VillageRoute({ stops = PUBLIC_STOPS, heading, intro }: { stops?:
 
           <div className="relative mx-auto w-full max-w-[1672px] overflow-hidden">
             <SnowLayer className="inset-x-0 top-0 h-[22%]" density={0.5} />
-            <div ref={boxRef} className="relative aspect-[1672/941] w-[260%] sm:w-full">
+            <div
+              className="village-panorama relative aspect-[1672/941] w-[260%] md:w-full"
+              style={{ "--house-x": `${selected.sign.x}%` } as React.CSSProperties}
+            >
               <ArtImage name="village-street" sizes="(min-width: 1672px) 1672px, 100vw" className="absolute inset-0 size-full" />
-              <svg viewBox="0 0 1672 941" className="pointer-events-none absolute inset-0 size-full" aria-hidden focusable="false">
+              <svg viewBox="0 0 1672 941" className="pointer-events-none absolute inset-0 hidden size-full md:block" aria-hidden focusable="false">
                 <path ref={pathRef} d={ROUTE} fill="none" stroke="none" />
                 {/* the teal parcel with its brass ribbon */}
                 <g ref={parcelRef} transform="translate(420 662)">
@@ -164,9 +160,14 @@ export function VillageRoute({ stops = PUBLIC_STOPS, heading, intro }: { stops?:
                 alt=""
                 aria-hidden
                 loading="lazy"
-                className="pointer-events-none absolute w-[8%] opacity-0 select-none"
+                className="pointer-events-none absolute hidden w-[8%] opacity-0 select-none md:block"
                 style={{ left: `${58 - 0.45 * 8}%`, top: `${67 - 0.97 * 8 * (1199 / 1312) * (1672 / 941)}%` }}
               />
+              <div aria-hidden className="village-guide pointer-events-none absolute bottom-[23%] w-[8%] md:hidden" style={{ left: `${selected.sign.x + 2}%` }}>
+                {/* eslint-disable-next-line @next/next/no-img-element -- transparent sprite shares the panorama's coordinates */}
+                <img key={stopIndex} src="/art/ribbon-elf-320.webp" alt="" width="1312" height="1199" loading="lazy"
+                  className={cn("block w-full select-none", goingRight && "-scale-x-100", stopIndex !== 0 || !goingRight ? "guide-step" : "")} />
+              </div>
               {stops.map((s) => (
                 <StreetBuilding
                   key={s.key}
@@ -177,6 +178,19 @@ export function VillageRoute({ stops = PUBLIC_STOPS, heading, intro }: { stops?:
                 />
               ))}
             </div>
+          </div>
+          <div role="group" aria-label="Explore village houses" className="relative z-10 mx-auto -mt-24 flex w-[calc(100%-2rem)] max-w-sm items-center justify-between gap-3 rounded-full bg-oxblood/95 p-1.5 text-buttercream md:hidden">
+            <button type="button" aria-label="Previous house" disabled={stopIndex === 0} onClick={() => step(-1)}
+              className="grid size-12 place-items-center rounded-full bg-buttercream text-oxblood disabled:opacity-40">
+              <ArrowLeft aria-hidden />
+            </button>
+            <span aria-live="polite" aria-atomic="true" className="text-center font-display text-2xl font-bold">
+              <span className="sr-only">House {stopIndex + 1} of {stops.length}: </span>{selected.name}
+            </span>
+            <button type="button" aria-label="Next house" disabled={stopIndex === stops.length - 1} onClick={() => step(1)}
+              className="grid size-12 place-items-center rounded-full bg-buttercream text-oxblood disabled:opacity-40">
+              <ArrowRight aria-hidden />
+            </button>
           </div>
         </div>
       </div>
@@ -246,10 +260,11 @@ function StreetBuilding({
         "building-sign absolute hidden items-center gap-2 rounded-md px-3 py-1.5 whitespace-nowrap text-buttercream md:inline-flex",
         // Links are teal enamel on a walnut ledge; a sign that only explains is a flat oxblood plaque with a lock.
         stop.href ? "bg-teal shadow-[0_3px_0_var(--color-walnut)]" : "border border-brass/60 bg-oxblood-deep",
+        stop.key === "gift-house" && "w-max max-w-[115%] flex-wrap justify-center gap-x-1.5 gap-y-0.5 text-center whitespace-normal",
         lit && "ring-2 ring-brass",
       )}
-      // Signs near the right edge hang from their right end so they never run off the painting.
-      style={{ left: `${signLeft}%`, top: `${signTop}%`, translate: stop.sign.x > 75 ? "-88% 0" : "-50% 0" }}
+      // Keep the plaque centered on its landmark. Wrap long copy within the Gift House frontage.
+      style={{ left: `${signLeft}%`, top: `${signTop}%`, translate: "-50% 0" }}
     >
       {bellRef && (
         <span ref={bellRef} aria-hidden className="inline-block origin-top">

@@ -1,4 +1,4 @@
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, LampDesk } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ElfFigure } from "@/components/workshop/art";
@@ -241,7 +241,10 @@ function NextStep({ d }: { d: OrganizerDashboardDTO }) {
       </div>
       {needed === 0 && (
         <Button asChild variant={blocked ? "secondary" : "festive"} className="w-full shrink-0 sm:w-auto">
-          <Link href={blocked ? `${base}/exclusions` : `${base}/draw`}>{blocked ? "Review exclusions" : "Draw names"}</Link>
+          <Link href={blocked ? `${base}/exclusions` : `${base}/draw`} className={d.readiness.ready ? "workbench-lamp" : undefined}>
+            {d.readiness.ready && <LampDesk aria-hidden className="size-5" />}
+            {blocked ? "Review exclusions" : "Draw names"}
+          </Link>
         </Button>
       )}
     </Bench>

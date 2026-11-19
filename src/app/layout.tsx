@@ -3,6 +3,7 @@ import { Atkinson_Hyperlegible_Next, Barlow_Condensed, Shantell_Sans } from "nex
 import { DoorstepMemory } from "@/components/village/doorstep-memory";
 import { RoomEntrance } from "@/components/workshop/room-entrance";
 import "./globals.css";
+import "@/components/workshop/workshop-motion.css";
 
 // Font choices: design/workshop-moodboard/SPEC.md and DESIGN.md (Typography).
 // Display: Barlow Condensed 700 for short titles and signs. Body: Atkinson Hyperlegible Next, built for
