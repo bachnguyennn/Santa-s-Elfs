@@ -25,7 +25,9 @@ export function StatusPage({
       <SkipLink />
       <SiteHeader />
       <main id="main" tabIndex={-1} className="flex-1 bg-parchment pb-16 outline-none">
-        <SceneBanner name={art} position={position} className="h-[clamp(8rem,20vw,14rem)]" />
+        {/* Not high priority: Next renders the not-found tree with every page, and a priority image here
+            would make React preload this painting everywhere. On screen, it still loads at once. */}
+        <SceneBanner name={art} position={position} priority={false} className="h-[clamp(8rem,20vw,14rem)]" />
         <div className="relative z-10 mx-auto -mt-10 w-full max-w-xl px-4 sm:-mt-14 sm:px-8">
           <div className="rounded-lg border border-paper-line bg-cream-50 p-6 text-center shadow-[var(--shadow-lifted)] sm:p-9">
             <h1 className="font-display text-[clamp(2.25rem,7vw,3rem)] leading-[0.98] font-bold text-oxblood [text-wrap:balance]">{title}</h1>

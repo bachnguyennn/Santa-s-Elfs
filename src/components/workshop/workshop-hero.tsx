@@ -23,8 +23,9 @@ const ELF_TOP = 61 - 0.97 * ELF_H;
  */
 const RIBBON_FROM = { x: 1232, y: 490 };
 const RIBBON_TO = { x: 1362, y: 459 };
-const RIBBON_LEN = Math.hypot(RIBBON_TO.x - RIBBON_FROM.x, RIBBON_TO.y - RIBBON_FROM.y);
-const RIBBON_ANGLE = (Math.atan2(RIBBON_TO.y - RIBBON_FROM.y, RIBBON_TO.x - RIBBON_FROM.x) * 180) / Math.PI;
+const RIBBON_LEN = Math.round(Math.hypot(RIBBON_TO.x - RIBBON_FROM.x, RIBBON_TO.y - RIBBON_FROM.y));
+// Rounded so the server and the browser print identical attributes (no hydration mismatch).
+const RIBBON_ANGLE = Math.round(((Math.atan2(RIBBON_TO.y - RIBBON_FROM.y, RIBBON_TO.x - RIBBON_FROM.x) * 180) / Math.PI) * 100) / 100;
 
 /**
  * Santa holds the ribbon while the elf pulls it taut around the teal parcel. One coordinate system

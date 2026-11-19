@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import * as React from "react";
-import { preload } from "react-dom";
 import { cn } from "@/lib/utils";
 import { ArtImage, artSrcSet } from "./art";
 
@@ -38,19 +37,27 @@ function consumeDeliberateEntry(): boolean {
 
 /** A real link to /new that also marks the arrival as a deliberate entry through the door. */
 export function WorkshopEntranceLink({ className, children, ...props }: Omit<React.ComponentProps<typeof Link>, "href">) {
-  // Fetch the threshold painting ahead of time, so the doorway never opens on an empty frame.
-  preload("/art/workshop-threshold-1024.webp", {
-    as: "image",
-    imageSrcSet: artSrcSet("workshop-threshold"),
-    imageSizes: "(min-width: 1100px) 1100px, 100vw",
-    fetchPriority: "low",
-  });
   return (
     <Link
       href="/new"
       {...props}
+      // Fetch the threshold painting at the first sign of intent (hover, focus, touch), so the doorway
+      // never opens on an empty frame, without every page that shows this link downloading it.
+      onPointerEnter={(e) => {
+        props.onPointerEnter?.(e);
+        warmThreshold();
+      }}
+      onFocus={(e) => {
+        props.onFocus?.(e);
+        warmThreshold();
+      }}
+      onTouchStart={(e) => {
+        props.onTouchStart?.(e);
+        warmThreshold();
+      }}
       onClick={(e) => {
         props.onClick?.(e);
+        warmThreshold();
         if (!e.defaultPrevented && e.button === 0 && !e.metaKey && !e.ctrlKey && !e.shiftKey && !e.altKey) markDeliberateEntry();
       }}
       className={className}
@@ -58,6 +65,17 @@ export function WorkshopEntranceLink({ className, children, ...props }: Omit<Rea
       {children}
     </Link>
   );
+}
+
+let warmed = false;
+/** Starts the threshold painting downloading into the HTTP cache once (an off-DOM image, not a <link rel=preload>). */
+function warmThreshold() {
+  if (warmed || typeof window === "undefined") return;
+  warmed = true;
+  const img = new Image();
+  img.sizes = "(min-width: 1100px) 1100px, 100vw";
+  img.srcset = artSrcSet("workshop-threshold");
+  img.src = "/art/workshop-threshold-1024.webp";
 }
 
 /**
@@ -161,7 +179,7 @@ export function DoorArrival({ onOpened }: { onOpened: (how: "played" | "skipped"
     let cancelled = false;
     let anims: Animation[] = [];
     const timers: number[] = [];
-    // Start once the painting is decoded (it is usually preloaded), but never wait more than 350 ms.
+    // Start once the painting is decoded (usually already fetched on hover/focus/touch), but never wait more than 350 ms.
     const img = rootRef.current?.querySelector("img");
     const ready = Promise.race([img?.decode?.().catch(() => undefined) ?? Promise.resolve(), new Promise((r) => window.setTimeout(r, 350))]);
     void ready.then(() => {
