@@ -5,7 +5,7 @@ import { SkipLink } from "@/components/ui/page-shell";
 import { C, line } from "@/components/village/art";
 import { ParticipantHeader } from "@/components/village/participant-header";
 import { VillageFooter } from "@/components/village/village-chrome";
-import { PREVIEW_PLACES } from "../places";
+import { previewPlaces } from "../places";
 import { Mailroom } from "./mailroom";
 
 export const metadata: Metadata = { title: "Preview · Post Office" };
@@ -27,10 +27,11 @@ function DoorWithSlot({ className }: { className?: string }) {
 export default async function PostOfficePreview({ searchParams }: PageProps<"/preview/participant/post-office">) {
   const sp = await searchParams;
   const thread = sp.thread === "santa" ? "santa" : "recipient";
+  const sealed = sp.sealed === "1";
   return (
     <div className="flex min-h-full flex-col bg-[#E4F0EA] text-midnight">
       <SkipLink />
-      <ParticipantHeader places={PREVIEW_PLACES} />
+      <ParticipantHeader places={previewPlaces(sealed)} />
       <main id="main" tabIndex={-1} className="flex-1 outline-none">
         <div className="relative border-b-[2.5px] border-midnight bg-[#CFE5DA]">
           <div aria-hidden className="absolute inset-x-0 top-0 h-3 bg-timber" />
@@ -44,12 +45,12 @@ export default async function PostOfficePreview({ searchParams }: PageProps<"/pr
         </div>
         <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 sm:py-10">
           <Link
-            href="/preview/participant#post-office"
+            href={sealed ? "/preview/participant?sealed=1#post-office" : "/preview/participant#post-office"}
             className="mb-6 inline-flex min-h-11 items-center gap-2 font-bold text-evergreen underline decoration-2 underline-offset-4"
           >
             <ArrowLeft className="size-4" aria-hidden /> Back to the village
           </Link>
-          <Mailroom thread={thread} fail={sp.fail === "1"} />
+          <Mailroom thread={thread} fail={sp.fail === "1"} sealed={sealed} />
         </div>
       </main>
       <VillageFooter />

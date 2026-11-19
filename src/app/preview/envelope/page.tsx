@@ -3,7 +3,7 @@ import { SkipLink } from "@/components/ui/page-shell";
 import { ParticipantHeader } from "@/components/village/participant-header";
 import { SnowLayer } from "@/components/village/snow";
 import { VillageFooter } from "@/components/village/village-chrome";
-import { PREVIEW_PLACES } from "../participant/places";
+import { previewPlaces } from "../participant/places";
 import { EnvelopeDemo } from "./envelope-demo";
 
 export const metadata: Metadata = { title: "Preview · Your envelope" };
@@ -17,7 +17,8 @@ export default async function EnvelopePreview({ searchParams }: PageProps<"/prev
   return (
     <div className="flex min-h-full flex-col bg-snow text-midnight">
       <SkipLink />
-      <ParticipantHeader places={PREVIEW_PLACES} />
+      {/* Until the envelope is opened, the header links lead to the sealed (name-free) village. */}
+      <ParticipantHeader places={previewPlaces(!opened)} />
 
       <main id="main" tabIndex={-1} className="flex-1 outline-none">
         <div className="relative bg-sky pb-2">

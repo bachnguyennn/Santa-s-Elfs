@@ -46,11 +46,12 @@ function Postmark({ className }: { className?: string }) {
 }
 
 /** One mail slot in the cabinet. A real link (replace: no history entry), marked when current. */
-function Slot({ k, active }: { k: ThreadKey; active: boolean }) {
+function Slot({ k, active, sealed }: { k: ThreadKey; active: boolean; sealed: boolean }) {
   const t = THREADS[k];
+  const label = k === "recipient" && sealed ? "To your person" : t.slot;
   return (
     <Link
-      href={`?thread=${k}`}
+      href={`?thread=${k}${sealed ? "&sealed=1" : ""}`}
       replace
       scroll={false}
       aria-current={active ? "true" : undefined}
@@ -70,42 +71,53 @@ function Slot({ k, active }: { k: ThreadKey; active: boolean }) {
       </span>
       {/* brass label plate */}
       <span className="relative rounded-md border-2 border-midnight bg-golden px-2.5 py-1.5 text-midnight">
-        <span className="block font-display text-[1.0625rem] leading-tight font-extrabold">{t.slot}</span>
+        <span className="block font-display text-[1.0625rem] leading-tight font-extrabold">{label}</span>
         <span className="block text-sm font-bold">{t.sub}</span>
       </span>
     </Link>
   );
 }
 
-export function Mailroom({ thread, fail }: { thread: ThreadKey; fail: boolean }) {
-  const [threads, setThreads] = React.useState(() => ({ recipient: THREADS.recipient.messages, santa: THREADS.santa.messages }));
-  const [draft, setDraft] = React.useState("");
-  const [busy, setBusy] = React.useState(false);
-  const [error, setError] = React.useState<string | null>(null);
-  const [status, setStatus] = React.useState("");
+/** Everything a conversation keeps for itself: its letters, its draft and its send feedback. */
+type Desk = { messages: Msg[]; draft: string; busy: boolean; error: string | null; status: string };
+const desk = (messages: Msg[]): Desk => ({ messages, draft: "", busy: false, error: null, status: "" });
+
+export function Mailroom({ thread, fail, sealed = false }: { thread: ThreadKey; fail: boolean; sealed?: boolean }) {
+  // One desk per mail slot. Switching slots keeps this component mounted, so nothing may be shared.
+  const [desks, setDesks] = React.useState<Record<ThreadKey, Desk>>(() => ({
+    // Before the envelope is opened there can't be letters to a named recipient yet.
+    recipient: desk(sealed ? [] : THREADS.recipient.messages),
+    santa: desk(THREADS.santa.messages),
+  }));
+  const update = (k: ThreadKey, patch: Partial<Desk> | ((d: Desk) => Partial<Desk>)) =>
+    setDesks((all) => ({ ...all, [k]: { ...all[k], ...(typeof patch === "function" ? patch(all[k]) : patch) } }));
+
   const t = THREADS[thread];
-  const messages = threads[thread];
+  const them = thread === "recipient" && sealed ? "Your person" : t.them;
+  const { messages, draft, busy, error, status } = desks[thread];
 
   async function send(e: React.FormEvent) {
     e.preventDefault();
-    const body = draft.trim();
+    const k = thread; // the slot this letter belongs to, even if the visitor switches mid-send
+    const body = desks[k].draft.trim();
     if (!body) {
-      setError("Write a few words before sending.");
+      update(k, { error: "Write a few words before sending." });
       return;
     }
-    setBusy(true);
-    setError(null);
-    setStatus("");
-    await new Promise((r) => window.setTimeout(r, 500));
-    setBusy(false);
+    update(k, { busy: true, error: null, status: "" });
+    await new Promise((r) => window.setTimeout(r, 1200));
     if (fail) {
       // Keep what they typed; explain beside the action.
-      setError("Your letter didn’t send. Check your connection and try again. Your words are still here.");
+      update(k, { busy: false, error: "Your letter didn’t send. Check your connection and try again. Your words are still here." });
       return;
     }
-    setThreads((all) => ({ ...all, [thread]: [...all[thread], { id: `n${Date.now()}`, fromMe: true, body, when: "Just now", fresh: true }] }));
-    setDraft("");
-    setStatus(thread === "recipient" ? "Sent. Tomás will see it from Dasher." : "Sent to your Santa.");
+    update(k, (d) => ({
+      busy: false,
+      messages: [...d.messages, { id: `n${Date.now()}`, fromMe: true, body, when: "Just now", fresh: true }],
+      // Only clear the draft if it's still the letter that was sent.
+      draft: d.draft.trim() === body ? "" : d.draft,
+      status: k === "recipient" ? (sealed ? "Sent, signed with your alias." : "Sent. Tomás will see it from Dasher.") : "Sent to your Santa.",
+    }));
   }
 
   return (
@@ -114,10 +126,10 @@ export function Mailroom({ thread, fail }: { thread: ThreadKey; fail: boolean })
       <nav aria-label="Mail slots" className="rounded-2xl border-[2.5px] border-midnight bg-timber p-2.5 lg:sticky lg:top-6">
         <ul className="grid grid-cols-2 gap-2.5 lg:grid-cols-1">
           <li>
-            <Slot k="recipient" active={thread === "recipient"} />
+            <Slot k="recipient" active={thread === "recipient"} sealed={sealed} />
           </li>
           <li>
-            <Slot k="santa" active={thread === "santa"} />
+            <Slot k="santa" active={thread === "santa"} sealed={sealed} />
           </li>
         </ul>
         {/* empty pigeonholes, for the room */}
@@ -132,7 +144,7 @@ export function Mailroom({ thread, fail }: { thread: ThreadKey; fail: boolean })
       <section aria-labelledby="thread-title" className="village-paper overflow-hidden">
         <div className="flex flex-wrap items-baseline justify-between gap-2 border-b-2 border-dashed border-snow-shadow px-5 pt-5 pb-4 sm:px-7">
           <h2 id="thread-title" className="font-display text-2xl font-extrabold tracking-[-0.02em]">
-            {thread === "recipient" ? "Letters with Tomás" : "Letters with your Santa"}
+            {thread === "recipient" ? (sealed ? "Letters with your person" : "Letters with Tomás") : "Letters with your Santa"}
           </h2>
           {thread === "santa" && (
             <button type="button" aria-pressed="false" className={cn(vb.base, vb.quiet, vb.sm)}>
@@ -141,7 +153,10 @@ export function Mailroom({ thread, fail }: { thread: ThreadKey; fail: boolean })
           )}
         </div>
 
-        <ol aria-label="Letters, oldest first" className="space-y-3 px-5 py-5 sm:px-7">
+        {messages.length === 0 && (
+          <p className="px-5 py-6 text-midnight-soft sm:px-7">No letters yet. Whatever you write is signed with your alias.</p>
+        )}
+        <ol aria-label="Letters, oldest first" className="space-y-3 px-5 py-5 empty:hidden sm:px-7">
           {messages.map((m) => (
             <li key={m.id} className={cn("flex", m.fromMe ? "justify-end" : "justify-start")}>
               <article
@@ -151,7 +166,7 @@ export function Mailroom({ thread, fail }: { thread: ThreadKey; fail: boolean })
                 )}
               >
                 <p className={cn("text-xs font-bold", m.fromMe ? "text-evergreen" : "text-cranberry-deep")}>
-                  {m.fromMe ? t.me : t.them} · <span className="font-normal text-midnight-soft">{m.when}</span>
+                  {m.fromMe ? t.me : them} · <span className="font-normal text-midnight-soft">{m.when}</span>
                 </p>
                 <p className="mt-1 leading-relaxed whitespace-pre-wrap">{m.body}</p>
                 {m.fresh && <Postmark className="absolute -top-4 -right-3 size-11 motion-safe:animate-[stamp-in_260ms_var(--ease-out-expo)_both]" />}
@@ -160,14 +175,14 @@ export function Mailroom({ thread, fail }: { thread: ThreadKey; fail: boolean })
           ))}
         </ol>
 
-        <form onSubmit={send} className="border-t-2 border-dashed border-snow-shadow bg-snow px-5 py-5 sm:px-7">
+        <form key={thread} onSubmit={send} className="border-t-2 border-dashed border-snow-shadow bg-snow px-5 py-5 sm:px-7">
           <label htmlFor="letter" className="block text-[0.9375rem] font-bold">
-            {thread === "recipient" ? "Write to Tomás" : "Write to your Santa"}
+            {thread === "recipient" ? (sealed ? "Write to your person" : "Write to Tomás") : "Write to your Santa"}
           </label>
           <textarea
             id="letter"
             value={draft}
-            onChange={(e) => setDraft(e.target.value)}
+            onChange={(e) => update(thread, { draft: e.target.value })}
             rows={3}
             maxLength={1000}
             aria-describedby={cn("letter-hint", error && "letter-error")}
@@ -176,8 +191,8 @@ export function Mailroom({ thread, fail }: { thread: ThreadKey; fail: boolean })
           />
           <p id="letter-hint" className="mt-1.5 text-sm text-midnight-soft">
             {thread === "recipient"
-              ? "Signed Dasher. In a small group, Tomás may still guess from your writing."
-              : "Your Santa sees your name, since they drew you."}
+              ? "Your recipient sees your alias, Dasher. In a small group, they may still guess from your writing."
+              : "The Santa who drew you sees your name."}
           </p>
           <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center">
             <button type="submit" disabled={busy} aria-busy={busy || undefined} className={cn(vb.base, vb.primary, "w-full disabled:opacity-60 sm:w-auto")}>

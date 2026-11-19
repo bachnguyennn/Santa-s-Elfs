@@ -7,17 +7,20 @@ import { ParticipantHeader } from "@/components/village/participant-header";
 import { GiftHouseArt, MailboxArt, PathBand, PostOfficeArt } from "@/components/village/scenes";
 import { SnowLayer } from "@/components/village/snow";
 import { VillageFooter } from "@/components/village/village-chrome";
-import { PREVIEW_PLACES } from "./places";
+import { previewPlaces } from "./places";
 
 export const metadata: Metadata = { title: "Preview · Your village" };
 
 const h2 = "font-display text-[clamp(1.75rem,4.5vw,2.5rem)] leading-[1.05] font-extrabold tracking-[-0.03em] [text-wrap:balance]";
 
-export default function ParticipantVillagePreview() {
+export default async function ParticipantVillagePreview({ searchParams }: PageProps<"/preview/participant">) {
+  // ?sealed=1: names are drawn but the envelope is still closed, so the recipient stays generic.
+  const sealed = (await searchParams).sealed === "1";
+  const q = sealed ? "?sealed=1" : "";
   return (
     <div className="flex min-h-full flex-col bg-snow text-midnight">
       <SkipLink />
-      <ParticipantHeader places={PREVIEW_PLACES} />
+      <ParticipantHeader places={previewPlaces(sealed)} />
 
       <main id="main" tabIndex={-1} className="flex-1 outline-none">
         {/* ───────── Your cottage: the envelope's own place ───────── */}
@@ -32,11 +35,13 @@ export default function ParticipantVillagePreview() {
                 <strong className="text-midnight">Maple Street Cousins</strong> · organized by Priya Raman
               </p>
               <p className="mt-5 max-w-[36ch] rounded-xl border-2 border-midnight bg-paper px-4 py-3 leading-snug">
-                The names are drawn and your envelope is open. Read it again any time from your post-box.
+                {sealed
+                  ? "The names are drawn. Your envelope is waiting in your post-box."
+                  : "The names are drawn and your envelope is open. Read it again any time from your post-box."}
               </p>
             </div>
             <BuildingLink
-              href="/preview/envelope?opened=1"
+              href={sealed ? "/preview/envelope" : "/preview/envelope?opened=1"}
               name="Your post-box"
               purpose="Envelope"
               art={<MailboxArt className="-mt-2 h-auto w-full" />}
@@ -51,7 +56,7 @@ export default function ParticipantVillagePreview() {
           <div className="relative mx-auto grid max-w-6xl gap-6 px-4 pt-12 pb-14 sm:px-6 lg:grid-cols-[minmax(0,6fr)_minmax(0,5fr)] lg:items-center lg:gap-14 lg:pb-20">
             <BuildingLink
               id="post-office"
-              href="/preview/participant/post-office"
+              href={`/preview/participant/post-office${q}`}
               name="Post Office"
               purpose="Messages"
               art={<PostOfficeArt className="-mt-2 h-auto w-full" />}
@@ -62,8 +67,15 @@ export default function ParticipantVillagePreview() {
                 Two mail slots wait for you
               </h2>
               <p className="mt-3 max-w-prose text-lg leading-relaxed text-midnight-soft">
-                Write to Tomás as <span className="font-hand font-bold text-evergreen">Dasher</span>, or answer the Santa who drew
-                you. Neither of them sees your name.
+                {sealed ? (
+                  "Write to your person, or answer the Santa who drew you."
+                ) : (
+                  <>
+                    Write to Tomás as <span className="font-hand font-bold text-evergreen">Dasher</span>, or answer the Santa who drew
+                    you.
+                  </>
+                )}{" "}
+                Your recipient sees your alias. The Santa who drew you sees your name.
               </p>
             </div>
           </div>
@@ -83,7 +95,7 @@ export default function ParticipantVillagePreview() {
             </div>
             <BuildingLink
               id="gift-house"
-              href="/preview/participant/gift-house"
+              href={`/preview/participant/gift-house${q}`}
               name="Gift House"
               purpose="Wishlist"
               art={<GiftHouseArt className="-mt-2 h-auto w-full" />}

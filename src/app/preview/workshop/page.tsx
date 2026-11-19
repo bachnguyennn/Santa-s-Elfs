@@ -340,7 +340,7 @@ export default function WorkshopPreview() {
                   ))}
                 </dl>
                 <p className="mt-3 text-sm leading-snug text-midnight-soft">
-                  These count single emails, not people. Everyone who joins gets two: one when they ask, one when you approve.
+                  These totals count individual emails. When someone asks to join, we email their private link to them and notify you if approval is required.
                 </p>
               </section>
             </aside>
