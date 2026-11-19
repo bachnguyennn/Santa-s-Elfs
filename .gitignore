@@ -48,10 +48,10 @@ next-env.d.ts
 /playwright/.cache/
 !.env.example
 
-# AI agent instructions, context and tooling (kept locally, not in the repo)
+# AI agent instructions, context and tooling (kept locally, not in the repo).
+# DESIGN.md is versioned: it records the current design decisions for contributors.
 /AGENTS.md
 /CLAUDE.md
-/DESIGN.md
 /PRODUCT.md
 /REDESIGN_BRIEF.md
 /.impeccable/
