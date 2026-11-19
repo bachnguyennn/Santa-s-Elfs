@@ -52,7 +52,7 @@ export function CopyField({
           {hint}
         </p>
       )}
-      <div className="flex rounded-xl border border-line-strong bg-white shadow-[inset_0_1px_2px_rgb(11_42_30/0.06)] focus-within:border-pine-700">
+      <div className="flex rounded-xl border-2 border-midnight bg-white">
         <input
           ref={inputRef}
           id={id}
@@ -67,7 +67,7 @@ export function CopyField({
           onClick={copy}
           className={cn(
             "m-1 inline-flex min-h-11 shrink-0 items-center gap-1.5 rounded-lg px-4 text-sm font-bold transition-colors",
-            copied ? "bg-pine-100 text-pine-900" : "bg-pine-800 text-cream-50 hover:bg-pine-900",
+            copied ? "bg-pine-100 text-evergreen-deep" : "bg-evergreen text-paper hover:bg-evergreen-deep",
           )}
         >
           {copied ? <Check className="size-4" aria-hidden /> : <Copy className="size-4" aria-hidden />}

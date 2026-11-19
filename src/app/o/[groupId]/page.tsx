@@ -12,6 +12,7 @@ import { Card, CardHeader } from "@/components/ui/card";
 import { CopyField } from "@/components/ui/copy-field";
 import { MIN_PARTICIPANTS, type OrganizerDashboardDTO } from "@/lib/contracts";
 import { formatInZone } from "@/lib/time";
+import { cn } from "@/lib/utils";
 import { organizerPage } from "@/server/page-auth";
 import { getOrganizerDashboard } from "@/server/services/groups";
 
@@ -99,6 +100,10 @@ export default async function OrganizerDashboardPage({ params, searchParams }: P
 
         <Card tone="plain">
           <CardHeader title="Emails" as="h2" description={`Sent from SantaElf to your group, including to you at ${d.group.organizerEmail}.`} />
+          <p className="-mt-2 mb-4 text-sm leading-snug text-midnight-soft">
+            These totals count individual emails. When someone asks to join, we email their private link to them and notify you if approval is
+            required.
+          </p>
           <dl className="grid grid-cols-3 gap-2 text-center">
             <EmailCount term="Sent" value={d.emails.sent} />
             <EmailCount term="On their way" value={d.emails.pending} />
@@ -121,11 +126,41 @@ export default async function OrganizerDashboardPage({ params, searchParams }: P
         {d.organizerParticipantId && (
           <Button asChild variant="secondary" className="w-full">
             <Link href={`/p/${d.organizerParticipantId}`}>
-              Your own Secret Santa page <ArrowRight aria-hidden />
+              Your own village page <ArrowRight aria-hidden />
             </Link>
           </Button>
         )}
       </aside>
+
+      {/* ───────── The back room: careful tools, kept apart ───────── */}
+      <section aria-labelledby="backroom-title" className="rounded-2xl border-[2.5px] border-dashed border-cranberry-deep bg-paper/70 p-5 sm:p-6 lg:col-span-2">
+        <h2 id="backroom-title" className="font-display text-lg font-bold text-cranberry-deep">
+          The back room
+        </h2>
+        <p className="mt-1 max-w-prose text-[0.9375rem] text-midnight-soft">Tools you can’t undo. Each one asks you to confirm first.</p>
+        <div className="mt-4 grid gap-4 md:grid-cols-2">
+          <div className="flex flex-col gap-2 rounded-xl border-2 border-snow-shadow bg-paper p-4">
+            <h3 className="font-bold">Emergency reveal</h3>
+            <p className="text-sm text-midnight-soft">
+              After the draw, look up one person’s match if they disappear. We email you a code, and it’s logged.
+            </p>
+            {d.group.status === "open" ? (
+              <p className="text-sm font-bold text-midnight-soft">Available once names are drawn.</p>
+            ) : (
+              <Link href={`/o/${d.groupId}/emergency`} className="self-start text-sm font-bold text-evergreen underline decoration-2 underline-offset-4">
+                Open the emergency reveal
+              </Link>
+            )}
+          </div>
+          <div className="flex flex-col gap-2 rounded-xl border-2 border-snow-shadow bg-paper p-4">
+            <h3 className="font-bold">Close or delete this group</h3>
+            <p className="text-sm text-midnight-soft">Deleting removes everyone’s wishlists and letters right away.</p>
+            <Link href={`/o/${d.groupId}/settings#back-room`} className="self-start text-sm font-bold text-cranberry-deep underline decoration-2 underline-offset-4">
+              Go to close or delete
+            </Link>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }
@@ -152,6 +187,16 @@ function CreatedBanner({ inviteUrl }: { inviteUrl: string }) {
   );
 }
 
+/** The workbench: the next step on a paper sheet with the bench edge below it. */
+function Bench({ children, className }: { children: React.ReactNode; className?: string }) {
+  return (
+    <section aria-label="Next step">
+      <div className={cn("rounded-2xl border-[2.5px] border-midnight bg-paper px-5 pt-5 pb-6 sm:px-7 sm:pt-6", className)}>{children}</div>
+      <div aria-hidden className="mx-2 h-4 rounded-b-xl border-[2.5px] border-t-0 border-midnight bg-timber" />
+    </section>
+  );
+}
+
 function NextStep({ d }: { d: OrganizerDashboardDTO }) {
   const base = `/o/${d.groupId}`;
   if (d.group.status === "closed") {
@@ -165,26 +210,26 @@ function NextStep({ d }: { d: OrganizerDashboardDTO }) {
     const approved = d.participants.filter((p) => p.status === "approved");
     const opened = approved.filter((p) => p.revealed).length;
     return (
-      <Card tone="felt">
-        <h2 className="font-display text-xl font-bold tracking-[-0.015em]">The names are drawn</h2>
-        <p className="mt-1 text-pine-200">
+      <Bench>
+        <h2 className="font-display text-2xl leading-tight font-extrabold tracking-[-0.02em]">The names are drawn</h2>
+        <p className="mt-1.5 text-midnight-soft">
           {opened === approved.length
-            ? "Everyone has opened their card. Nothing left to do but wait for the gifts."
-            : `${opened} of ${approved.length} have opened their card. Anyone who lost their email can get a new link below.`}
+            ? "Everyone has opened their envelope. Nothing left to do but wait for the gifts."
+            : `${opened} of ${approved.length} have opened their envelope. Anyone who lost their email can get a new link below.`}
         </p>
-        <Progress value={opened} max={approved.length} label="Cards opened" />
-      </Card>
+        <Progress value={opened} max={approved.length} label="Envelopes opened" />
+      </Bench>
     );
   }
   const needed = Math.max(0, MIN_PARTICIPANTS - d.approvedCount);
   const blocked = d.readiness.issues.find((i) => i.code === "IMPOSSIBLE_EXCLUSIONS");
   return (
-    <Card tone="felt" className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+    <Bench className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
       <div className="min-w-0">
-        <h2 className="font-display text-xl font-bold tracking-[-0.015em]">
+        <h2 className="font-display text-2xl leading-tight font-extrabold tracking-[-0.02em]">
           {needed > 0 ? `${needed} more ${needed === 1 ? "person" : "people"} to go` : blocked ? "Your exclusions need a tweak" : "Ready when you are"}
         </h2>
-        <p className="mt-1 text-pine-200">
+        <p className="mt-1.5 max-w-[56ch] text-midnight-soft">
           {needed > 0
             ? `The elves need at least ${MIN_PARTICIPANTS} people taking part before they can draw names.`
             : blocked
@@ -195,11 +240,11 @@ function NextStep({ d }: { d: OrganizerDashboardDTO }) {
         </p>
       </div>
       {needed === 0 && (
-        <Button asChild variant={blocked ? "light" : "festive"} className="w-full shrink-0 sm:w-auto">
+        <Button asChild variant={blocked ? "secondary" : "festive"} className="w-full shrink-0 sm:w-auto">
           <Link href={blocked ? `${base}/exclusions` : `${base}/draw`}>{blocked ? "Review exclusions" : "Draw names"}</Link>
         </Button>
       )}
-    </Card>
+    </Bench>
   );
 }
 
@@ -213,9 +258,9 @@ function Progress({ value, max, label }: { value: number; max: number; label: st
         aria-valuemin={0}
         aria-valuemax={max}
         aria-valuenow={value}
-        className="h-2 overflow-hidden rounded-full bg-pine-950/60"
+        className="h-3 overflow-hidden rounded-full border-2 border-midnight bg-snow"
       >
-        <div className="h-full rounded-full bg-gold-400 transition-[width] duration-500 ease-[var(--ease-out-expo)]" style={{ width: `${pct}%` }} />
+        <div className="h-full rounded-full bg-evergreen transition-[width] duration-500 ease-[var(--ease-out-expo)]" style={{ width: `${pct}%` }} />
       </div>
     </div>
   );

@@ -50,9 +50,9 @@ export function DangerZone({ groupId, groupName, status }: { groupId: string; gr
   }
 
   return (
-    <Card tone="plain" className="border-berry-500/40">
-      <CardHeader title="Finish or delete" as="h2" description="These can’t be undone." />
-      <div className="flex flex-col divide-y-2 divide-pine-800/15">
+    <Card id="back-room" tone="plain" className="mt-6 scroll-mt-6 border-dashed border-cranberry-deep">
+      <CardHeader title="The back room: finish or delete" as="h2" description="Kept apart because these can’t be undone. Each one asks you to confirm." />
+      <div className="flex flex-col divide-y-2 divide-dashed divide-snow-shadow">
         <div className="flex flex-col gap-3 pb-5 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
           <div>
             <h3 className="font-bold text-ink-900">Close the exchange</h3>

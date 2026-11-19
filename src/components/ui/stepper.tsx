@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 
 /**
  * OWNER: design agent. Progress through a multi-step flow (create group, join, set up profile).
- * Steps hang on a gold thread; the current step is a filled pine tag.
+ * Numbered tokens joined by a path; the current step is golden, finished steps evergreen.
  * `current` is 0-based. Labels collapse to "Step n of m: label" on phones.
  */
 export function Stepper({ steps, current, className }: { steps: string[]; current: number; className?: string }) {
@@ -22,9 +22,9 @@ export function Stepper({ steps, current, className }: { steps: string[]; curren
                 <span
                   className={cn(
                     "grid size-8 shrink-0 place-items-center rounded-full border-2 text-sm font-bold transition-colors",
-                    state === "done" && "border-pine-700 bg-pine-700 text-cream-50",
-                    state === "current" && "border-pine-800 bg-cream-50 text-pine-900 ring-4 ring-gold-200",
-                    state === "todo" && "border-line-strong bg-cream-50 text-ink-500",
+                    state === "done" && "border-midnight bg-evergreen text-paper",
+                    state === "current" && "border-midnight bg-golden text-midnight",
+                    state === "todo" && "border-snow-shadow bg-paper text-ink-500",
                   )}
                 >
                   {state === "done" ? <Check className="size-4" aria-hidden /> : i + 1}
@@ -40,7 +40,7 @@ export function Stepper({ steps, current, className }: { steps: string[]; curren
                 </span>
               </span>
               {i < steps.length - 1 && (
-                <span aria-hidden className={cn("mx-2 h-0.5 min-w-4 flex-1 rounded-full sm:mx-3", i < current ? "bg-gold-500" : "bg-line")} />
+                <span aria-hidden className={cn("mx-2 h-0.5 min-w-4 flex-1 rounded-full sm:mx-3", i < current ? "bg-evergreen" : "bg-snow-shadow")} />
               )}
             </li>
           );

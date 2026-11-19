@@ -65,7 +65,7 @@ test.describe("A: three friends complete a normal exchange", () => {
     await marcus.page.getByRole("link", { name: `Ask ${recipientName} an anonymous question` }).click();
     await marcus.page.waitForURL(/messages\?thread=recipient/);
     await marcus.page.getByLabel(`Message to ${recipientName}`).fill("Hi! What's your favourite kind of tea?");
-    await marcus.page.getByRole("button", { name: "Send message" }).click();
+    await marcus.page.getByRole("button", { name: "Send letter" }).click();
     await expect(marcus.page.getByText("Hi! What's your favourite kind of tea?")).toBeVisible();
 
     const recipient = recipientName === organizer.name ? { page, pid: orgPid } : people.find((p) => p.name === recipientName)!;
@@ -74,7 +74,7 @@ test.describe("A: three friends complete a normal exchange", () => {
     await expect(recipient.page.getByRole("heading", { name: /— Your Secret Santa$/ })).toBeVisible();
     await expect(recipient.page.getByRole("main")).not.toContainText(marcus.name);
     await recipient.page.getByLabel(/your Secret Santa$/).fill("Earl Grey, please!");
-    await recipient.page.getByRole("button", { name: "Send message" }).click();
+    await recipient.page.getByRole("button", { name: "Send letter" }).click();
     await expect(recipient.page.getByText("Earl Grey, please!")).toBeVisible();
 
     await marcus.page.reload();

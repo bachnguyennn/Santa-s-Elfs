@@ -350,8 +350,12 @@ export function Mailbox({ x, y, s = 1, flagUp = true }: At & { flagUp?: boolean 
       <path d="M-34 -78v-30a22 22 0 0 1 22-22h44a22 22 0 0 1 22 22v30z" fill={C.cranberry} {...line} />
       <path d="M-30 -116a20 20 0 0 1 16-12" fill="none" stroke="#C9485D" strokeWidth={5} strokeLinecap="round" />
       <path d="M-36 -126c8-10 26-12 44-10 12 1 22 4 28 10-8 4-18 4-26 0-10 4-24 4-34 0-4 3-8 2-12 0z" fill={C.snow} {...line} />
-      <rect x={-22} y={-104} width={30} height={18} rx={2} fill={C.paper} {...line} transform="rotate(-12 -7 -95)" />
-      <path d="M-22 -104l15 10 15-10" fill="none" {...thin} transform="rotate(-12 -7 -95)" />
+      {flagUp && (
+        <>
+          <rect x={-22} y={-104} width={30} height={18} rx={2} fill={C.paper} {...line} transform="rotate(-12 -7 -95)" />
+          <path d="M-22 -104l15 10 15-10" fill="none" {...thin} transform="rotate(-12 -7 -95)" />
+        </>
+      )}
       {flagUp ? (
         <path d="M34 -84v-44h20v14H38" fill={C.golden} {...line} />
       ) : (

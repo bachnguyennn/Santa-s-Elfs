@@ -1,4 +1,4 @@
-import { apiJson, createGroup, email, expect, joinApi, newPerson, readRevealedName, revealViaUi, test, waitForEmail } from "./helpers";
+import { apiJson, createGroup, email, expect, joinApi, newPerson, readMyAlias, readRevealedName, revealViaUi, test, waitForEmail } from "./helpers";
 import type { Page } from "@playwright/test";
 
 test.describe("F: reveal and anonymous messaging", () => {
@@ -19,7 +19,7 @@ test.describe("F: reveal and anonymous messaging", () => {
     const recipientName = await revealViaUi(giver.page, giver.pid);
     expect(names).toContain(recipientName);
     expect(recipientName).not.toBe(giver.name);
-    const alias = (await giver.page.getByText("Your secret alias:").locator("span").first().textContent())!.trim();
+    const alias = await readMyAlias(giver.page);
     expect(alias.length).toBeGreaterThan(0);
     await giver.page.reload();
     expect(await readRevealedName(giver.page)).toBe(recipientName);
@@ -28,7 +28,7 @@ test.describe("F: reveal and anonymous messaging", () => {
     await giver.page.goto(`/p/${giver.pid}/messages?thread=recipient`);
     await expect(giver.page.getByText(`You appear as ${alias}`)).toBeVisible();
     await giver.page.getByLabel(`Message to ${recipientName}`).fill("Do you prefer dark or milk chocolate?");
-    await giver.page.getByRole("button", { name: "Send message" }).click();
+    await giver.page.getByRole("button", { name: "Send letter" }).click();
     await expect(giver.page.getByText("Do you prefer dark or milk chocolate?")).toBeVisible();
 
     // The recipient (who hasn't revealed their own card) reads it; record every response they receive.
@@ -43,7 +43,7 @@ test.describe("F: reveal and anonymous messaging", () => {
     await expect(recipient.page.getByRole("heading", { name: `${alias} — Your Secret Santa` })).toBeVisible();
     await expect(recipient.page.getByText("Do you prefer dark or milk chocolate?")).toBeVisible();
     await recipient.page.getByLabel(/your Secret Santa$/).fill("Dark, always!");
-    await recipient.page.getByRole("button", { name: "Send message" }).click();
+    await recipient.page.getByRole("button", { name: "Send letter" }).click();
     await expect(recipient.page.getByText("Dark, always!")).toBeVisible();
     bodies.push(await recipient.page.content());
     bodies.push(JSON.stringify(await apiJson(recipient.page.context().request, "GET", `/api/p/${recipient.pid}/messages?thread=santa`)));

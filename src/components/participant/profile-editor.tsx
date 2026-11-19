@@ -55,6 +55,8 @@ export function ProfileEditor({ participantId, initial, readOnly = false }: { pa
   const [state, setState] = React.useState<State>(() => fromDTO(initial));
   const [saved, setSaved] = React.useState(() => snapshot(fromDTO(initial)));
   const [errors, setErrors] = React.useState<Record<string, string>>({});
+  /** Bumps on each successful save so the elf nods once per save. */
+  const [savedCount, setSavedCount] = React.useState(0);
   const [formError, setFormError] = React.useState<string>();
   const [justSaved, setJustSaved] = React.useState(false);
   const [pending, setPending] = React.useState(false);
@@ -130,6 +132,7 @@ export function ProfileEditor({ participantId, initial, readOnly = false }: { pa
       setState(next);
       setSaved(snapshot(next));
       setJustSaved(true);
+      setSavedCount((n) => n + 1);
     } catch (err) {
       if (err instanceof ApiRequestError && Object.keys(err.fields).length) {
         setErrors(err.fields);
@@ -341,14 +344,21 @@ export function ProfileEditor({ participantId, initial, readOnly = false }: { pa
         </div>
       </Card>
 
-      {formError && <Alert tone="error">{formError}</Alert>}
+      {readOnly && formError && <Alert tone="error">{formError}</Alert>}
 
       {!readOnly && (
-        <div className="sticky bottom-0 z-10 -mx-4 border-t border-line bg-cream-50/95 px-4 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] backdrop-blur-sm sm:mx-0 sm:rounded-xl sm:border sm:px-5 sm:shadow-[var(--shadow-paper)]">
+        <div className="sticky bottom-0 z-10 -mx-4 border-t-[2.5px] border-midnight bg-paper px-4 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] sm:mx-0 sm:rounded-xl sm:border-[2.5px] sm:px-5 sm:shadow-[var(--shadow-paper)]">
+          {/* A failed save keeps everything typed; the reason sits right beside the action. */}
+          {formError && (
+            <p role="alert" className="mb-3 rounded-xl border-2 border-cranberry-deep bg-berry-100 px-3 py-2 text-sm font-bold text-cranberry-deep">
+              {formError}
+            </p>
+          )}
           <div className="flex items-center justify-between gap-4">
-            <p role="status" className="min-w-0 text-sm">
+            <p role="status" className="flex min-w-0 items-center gap-2 text-sm">
               {justSaved && !dirty ? (
-                <span className="inline-flex animate-unfold items-center gap-1.5 font-bold text-pine-800">
+                <span className="inline-flex items-center gap-1.5 font-bold text-evergreen">
+                  <NoddingElf key={savedCount} />
                   <Check className="size-4" aria-hidden /> Saved
                 </span>
               ) : dirty ? (
@@ -364,5 +374,19 @@ export function ProfileEditor({ participantId, initial, readOnly = false }: { pa
         </div>
       )}
     </form>
+  );
+}
+
+/** The Gift House elf nods once when the wishlist is saved. Decorative; the "Saved" text carries the meaning. */
+function NoddingElf() {
+  return (
+    <svg viewBox="0 0 40 40" className="size-8 origin-bottom motion-safe:animate-[elf-nod_700ms_var(--ease-out-quint)_1]" aria-hidden focusable="false">
+      <path d="M9 22c-4-1-7-4-9-6 1 6 4 10 9 11zM31 22c4-1 7-4 9-6-1 6-4 10-9 11z" fill="#F2C6A0" stroke="#172D38" strokeWidth={1.5} strokeLinejoin="round" />
+      <circle cx={20} cy={24} r={12} fill="#F2C6A0" stroke="#172D38" strokeWidth={1.5} />
+      <path d="M15.5 23.5q1.5-1.6 3 0M21.5 23.5q1.5-1.6 3 0" fill="none" stroke="#172D38" strokeWidth={1.5} strokeLinecap="round" />
+      <path d="M16.5 28.5q3.5 3 7 0" fill="none" stroke="#172D38" strokeWidth={1.5} strokeLinecap="round" />
+      <path d="M8 17c1-8 9-14 18-14 4 0 8 1 9 4-5 1-8 4-8 8z" fill="#175541" stroke="#172D38" strokeWidth={1.5} strokeLinejoin="round" />
+      <path d="M7 15.5c9-2.5 18-2.5 26 0V19c-8-2.5-17-2.5-26 0z" fill="#B52F46" stroke="#172D38" strokeWidth={1.5} strokeLinejoin="round" />
+    </svg>
   );
 }

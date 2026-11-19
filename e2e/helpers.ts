@@ -178,20 +178,28 @@ export async function drawViaUi(page: Page, groupId: string) {
   await expect(page.getByRole("heading", { name: "What happens now" })).toBeVisible();
 }
 
-/** Giver reveals their card in the UI (skipping the animation); returns the recipient name shown. */
+/** Giver opens their envelope in the UI (skipping the animation when offered); returns the recipient name shown. */
 export async function revealViaUi(page: Page, participantId: string): Promise<string> {
   await page.goto(`/p/${participantId}/reveal`);
-  await page.getByRole("button", { name: "Reveal My Person" }).click();
-  // The shuffle lasts at least 2.6 s (no reduced motion in these browsers), so Skip is always offered.
-  await expect(page.getByRole("heading", { name: "The elves are shuffling…" })).toBeVisible();
-  await page.getByRole("button", { name: "Skip animation" }).click();
+  await page.getByRole("button", { name: "Open my envelope" }).click();
+  // The flap and letter take ~0.6 s; Skip is offered while they move. Either way the letter must appear.
+  const skip = page.getByRole("button", { name: "Skip animation" });
+  await skip.click({ timeout: 1500 }).catch(() => undefined);
   return readRevealedName(page);
 }
 
+/** The open letter's heading reads "You’re the Secret Santa for <name>". */
 export async function readRevealedName(page: Page): Promise<string> {
-  const slip = page.getByText("This is the name").locator("span.font-bold");
-  await expect(slip).toBeVisible();
-  return (await slip.textContent())!.trim();
+  const heading = page.getByRole("heading", { name: /^You’re the Secret Santa for/ });
+  await expect(heading).toBeVisible();
+  return (await heading.locator("span").nth(1).textContent())!.trim();
+}
+
+/** The participant's own alias, as signed on the open letter. */
+export async function readMyAlias(page: Page): Promise<string> {
+  const line = page.getByText("Your messages to them are signed");
+  await expect(line).toBeVisible();
+  return (await line.locator("span").first().textContent())!.trim();
 }
 
 /** Assert a mapping giver -> recipient is a derangement of the given people. */

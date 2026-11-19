@@ -3,9 +3,9 @@ import { cn } from "@/lib/utils";
 import { artA11y, lineProps, type ArtProps } from "./motifs";
 
 const TONES = {
-  pine: { box: "#1c5c40", lid: "#2a7253", ribbon: "#a8383a" },
-  berry: { box: "#a8383a", lid: "#c24e4c", ribbon: "#ddb65a" },
-  cream: { box: "#f8f0df", lid: "#fdf9f0", ribbon: "#1c5c40" },
+  pine: { box: "#175541", lid: "#2E7A5C", ribbon: "#B52F46" },
+  berry: { box: "#B52F46", lid: "#C9485D", ribbon: "#FFD166" },
+  cream: { box: "#FBEFD8", lid: "#FFF7E8", ribbon: "#175541" },
 } as const;
 
 /** A wrapped gift with a bow. tone: pine | berry | cream. */

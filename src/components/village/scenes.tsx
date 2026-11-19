@@ -96,13 +96,13 @@ export function GiftHouseArt({ className }: { className?: string }) {
 }
 
 /** The participant's own cottage, with the post-box where their envelope waits. */
-export function MailboxArt({ className }: { className?: string }) {
+export function MailboxArt({ className, flagUp = true }: { className?: string; flagUp?: boolean }) {
   return (
     <svg viewBox="-200 -200 400 220" className={className} aria-hidden focusable="false">
       <path d="M-200 6c80-12 140-14 200-8s130 6 200-4V20h-400z" fill={C.snow} />
       <path d="M-200 6c80-12 140-14 200-8s130 6 200-4" fill="none" {...line} />
       <Cottage x={-50} y={6} s={1.05} wall="#FCE2C2" roof={C.evergreen} chimneyTilt={6} />
-      <Mailbox x={110} y={6} s={1.05} />
+      <Mailbox x={110} y={6} s={1.05} flagUp={flagUp} />
       <Pine x={176} y={8} s={0.42} />
     </svg>
   );

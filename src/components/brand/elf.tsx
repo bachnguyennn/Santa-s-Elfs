@@ -23,37 +23,37 @@ export function Elf({ pose = "wave", title, className, ...props }: ArtProps & { 
         <g>
           {/* legs + curled shoes */}
           <path d="M68 184v12M92 184v12" {...lineProps} fill="none" />
-          <path d="M70 194H56c-6 0-9-3-10-7 4 2 6 1 7-1 1 4 4 5 7 5h10z" fill="#a8383a" {...lineProps} />
-          <path d="M90 194h14c6 0 9-3 10-7-4 2-6 1-7-1-1 4-4 5-7 5H90z" fill="#a8383a" {...lineProps} />
+          <path d="M70 194H56c-6 0-9-3-10-7 4 2 6 1 7-1 1 4 4 5 7 5h10z" fill="#B52F46" {...lineProps} />
+          <path d="M90 194h14c6 0 9-3 10-7-4 2-6 1-7-1-1 4-4 5-7 5H90z" fill="#B52F46" {...lineProps} />
           {/* tunic */}
-          <path d="M57 128c-4 20-8 40-10 58h66c-2-18-6-38-10-58z" fill="#1c5c40" {...lineProps} />
+          <path d="M57 128c-4 20-8 40-10 58h66c-2-18-6-38-10-58z" fill="#175541" {...lineProps} />
           {/* belt + buckle */}
-          <path d="M51 160h58v9H50z" fill="#1e1a14" {...lineProps} />
-          <rect x="74" y="157.5" width="12" height="14" rx="2" fill="#ddb65a" {...lineProps} />
+          <path d="M51 160h58v9H50z" fill="#172D38" {...lineProps} />
+          <rect x="74" y="157.5" width="12" height="14" rx="2" fill="#FFD166" {...lineProps} />
           {/* arms */}
           {pose === "wave" && (
             <>
-              <path d="M58 134c-12 7-17 18-16 30l8 1c0-9 4-16 11-20z" fill="#164a33" {...lineProps} />
+              <path d="M58 134c-12 7-17 18-16 30l8 1c0-9 4-16 11-20z" fill="#175541" {...lineProps} />
               <circle cx="46" cy="168" r="6" fill={SKIN} {...lineProps} />
-              <path d="M102 134c11-5 17-15 19-28l8 2c-2 15-10 27-23 35z" fill="#164a33" {...lineProps} />
+              <path d="M102 134c11-5 17-15 19-28l8 2c-2 15-10 27-23 35z" fill="#175541" {...lineProps} />
               <circle cx="126" cy="101" r="6.5" fill={SKIN} {...lineProps} />
             </>
           )}
           {pose === "hold" && (
             <>
-              <path d="M58 134c-8 6-11 13-10 20l8 2c0-5 3-9 7-12z" fill="#164a33" {...lineProps} />
-              <path d="M102 134c8 6 11 13 10 20l-8 2c0-5-3-9-7-12z" fill="#164a33" {...lineProps} />
+              <path d="M58 134c-8 6-11 13-10 20l8 2c0-5 3-9 7-12z" fill="#175541" {...lineProps} />
+              <path d="M102 134c8 6 11 13 10 20l-8 2c0-5-3-9-7-12z" fill="#175541" {...lineProps} />
               <g transform="rotate(-6 80 152)">
-                <rect x="50" y="138" width="60" height="30" rx="3" fill="#fdf9f0" {...lineProps} />
-                <path d="M51 153h58" stroke="#e3d5b8" strokeWidth={1.5} />
-                <path d="M60 147c6-3 10 2 15-1s9 1 13-1M64 160c5-2 9 1 13-1" fill="none" stroke="#4a4136" strokeWidth={1.6} strokeLinecap="round" />
+                <rect x="50" y="138" width="60" height="30" rx="3" fill="#FFF7E8" {...lineProps} />
+                <path d="M51 153h58" stroke="#F4E6C8" strokeWidth={1.5} />
+                <path d="M60 147c6-3 10 2 15-1s9 1 13-1M64 160c5-2 9 1 13-1" fill="none" stroke="#3E5866" strokeWidth={1.6} strokeLinecap="round" />
               </g>
               <circle cx="52" cy="156" r="6" fill={SKIN} {...lineProps} />
               <circle cx="108" cy="150" r="6" fill={SKIN} {...lineProps} />
             </>
           )}
           {/* collar */}
-          <path d="M58 126l8 12 7-10 7 12 7-12 7 10 8-12z" fill="#fdf9f0" {...lineProps} />
+          <path d="M58 126l8 12 7-10 7 12 7-12 7 10 8-12z" fill="#FFF7E8" {...lineProps} />
         </g>
       )}
       {/* ears */}
@@ -62,16 +62,16 @@ export function Elf({ pose = "wave", title, className, ...props }: ArtProps & { 
       {/* head */}
       <circle cx="80" cy="100" r="27" fill={SKIN} {...lineProps} />
       {/* face */}
-      <ellipse cx="70.5" cy="101" rx="2.6" ry="3.4" fill="#1e1a14" />
-      <ellipse cx="89.5" cy="101" rx="2.6" ry="3.4" fill="#1e1a14" />
-      <circle cx="63" cy="109" r="4.5" fill="#c24e4c" opacity={0.35} />
-      <circle cx="97" cy="109" r="4.5" fill="#c24e4c" opacity={0.35} />
+      <ellipse cx="70.5" cy="101" rx="2.6" ry="3.4" fill="#172D38" />
+      <ellipse cx="89.5" cy="101" rx="2.6" ry="3.4" fill="#172D38" />
+      <circle cx="63" cy="109" r="4.5" fill="#C9485D" opacity={0.35} />
+      <circle cx="97" cy="109" r="4.5" fill="#C9485D" opacity={0.35} />
       <circle cx="80" cy="107" r="3" fill={SKIN_SHADE} />
       <path d="M72 113q8 7 16 0" fill="none" {...lineProps} />
       {/* hat */}
-      <path d="M52 86c2-26 20-46 46-56 12-4 24-6 30 0-10 4-20 14-22 26-1 10 1 20 4 30z" fill="#2a7253" {...lineProps} />
-      <path d="M49 82c20-6 42-6 62 0v10c-20-6-42-6-62 0z" fill="#a8383a" {...lineProps} />
-      <circle cx="130" cy="34" r="5.5" fill="#ddb65a" {...lineProps} />
+      <path d="M52 86c2-26 20-46 46-56 12-4 24-6 30 0-10 4-20 14-22 26-1 10 1 20 4 30z" fill="#2E7A5C" {...lineProps} />
+      <path d="M49 82c20-6 42-6 62 0v10c-20-6-42-6-62 0z" fill="#B52F46" {...lineProps} />
+      <circle cx="130" cy="34" r="5.5" fill="#FFD166" {...lineProps} />
       {peek && (
         <>
           {/* fingers over the edge */}

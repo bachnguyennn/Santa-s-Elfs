@@ -1,7 +1,6 @@
 import Link from "next/link";
 import * as React from "react";
 import { Logo } from "@/components/brand/logo";
-import { Holly } from "@/components/brand/motifs";
 import { cn } from "@/lib/utils";
 
 /**
@@ -40,7 +39,7 @@ export function SkipLink() {
   return (
     <a
       href="#main"
-      className="sr-only z-50 rounded-lg bg-pine-900 px-4 py-3 font-bold text-cream-50 focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:inline-flex focus:min-h-12 focus:items-center focus:px-4 focus:py-3"
+      className="sr-only z-50 rounded-lg border-2 border-golden bg-midnight px-4 py-3 font-bold text-paper focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:inline-flex focus:min-h-12 focus:items-center focus:px-4 focus:py-3"
     >
       Skip to content
     </a>
@@ -49,7 +48,7 @@ export function SkipLink() {
 
 export function SiteHeader({ action, tone = "light" }: { action?: React.ReactNode; tone?: "light" | "felt" }) {
   return (
-    <header className={cn(tone === "felt" ? "felt on-pine" : "border-b border-line bg-cream-50")}>
+    <header className={cn("border-b-[2.5px] border-midnight", tone === "felt" ? "felt on-pine" : "bg-sky")}>
       <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-4 px-4 py-2 sm:px-6">
         <Logo tone={tone === "felt" ? "light" : "dark"} />
         {action}
@@ -58,29 +57,24 @@ export function SiteHeader({ action, tone = "light" }: { action?: React.ReactNod
   );
 }
 
-export function SiteFooter({ tone = "light", showHome = true }: { tone?: "light" | "felt"; showHome?: boolean }) {
-  const felt = tone === "felt";
+export function SiteFooter({ showHome = true }: { tone?: "light" | "felt"; showHome?: boolean }) {
+  // One footer everywhere: evergreen ground, paper text (8.9:1).
   return (
-    <footer className={cn("mt-auto", felt ? "felt on-pine text-pine-200" : "border-t border-line bg-cream-100 text-ink-700")}>
+    <footer className="on-pine mt-auto border-t-[2.5px] border-midnight bg-evergreen text-paper">
       <div className="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-8 text-sm sm:flex-row sm:items-center sm:justify-between sm:px-6">
-        <div className="flex items-center gap-3">
-          <Holly className="h-6 shrink-0" />
-          <p>
-            SantaElf is free and needs no account. Groups are deleted automatically after the exchange.
-          </p>
-        </div>
+        <p className="max-w-prose">SantaElf is free and needs no account. Groups are deleted automatically 60 days after the exchange.</p>
         <nav aria-label="Footer" className="shrink-0">
           <ul className="flex flex-wrap gap-x-5">
             {showHome ? (
               <li>
-                <Link href="/" className={cn("inline-flex min-h-11 items-center underline", felt ? "text-cream-50" : "text-pine-800")}>
-                  Home
+                <Link href="/" className="inline-flex min-h-11 items-center font-bold underline underline-offset-4">
+                  Village Square
                 </Link>
               </li>
             ) : null}
             <li>
-              <Link href="/recover" className={cn("inline-flex min-h-11 items-center underline", felt ? "text-cream-50" : "text-pine-800")}>
-                Lost your link?
+              <Link href="/recover" className="inline-flex min-h-11 items-center font-bold underline underline-offset-4">
+                Recover my link
               </Link>
             </li>
           </ul>

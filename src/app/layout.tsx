@@ -15,7 +15,7 @@ export const metadata: Metadata = {
     "Draw names, share wishlists and chat anonymously with your Secret Santa. Free, no accounts, groups of 3 to 20.",
 };
 
-export const viewport: Viewport = { themeColor: "#103826" };
+export const viewport: Viewport = { themeColor: "#BDEBFA" };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (

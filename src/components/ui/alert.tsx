@@ -19,17 +19,17 @@ export function Alert({
   className?: string;
 }) {
   const tones = {
-    info: { box: "border-pine-200 bg-pine-100/60 text-pine-900", icon: Info, iconCls: "text-pine-700" },
-    success: { box: "border-pine-200 bg-pine-100 text-pine-900", icon: CircleCheck, iconCls: "text-pine-700" },
-    warning: { box: "border-gold-500/50 bg-gold-200/60 text-ink-900", icon: TriangleAlert, iconCls: "text-gold-700" },
-    error: { box: "border-berry-500/40 bg-berry-100 text-berry-800", icon: CircleAlert, iconCls: "text-berry-700" },
+    info: { box: "border-midnight bg-sky/60 text-midnight", icon: Info, iconCls: "text-midnight" },
+    success: { box: "border-evergreen bg-pine-100 text-evergreen-deep", icon: CircleCheck, iconCls: "text-evergreen" },
+    warning: { box: "border-midnight bg-gold-200 text-midnight", icon: TriangleAlert, iconCls: "text-gold-700" },
+    error: { box: "border-cranberry-deep bg-berry-100 text-berry-800", icon: CircleAlert, iconCls: "text-cranberry-deep" },
   };
   const t = tones[tone];
   const Icon = t.icon;
   return (
     <div
       role={tone === "error" ? "alert" : "status"}
-      className={cn("flex gap-3 rounded-xl border px-4 py-3 text-sm leading-relaxed", t.box, className)}
+      className={cn("flex gap-3 rounded-xl border-2 px-4 py-3 text-sm leading-relaxed", t.box, className)}
     >
       <Icon className={cn("mt-0.5 size-[1.15rem] shrink-0", t.iconCls)} aria-hidden />
       <div className="min-w-0">

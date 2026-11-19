@@ -77,7 +77,8 @@ export function Roster({
   }
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-5 rounded-2xl border-[2.5px] border-midnight bg-timber p-2.5 sm:p-3">
+      <div className="flex flex-col gap-5 rounded-xl bg-[#D9B98C] p-3 sm:p-5">
       {(error || notice) && (
         <div aria-live="polite">
           {error ? (
@@ -91,7 +92,8 @@ export function Roster({
       )}
 
       {pending.length > 0 && (
-        <Card>
+        <Card className="relative -rotate-[0.4deg] bg-golden shadow-none">
+          <Pin className="-top-2.5 left-1/2 -translate-x-1/2" />
           <CardHeader
             title={`Waiting for you (${pending.length})`}
             description={
@@ -121,7 +123,9 @@ export function Roster({
         </Card>
       )}
 
-      <Card tone="plain">
+      <Card tone="plain" className="relative rotate-[0.2deg]">
+        <Pin className="-top-2.5 left-8" />
+        <Pin className="-top-2.5 right-8" />
         <CardHeader
           title={`Taking part (${approved.length} of ${capacity})`}
           description={
@@ -149,7 +153,7 @@ export function Roster({
                   Resend link
                 </Button>
                 {open && !p.isOrganizer && (
-                  <Button size="sm" variant="ghost" className="text-berry-700" onClick={() => setRemoving(p)} disabled={!!busy} aria-label={`Remove ${p.name}`}>
+                  <Button size="sm" variant="ghost" className="text-cranberry-deep" onClick={() => setRemoving(p)} disabled={!!busy} aria-label={`Remove ${p.name}`}>
                     Remove
                   </Button>
                 )}
@@ -160,7 +164,7 @@ export function Roster({
       </Card>
 
       {inactive.length > 0 && (
-        <details className="group rounded-[var(--radius-card)] border border-line bg-cream-100/60 px-5 sm:px-6">
+        <details className="group rounded-[var(--radius-card)] border-2 border-midnight bg-cream-100 px-5 sm:px-6">
           <summary className="flex min-h-14 cursor-pointer list-none items-center justify-between gap-3 font-bold text-pine-900 [&::-webkit-details-marker]:hidden">
             Not taking part ({inactive.length})
             <span aria-hidden className="text-sm font-normal text-ink-500 group-open:hidden">
@@ -184,6 +188,7 @@ export function Roster({
         </details>
       )}
 
+      </div>
       <Dialog
         open={removing !== null}
         onOpenChange={(o) => {
@@ -217,10 +222,10 @@ export function Roster({
 function Row({ p, drawn, children }: { p: OrganizerParticipantDTO; drawn?: boolean; children?: React.ReactNode }) {
   const badge = STATUS_BADGE[p.status];
   return (
-    <li className="flex flex-col gap-3 border-t-2 border-pine-800/15 py-4 first:border-t-0 first:pt-1 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
+    <li className="flex flex-col gap-3 border-t-2 border-dashed border-snow-shadow py-4 first:border-t-0 first:pt-1 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
       <div className="min-w-0">
         <p className="flex flex-wrap items-center gap-x-2 gap-y-1">
-          <HandName className="text-lg leading-tight break-words text-pine-900">{p.name}</HandName>
+          <HandName className="text-lg leading-tight break-words text-midnight">{p.name}</HandName>
           {p.isOrganizer && <Badge>You</Badge>}
           {p.status !== "approved" && p.status !== "pending" && <Badge tone={badge.tone}>{badge.text}</Badge>}
         </p>
@@ -236,7 +241,7 @@ function Row({ p, drawn, children }: { p: OrganizerParticipantDTO; drawn?: boole
           {drawn && p.revealed !== null && (
             <li className="inline-flex items-center gap-1.5">
               <MailOpen className={cn("size-4", p.revealed ? "text-pine-700" : "text-ink-500")} aria-hidden />
-              {p.revealed ? <span className="font-bold text-pine-800">Opened their card</span> : "Hasn’t opened their card"}
+              {p.revealed ? <span className="font-bold text-evergreen">Opened their envelope</span> : "Hasn’t opened their envelope"}
             </li>
           )}
         </ul>
@@ -246,6 +251,16 @@ function Row({ p, drawn, children }: { p: OrganizerParticipantDTO; drawn?: boole
   );
 }
 
+/** Names the latest email by its template, as recorded in lastEmail (template + delivery status). */
+const EMAIL_KIND: Record<string, string> = {
+  participant_welcome: "Welcome email",
+  join_approved: "Approval email",
+  join_rejected: "Decline email",
+  participant_recovery: "New-link email",
+  assignment_ready: "Envelope email",
+  new_message: "Letter alert",
+};
+
 function EmailStatus({ email }: { email: OrganizerParticipantDTO["lastEmail"] }) {
   if (!email)
     return (
@@ -254,24 +269,35 @@ function EmailStatus({ email }: { email: OrganizerParticipantDTO["lastEmail"] })
         No email yet
       </li>
     );
+  const kind = EMAIL_KIND[email.template] ?? "Latest email";
   if (email.status === "failed")
     return (
-      <li className="inline-flex items-center gap-1.5 font-bold text-berry-700">
+      <li className="inline-flex items-center gap-1.5 font-bold text-cranberry-deep">
         <MailX className="size-4" aria-hidden />
-        Email failed. Check the address or resend.
+        {kind} failed. Check the address or resend.
       </li>
     );
   if (email.status === "sent")
     return (
       <li className="inline-flex items-center gap-1.5">
-        <MailCheck className="size-4 text-pine-700" aria-hidden />
-        Email sent
+        <MailCheck className="size-4 text-evergreen" aria-hidden />
+        {kind} sent
       </li>
     );
   return (
     <li className="inline-flex items-center gap-1.5">
       <MailWarning className="size-4 text-gold-700" aria-hidden />
-      Email on its way
+      {kind} on its way
     </li>
+  );
+}
+
+/** A brass drawing pin holding a note to the noticeboard. Decorative. */
+function Pin({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 20 20" className={cn("absolute size-5", className)} aria-hidden focusable="false">
+      <circle cx={10} cy={10} r={7} fill="#FFD166" stroke="#172D38" strokeWidth={2} />
+      <circle cx={8} cy={8} r={2} fill="#FFF7E8" />
+    </svg>
   );
 }

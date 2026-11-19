@@ -13,9 +13,9 @@ export function Card({
   ...props
 }: React.HTMLAttributes<HTMLDivElement> & { tone?: "paper" | "plain" | "felt" }) {
   const tones = {
-    paper: "border border-line bg-cream-50 shadow-[var(--shadow-paper)]",
-    plain: "border border-line bg-white",
-    felt: "felt on-pine text-cream-50",
+    paper: "border-[2.5px] border-midnight bg-paper shadow-[var(--shadow-paper)]",
+    plain: "border-[2.5px] border-midnight bg-paper",
+    felt: "felt on-pine border-[2.5px] border-midnight text-paper shadow-[var(--shadow-paper)]",
   };
   return <div className={cn("rounded-[var(--radius-card)] p-5 sm:p-6", tones[tone], className)} {...props} />;
 }
@@ -37,8 +37,8 @@ export function CardHeader({
   return (
     <div className={cn("mb-4 flex flex-wrap items-start justify-between gap-3", className)}>
       <div className="min-w-0">
-        <Heading className="font-display text-xl leading-tight font-bold tracking-[-0.015em] text-pine-900">{title}</Heading>
-        {description && <p className="mt-1 text-sm text-ink-500">{description}</p>}
+        <Heading className="font-display text-xl leading-tight font-bold tracking-[-0.015em] text-midnight">{title}</Heading>
+        {description && <p className="mt-1 text-sm text-midnight-soft">{description}</p>}
       </div>
       {action}
     </div>

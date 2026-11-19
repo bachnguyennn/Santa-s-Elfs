@@ -7,36 +7,38 @@ import { Spinner } from "./spinner";
 /**
  * OWNER: design agent. Props API is the contract: variant, size, asChild, loading.
  * variant:
- *  - primary   pine; the default action on cream screens
- *  - festive   berry; the ONE celebratory/primary CTA of a page (Start a group, Draw names, Open card)
- *  - secondary paper with a line border
- *  - ghost     text-only, quiet
- *  - danger    destructive (delete group, remove participant); always confirm in a Dialog
- *  - light     cream on pine/felt grounds
+ *  - primary   evergreen; ordinary actions and secondary steps (Approve, Save)
+ *  - festive   cranberry; the ONE main action of an area (Start a group, Draw names now, Send letter)
+ *  - secondary paper with an ink outline
+ *  - ghost     text-only link look, quiet
+ *  - danger    cranberry outline on paper; destructive, always confirm in a Dialog, kept apart from other actions
+ *  - light     paper on evergreen grounds
  * Touch targets: every size is at least 44px tall.
  */
 export const buttonVariants = cva(
   [
-    "relative inline-flex min-h-11 items-center justify-center gap-2 rounded-xl font-sans font-bold whitespace-nowrap select-none",
-    "transition-[background-color,box-shadow,transform,color] duration-200 ease-[var(--ease-out-expo)]",
-    "hover:-translate-y-px active:translate-y-0 active:duration-75",
+    "relative inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border-[2.5px] border-midnight font-sans font-bold whitespace-nowrap select-none",
+    "transition-[background-color,box-shadow,transform,color] duration-200 ease-[var(--ease-out-quint)]",
+    "hover:-translate-y-0.5 active:translate-y-0 active:duration-75",
     "disabled:pointer-events-none disabled:opacity-55 aria-busy:cursor-progress",
     "[&_svg]:size-[1.1em] [&_svg]:shrink-0",
   ],
   {
     variants: {
       variant: {
+        // Village buttons: an ink outline and a crisp shadow down-right that flattens when pressed.
         primary:
-          "bg-pine-800 text-cream-50 shadow-[inset_0_-2px_0_rgb(0_0_0/0.22),var(--shadow-paper)] hover:bg-pine-900 active:shadow-[inset_0_1px_0_rgb(0_0_0/0.2)]",
+          "bg-evergreen text-paper shadow-[3px_4px_0_rgb(23_45_56/0.9)] hover:bg-evergreen-deep active:shadow-[1px_1px_0_rgb(23_45_56/0.9)]",
         festive:
-          "bg-berry-600 text-cream-50 shadow-[inset_0_-2px_0_rgb(0_0_0/0.22),var(--shadow-paper)] hover:bg-berry-700 active:shadow-[inset_0_1px_0_rgb(0_0_0/0.2)]",
+          "bg-cranberry text-paper shadow-[3px_4px_0_rgb(23_45_56/0.9)] hover:bg-cranberry-deep active:shadow-[1px_1px_0_rgb(23_45_56/0.9)]",
         secondary:
-          "border border-line-strong bg-cream-50 text-pine-900 shadow-[0_1px_1px_rgb(11_42_30/0.06)] hover:border-pine-700 hover:bg-cream-100",
-        ghost: "text-pine-800 underline-offset-4 hover:bg-cream-100 hover:translate-y-0",
+          "bg-paper text-evergreen shadow-[3px_4px_0_rgb(23_45_56/0.9)] hover:bg-snow active:shadow-[1px_1px_0_rgb(23_45_56/0.9)]",
+        ghost:
+          "border-transparent text-evergreen underline decoration-2 underline-offset-4 hover:translate-y-0 hover:bg-paper",
         danger:
-          "bg-berry-700 text-cream-50 shadow-[inset_0_-2px_0_rgb(0_0_0/0.25)] hover:bg-berry-800 active:shadow-[inset_0_1px_0_rgb(0_0_0/0.2)]",
+          "border-cranberry-deep bg-paper text-cranberry-deep shadow-[3px_4px_0_rgb(143_34_54/0.85)] hover:bg-berry-100 active:shadow-[1px_1px_0_rgb(143_34_54/0.85)]",
         light:
-          "bg-cream-50 text-pine-900 shadow-[inset_0_-2px_0_rgb(11_42_30/0.18),0_6px_16px_-6px_rgb(0_0_0/0.4)] hover:bg-gold-200",
+          "bg-paper text-evergreen shadow-[3px_4px_0_rgb(23_45_56/0.9)] hover:bg-golden active:shadow-[1px_1px_0_rgb(23_45_56/0.9)]",
       },
       size: {
         sm: "min-h-11 px-4 text-sm",
