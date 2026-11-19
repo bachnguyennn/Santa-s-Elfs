@@ -47,3 +47,15 @@ next-env.d.ts
 /blob-report/
 /playwright/.cache/
 !.env.example
+
+# AI agent instructions, context and tooling (kept locally, not in the repo)
+/AGENTS.md
+/CLAUDE.md
+/DESIGN.md
+/PRODUCT.md
+/REDESIGN_BRIEF.md
+/.impeccable/
+/.claude/
+/.cursor/
+/.codex/
+/.github/copilot-instructions.md
