@@ -6,7 +6,7 @@ import { Elf } from "@/components/brand/elf";
 import { HatDraw } from "@/components/brand/hat-draw";
 import { GiftBox } from "@/components/brand/gift-box";
 import { Logo } from "@/components/brand/logo";
-import { Holly, Sparkle, Star, Thread } from "@/components/brand/motifs";
+import { Holly, Star, Thread } from "@/components/brand/motifs";
 import { HandName, PaperSlip } from "@/components/brand/paper-slip";
 import { Button } from "@/components/ui/button";
 import { SiteFooter, SkipLink } from "@/components/ui/page-shell";
@@ -81,9 +81,7 @@ export default function Home() {
             className="relative mx-auto grid max-w-6xl gap-6 px-4 pt-6 pb-0 sm:px-6 sm:pt-10 md:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] md:items-end md:gap-4 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:pt-14"
           >
             {/* scattered stars on the felt */}
-            <Star className="absolute top-4 right-[8%] size-5 text-gold-400 motion-safe:animate-twinkle" />
-            <Sparkle className="absolute top-[30%] right-[44%] hidden size-5 text-gold-400 lg:block" />
-            <Star className="absolute bottom-[38%] left-[2%] hidden size-4 text-gold-400 sm:block" />
+            <Star className="absolute bottom-[38%] left-[2%] hidden size-4 text-gold-400 motion-safe:animate-twinkle sm:block" />
 
             <PaperSlip tilt={-0.75} crease={false} className="relative z-10 mb-2 max-w-2xl p-6 sm:p-9 md:mb-12 lg:mb-16">
               <span aria-hidden className="absolute -top-3 left-8 h-6 w-16 -rotate-3 rounded-sm bg-gold-200/90 shadow-sm" />
@@ -107,7 +105,7 @@ export default function Home() {
               <p className="mt-5 text-ink-700">Invited by someone? Open the link they sent you.</p>
             </PaperSlip>
 
-            <HatDraw className="mx-auto -mt-10 mb-6 w-full max-w-[24rem] sm:mt-0 sm:max-w-md md:mx-0 md:mb-8 md:max-w-none lg:mb-10" />
+            <HatDraw className="mx-auto -mt-10 mb-6 w-full max-w-[24rem] sm:mt-0 sm:max-w-md md:mr-0 md:-ml-12 md:mb-8 md:w-[calc(100%+3rem)] md:max-w-none lg:-ml-24 lg:mb-10 lg:w-[calc(100%+6rem)]" />
           </section>
         </div>
 
