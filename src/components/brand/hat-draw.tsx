@@ -33,17 +33,19 @@ export function HatDraw({ className }: { className?: string }) {
 
   return (
     <div className={cn("relative", className)}>
-      <div className="relative ml-auto w-[80%] pt-[26%] sm:w-[86%]">
+      <div className="relative ml-auto w-[80%] pt-[26%] sm:w-[86%] md:mr-[20%] md:w-[76%]">
         <NameHat />
       </div>
-      <Elf pose="hold" className="absolute bottom-[4%] left-0 h-[46%]" />
+      {/* Phones: the elf stands at the hat's mouth. From md up the hat tucks under the hero slip,
+          so the elf moves out beside the pompom where it stays in view. */}
+      <Elf pose="hold" className="absolute bottom-[4%] left-0 h-[46%] md:right-0 md:left-auto md:h-[44%]" />
 
       {!drawn ? (
         <button
           ref={drawRef}
           type="button"
           onClick={() => toggle(true)}
-          className="slip group absolute top-[33%] left-[44%] z-10 inline-flex min-h-12 -translate-x-1/2 -rotate-12 items-center gap-2 px-4 py-2 font-bold whitespace-nowrap text-pine-900 transition-[translate,rotate] duration-300 ease-[var(--ease-out-quint)] hover:-translate-y-2 hover:-rotate-6 active:translate-y-0"
+          className="slip group absolute top-[33%] left-[44%] z-10 md:left-[32%] inline-flex min-h-12 -translate-x-1/2 -rotate-12 items-center gap-2 px-4 py-2 font-bold whitespace-nowrap text-pine-900 transition-[translate,rotate] duration-300 ease-[var(--ease-out-quint)] hover:-translate-y-2 hover:-rotate-6 active:translate-y-0"
         >
           <span aria-hidden className="block h-4 w-0.5 rounded-full bg-gold-500" />
           Try a draw
@@ -56,7 +58,7 @@ export function HatDraw({ className }: { className?: string }) {
           aria-label="Example draw"
           // Once unfolded, bring the whole result, including "Put it back", on screen (short phones).
           onAnimationEnd={() => groupRef.current?.scrollIntoView({ block: "nearest" })}
-          className="slip slip-plain absolute top-0 left-0 z-20 w-[64%] -rotate-2 animate-unfold p-4 text-center sm:top-[2%] sm:left-[10%] sm:w-[min(18rem,84%)] sm:p-6"
+          className="slip slip-plain absolute top-0 right-0 z-20 w-[64%] -rotate-2 animate-unfold p-4 text-center sm:top-[2%] sm:right-auto sm:left-[10%] sm:w-[min(18rem,84%)] sm:p-6"
         >
           <span aria-hidden className="absolute -top-3 left-1/2 h-6 w-14 -translate-x-1/2 rotate-2 rounded-sm bg-gold-200/90 shadow-sm" />
           <p ref={resultRef} tabIndex={-1} className="text-sm text-ink-700">

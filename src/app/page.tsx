@@ -105,7 +105,7 @@ export default function Home() {
               <p className="mt-5 text-ink-700">Invited by someone? Open the link they sent you.</p>
             </PaperSlip>
 
-            <HatDraw className="mx-auto -mt-10 mb-6 w-full max-w-[24rem] sm:mt-0 sm:max-w-md md:mr-0 md:-ml-12 md:mb-8 md:w-[calc(100%+3rem)] md:max-w-none lg:-ml-24 lg:mb-10 lg:w-[calc(100%+6rem)]" />
+            <HatDraw className="mx-auto -mt-10 mb-6 w-full max-w-[24rem] sm:mt-0 sm:max-w-md md:mr-0 md:-ml-12 md:mb-8 md:w-[calc(100%+3rem)] md:max-w-none lg:-ml-14 lg:mb-10 lg:w-[calc(100%+3.5rem)]" />
           </section>
         </div>
 
