@@ -191,7 +191,7 @@ function StopLink({ stop }: { stop: StreetStop }) {
   return stop.door ? (
     <WorkshopEntranceLink className={linkCls}>{body}</WorkshopEntranceLink>
   ) : (
-    <Link href={stop.href} className={linkCls}>
+    <Link href={stop.href} className={linkCls} data-enter={stop.key === "post-office" ? "post-office" : undefined}>
       {body}
     </Link>
   );
@@ -242,7 +242,7 @@ function StreetBuilding({ stop, lit, bellRef }: { stop: StreetStop; lit: boolean
       {sign}
     </WorkshopEntranceLink>
   ) : (
-    <Link id={stop.key} href={stop.href} className={cls} style={box}>
+    <Link id={stop.key} href={stop.href} className={cls} style={box} data-enter={stop.key === "post-office" ? "post-office" : undefined}>
       {sign}
     </Link>
   );

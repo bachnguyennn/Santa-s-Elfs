@@ -66,6 +66,8 @@ test.describe("Village journeys", () => {
       await door.click();
       await me.page.waitForURL(new RegExp(`/p/${me.pid}/messages`));
       await expect(me.page.getByRole("heading", { level: 1, name: "Post Office" })).toBeVisible();
+      // The slot-to-cabinet hand-off is decorative and short: it never lingers over the room.
+      await expect(me.page.locator("[data-room-entrance]")).toHaveCount(0);
 
       // Each mail slot keeps its own draft.
       const box = me.page.locator("#message-body");
@@ -82,6 +84,13 @@ test.describe("Village journeys", () => {
       await me.page.waitForURL(new RegExp(`/p/${me.pid}$`));
       await expect.poll(() => me.page.evaluate(() => Math.round(window.scrollY))).toBe(doorstep);
     }
+
+    // Reduced motion: the room simply appears, with no hand-off layer at all.
+    await me.page.emulateMedia({ reducedMotion: "reduce" });
+    await me.page.locator("#post-office").click();
+    expect(await me.page.locator("[data-room-entrance]").count()).toBe(0);
+    await me.page.waitForURL(new RegExp(`/p/${me.pid}/messages`));
+    await expect(me.page.locator("[data-room-entrance]")).toHaveCount(0);
   });
 
   test("@mobile only the participant can open their envelope, and returning shows the same recipient", async ({ context, browser }) => {

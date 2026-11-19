@@ -47,6 +47,7 @@ export function ArtImage({
       loading={priority ? "eager" : "lazy"}
       fetchPriority={priority ? "high" : undefined}
       draggable={false}
+      data-art={name}
       className={cn("select-none", className)}
       style={{ objectPosition: position, ...style }}
     />

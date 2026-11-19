@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Atkinson_Hyperlegible_Next, Barlow_Condensed, Shantell_Sans } from "next/font/google";
 import { DoorstepMemory } from "@/components/village/doorstep-memory";
+import { RoomEntrance } from "@/components/workshop/room-entrance";
 import "./globals.css";
 
 // Font choices: design/workshop-moodboard/SPEC.md and DESIGN.md (Typography).
@@ -24,6 +25,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body className="flex min-h-full flex-col font-sans">
         {children}
         <DoorstepMemory />
+        <RoomEntrance />
       </body>
     </html>
   );
