@@ -32,10 +32,10 @@ export default function Home() {
       </header>
 
       <main id="main" tabIndex={-1} className="outline-none">
-          <section aria-labelledby="square-title" className="relative bg-sky lg:h-[44rem]">
-            <SnowLayer className="top-0 right-0 hidden h-[24rem] w-[48%] lg:block" />
+          <section aria-labelledby="square-title" className="relative overflow-x-clip bg-sky xl:h-[44rem]">
+            <SnowLayer className="top-0 right-0 hidden h-[24rem] w-[48%] xl:block" />
 
-            <div className="relative z-10 mx-auto max-w-6xl px-4 pt-4 sm:px-6 sm:pt-6 lg:pt-16">
+            <div className="relative z-10 mx-auto max-w-6xl px-4 pt-4 sm:px-6 sm:pt-6 xl:pt-16">
               <div className="max-w-[36rem]">
                 <h1
                   id="square-title"
@@ -66,11 +66,11 @@ export default function Home() {
             </div>
 
             {/* the square itself */}
-            <div className="relative -mt-2 lg:hidden">
+            <div className="relative mx-auto -mt-2 max-w-3xl xl:hidden">
               <SnowLayer className="inset-x-0 top-0 h-1/2" density={0.5} />
               <SquareSceneNarrow className="block h-auto w-full" />
             </div>
-            <SquareSceneWide className="absolute inset-x-0 bottom-0 hidden h-[32.5rem] w-full lg:block" />
+            <SquareSceneWide className="absolute inset-x-0 bottom-0 hidden h-[32.5rem] w-full xl:block" />
           </section>
 
       {/* ───────── Workshop Lane ───────── */}
@@ -82,7 +82,7 @@ export default function Home() {
             name="Workshop"
             purpose="Start a group"
             art={<WorkshopArt className="-mt-3 h-auto w-full" />}
-            className="mx-auto w-full max-w-[34rem] lg:order-1 lg:-mt-28"
+            className="mx-auto w-full max-w-[34rem] lg:order-1 xl:-mt-28"
           />
           <div className="lg:order-2 lg:pt-10">
             <h2 id="workshop-title" className="font-display text-[clamp(2rem,5vw,3rem)] leading-[1.05] font-extrabold tracking-[-0.03em] [text-wrap:balance]">
@@ -94,7 +94,7 @@ export default function Home() {
             <ol className="village-paper mt-6 divide-y-2 divide-dashed divide-snow-shadow px-5 py-2 sm:px-6">
               {WORKSHOP_STEPS.map((s, i) => (
                 <li key={s.title} className="flex gap-4 py-4">
-                  <span aria-hidden className="font-hand text-2xl leading-none font-bold text-cranberry">
+                  <span aria-hidden className="font-display text-2xl leading-none font-extrabold text-cranberry">
                     {i + 1}
                   </span>
                   <div>

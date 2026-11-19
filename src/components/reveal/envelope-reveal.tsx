@@ -47,7 +47,7 @@ export function EnvelopeReveal({
           <div className="mx-auto mt-10 max-w-2xl">
             <RecipientProfile view={view} />
             <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center">
-              <Button asChild size="lg" className="w-full sm:w-auto">
+              <Button asChild size="lg" className="h-auto w-full py-3 text-center whitespace-normal sm:w-auto">
                 <Link href={`${base}/messages?thread=recipient`}>
                   <MessageCircle aria-hidden /> Ask {view.recipient.name} an anonymous question
                 </Link>

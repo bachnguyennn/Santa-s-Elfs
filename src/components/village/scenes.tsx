@@ -1,4 +1,5 @@
 import * as React from "react";
+import { cn } from "@/lib/utils";
 import { C, Cottage, ElfCourier, Footprints, GiftHouse, line, Mailbox, Pine, PostOffice, Santa, Sleigh, SnowShadow, Workshop } from "./art";
 
 /**
@@ -47,12 +48,13 @@ export function SquareSceneWide({ className }: { className?: string }) {
 /** Village Square, phones: tree on the left, Santa and the sleigh on the right, the elf in front. */
 export function SquareSceneNarrow({ className }: { className?: string }) {
   return (
-    <svg viewBox="0 84 400 256" className={className} aria-hidden focusable="false">
-      <path d="M0 150c80-24 180-30 260-18s110 10 140 2V340H0z" fill="#E3F5FC" />
+    <svg viewBox="0 84 400 256" className={cn("overflow-visible", className)} aria-hidden focusable="false">
+      {/* ridge and ground run far past the frame, so a width-capped scene never shows a hard edge */}
+      <path d="M-2000 150H0c80-24 180-30 260-18s110 10 140 2H2400V400H-2000z" fill="#E3F5FC" />
       <Cottage x={300} y={170} s={0.55} roof={C.evergreen} chimneyTilt={6} />
       <Cottage x={150} y={176} s={0.5} wall="#FCE2C2" roof={C.cranberry} chimneyTilt={-6} />
-      <path d="M0 214c90-20 200-26 300-16 40 4 70 4 100 0V340H0z" fill={C.snow} />
-      <path d="M-4 214c90-20 204-26 304-16 40 4 70 4 104 0" fill="none" {...line} />
+      <path d="M-2000 214H0c90-20 200-26 300-16 40 4 70 4 100 0H2400V400H-2000z" fill={C.snow} />
+      <path d="M-2000 214H0c90-20 200-26 300-16 40 4 70 4 100 0H2400" fill="none" {...line} />
       <path d="M196 340c-6-30 10-52 40-64" fill="none" stroke="#E3F0F6" strokeWidth={34} strokeLinecap="round" />
       <Footprints points={[[190, 330], [198, 318], [206, 306], [216, 296]]} />
       <Pine x={64} y={262} s={0.82} star baubles />
@@ -98,12 +100,11 @@ export function GiftHouseArt({ className }: { className?: string }) {
 /** The participant's own cottage, with the post-box where their envelope waits. */
 export function MailboxArt({ className, flagUp = true }: { className?: string; flagUp?: boolean }) {
   return (
-    <svg viewBox="-200 -200 400 220" className={className} aria-hidden focusable="false">
-      <path d="M-200 6c80-12 140-14 200-8s130 6 200-4V20h-400z" fill={C.snow} />
-      <path d="M-200 6c80-12 140-14 200-8s130 6 200-4" fill="none" {...line} />
-      <Cottage x={-50} y={6} s={1.05} wall="#FCE2C2" roof={C.evergreen} chimneyTilt={6} />
-      <Mailbox x={110} y={6} s={1.05} flagUp={flagUp} />
-      <Pine x={176} y={8} s={0.42} />
+    // No ground of its own: the village page lays one full-width snowbank under it.
+    <svg viewBox="-200 -200 400 214" className={className} aria-hidden focusable="false">
+      <Pine x={-168} y={8} s={0.42} />
+      <Cottage x={-40} y={6} s={1.05} wall="#FCE2C2" roof={C.evergreen} chimneyTilt={6} />
+      <Mailbox x={128} y={6} s={1.05} flagUp={flagUp} />
     </svg>
   );
 }

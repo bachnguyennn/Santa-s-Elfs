@@ -30,7 +30,7 @@ export function ParticipantHeader({
         </div>
       </div>
       <nav aria-label="Your village" className="mx-auto max-w-6xl">
-        <ul className="relative flex gap-1 overflow-x-auto px-2 [scrollbar-width:none] sm:px-4">
+        <ul className="flex flex-wrap gap-x-1 px-2 sm:px-4">
           {places.map((p) => {
             const current = pathname === p.href.split(/[?#]/)[0];
             return (

@@ -261,9 +261,18 @@ export function Envelope({
             <path d="M8 492 L300 262 M692 492 L400 262" fill="none" stroke={C.paperDeep} strokeWidth={5} />
           </svg>
 
-          {/* addressed to the participant (their own name), and a postmark */}
-          <div aria-hidden className="pointer-events-none absolute inset-x-0 bottom-[9%] z-30 flex items-end justify-between px-[7%]">
-            <span className="font-hand text-[clamp(1.1rem,4.4vw,1.4rem)] font-bold text-midnight">For {participantName}</span>
+          {/* Addressed to the participant (their own name). Sealed, it sits on the flap's upper left, clear of the
+              seal and its label; opened, it moves down to the pocket. Plus a postmark. */}
+          <span
+            aria-hidden
+            className={cn(
+              "pointer-events-none absolute left-[7%] max-w-[46%] font-hand text-[clamp(1.05rem,4.2vw,1.4rem)] leading-tight font-bold break-words text-midnight",
+              sealed ? "top-[7%] z-[45]" : "bottom-[9%] z-30",
+            )}
+          >
+            For {participantName}
+          </span>
+          <div aria-hidden className="pointer-events-none absolute inset-x-0 bottom-[9%] z-30 flex items-end justify-end px-[7%]">
             <svg viewBox="0 0 60 60" className="size-12 -rotate-12 sm:size-14">
               <circle cx={30} cy={30} r={25} fill="none" stroke={C.snowShadow} strokeWidth={3} />
               <circle cx={30} cy={30} r={18} fill="none" stroke={C.snowShadow} strokeWidth={1.5} />

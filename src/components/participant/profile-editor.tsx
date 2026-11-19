@@ -207,9 +207,9 @@ export function ProfileEditor({ participantId, initial, readOnly = false }: { pa
             {state.wishlist.map((item, i) => {
               const base = `wishlist.${i}`;
               return (
-                <li key={item.key} className="rounded-xl border border-line bg-white p-4">
+                <li key={item.key} className="rounded-xl border-2 border-midnight bg-paper p-4">
                   <div className="flex items-center justify-between gap-2">
-                    <p className="font-hand text-lg font-bold text-berry-600" aria-hidden>
+                    <p className="font-display text-lg font-extrabold text-cranberry" aria-hidden>
                       {i + 1}.
                     </p>
                     {!readOnly && (

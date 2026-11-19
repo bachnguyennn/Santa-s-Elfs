@@ -3,20 +3,15 @@
 import { Lock } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import * as React from "react";
 import { cn } from "@/lib/utils";
 
 /**
  * The Workshop's rooms, as signs hanging from the beam. Plain links (each room is its own page),
- * the current one marked. The emergency reveal is shown, locked, until names are drawn.
+ * the current one golden. They wrap onto a second row on phones, so no sign is ever cut off.
+ * The emergency reveal is shown, locked, until names are drawn.
  */
 export function OrganizerNav({ groupId, drawn }: { groupId: string; drawn: boolean }) {
   const pathname = usePathname();
-  const listRef = React.useRef<HTMLUListElement>(null);
-  // On narrow screens the signs scroll sideways: keep the current one in view.
-  React.useEffect(() => {
-    listRef.current?.querySelector<HTMLElement>('[aria-current="page"]')?.scrollIntoView({ block: "nearest", inline: "nearest" });
-  }, [pathname]);
   const base = `/o/${groupId}`;
   const items = [
     { href: base, label: "Workbench" },
@@ -27,14 +22,14 @@ export function OrganizerNav({ groupId, drawn }: { groupId: string; drawn: boole
   ];
 
   return (
-    <nav aria-label="Workshop rooms" className="-mx-4 mt-6 sm:mx-0">
-      <ul ref={listRef} className="relative flex gap-2 overflow-x-auto px-4 [scrollbar-width:none] sm:px-0 [&::-webkit-scrollbar]:hidden">
+    <nav aria-label="Workshop rooms" className="mt-6 pb-4">
+      <ul className="flex flex-wrap gap-2">
         {items.map((item) => {
           const current = pathname === item.href;
           if (item.locked) {
             return (
               <li key={item.href} className="shrink-0">
-                <span className="inline-flex min-h-12 items-center gap-1.5 px-4 text-[0.9375rem] font-bold text-midnight-soft">
+                <span className="inline-flex min-h-11 items-center gap-1.5 rounded-xl border-2 border-dashed border-midnight-soft/50 px-3.5 text-[0.9375rem] font-bold text-midnight-soft">
                   <Lock className="size-3.5" aria-hidden /> {item.label}
                   <span className="sr-only"> (available after the draw)</span>
                 </span>
@@ -47,14 +42,11 @@ export function OrganizerNav({ groupId, drawn }: { groupId: string; drawn: boole
                 href={item.href}
                 aria-current={current ? "page" : undefined}
                 className={cn(
-                  "relative -mb-[2.5px] inline-flex min-h-12 items-center rounded-t-xl border-[2.5px] border-b-0 px-4 text-[0.9375rem] font-bold transition-colors duration-200",
-                  current
-                    ? "border-midnight bg-[#F6EBD6] text-midnight"
-                    : "border-transparent text-evergreen underline decoration-2 underline-offset-4 hover:bg-paper/60",
+                  "inline-flex min-h-11 items-center rounded-xl border-2 border-midnight px-3.5 text-[0.9375rem] font-bold transition-[background-color,transform] duration-200 hover:-translate-y-0.5",
+                  current ? "bg-golden text-midnight" : "bg-paper text-evergreen underline decoration-2 underline-offset-4",
                 )}
               >
                 {item.label}
-                {current && <span aria-hidden className="absolute inset-x-3 top-1.5 h-1 rounded-full bg-golden" />}
               </Link>
             </li>
           );

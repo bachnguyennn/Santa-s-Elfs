@@ -84,7 +84,7 @@ export default async function ParticipantHomePage({ params, searchParams }: Page
             )}
 
             {me.alias && (
-              <div className="slip mt-5 inline-block max-w-full px-4 py-3">
+              <div className="slip mt-5 block w-fit max-w-full px-4 py-3">
                 <p className="text-sm text-midnight-soft">Your secret alias</p>
                 <p className="font-hand text-3xl font-bold text-evergreen">{me.alias}</p>
                 <p className="mt-1 max-w-xs text-sm text-midnight-soft">Only you can see it’s yours. Your recipient sees it on your letters.</p>
@@ -111,6 +111,10 @@ export default async function ParticipantHomePage({ params, searchParams }: Page
               </figure>
             ))}
         </div>
+        <svg viewBox="0 0 1440 48" preserveAspectRatio="none" className="relative -mt-6 block h-8 w-full sm:h-10" aria-hidden focusable="false">
+          <path d="M0 22c240-18 480-20 720-10s480 12 720-4V48H0z" fill="#F7FCFF" />
+          <path d="M-4 22c240-18 484-20 724-10s480 12 724-4" fill="none" stroke="#172D38" strokeWidth={2.5} vectorEffect="non-scaling-stroke" />
+        </svg>
       </section>
 
       {active && (

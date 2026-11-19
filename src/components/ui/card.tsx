@@ -2,9 +2,9 @@ import * as React from "react";
 import { cn } from "@/lib/utils";
 
 /**
- * OWNER: design agent. A sheet of paper on the page.
- * tone: "paper" (default, cream-50 with a soft shadow), "plain" (white, border only: dense lists/tables),
- * "felt" (pine ground, cream text: one highlight block per screen at most).
+ * OWNER: design agent. A sheet of warm paper with an ink outline (DESIGN.md).
+ * tone: "paper" (default, short blue shadow), "plain" (no shadow: dense lists, noticeboard sheets),
+ * "felt" (evergreen sign ground, paper text: one per screen at most).
  * Never nest Cards; use dividers or PaperSlip inside.
  */
 export function Card({

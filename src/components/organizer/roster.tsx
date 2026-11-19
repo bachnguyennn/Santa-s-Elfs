@@ -2,7 +2,6 @@
 
 import { Gift, MailCheck, MailOpen, MailQuestion, MailWarning, MailX } from "lucide-react";
 import * as React from "react";
-import { HandName } from "@/components/brand/paper-slip";
 import { Alert } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -144,7 +143,8 @@ export function Roster({
               <Row key={p.id} p={p} drawn={drawn}>
                 <Button
                   size="sm"
-                  variant="secondary"
+                  // Quiet unless delivery failed, so Draw names and Approve stay the strongest controls.
+                  variant={p.lastEmail?.status === "failed" ? "secondary" : "ghost"}
                   onClick={() => resend(p)}
                   loading={busy === `resend:${p.id}`}
                   disabled={!!busy || status === "closed"}
@@ -225,7 +225,7 @@ function Row({ p, drawn, children }: { p: OrganizerParticipantDTO; drawn?: boole
     <li className="flex flex-col gap-3 border-t-2 border-dashed border-snow-shadow py-4 first:border-t-0 first:pt-1 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
       <div className="min-w-0">
         <p className="flex flex-wrap items-center gap-x-2 gap-y-1">
-          <HandName className="text-lg leading-tight break-words text-midnight">{p.name}</HandName>
+          <span className="text-lg leading-tight font-bold break-words text-midnight">{p.name}</span>
           {p.isOrganizer && <Badge>You</Badge>}
           {p.status !== "approved" && p.status !== "pending" && <Badge tone={badge.tone}>{badge.text}</Badge>}
         </p>
