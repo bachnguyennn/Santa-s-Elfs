@@ -15,6 +15,7 @@ import { HandName } from "./paper-slip";
 export function HatDraw({ className }: { className?: string }) {
   const [drawn, setDrawn] = React.useState(false);
   const resultRef = React.useRef<HTMLParagraphElement>(null);
+  const groupRef = React.useRef<HTMLDivElement>(null);
   const drawRef = React.useRef<HTMLButtonElement>(null);
   // Move focus only after the visitor draws or puts the slip back, never on page load.
   const moveFocus = React.useRef(false);
@@ -32,7 +33,7 @@ export function HatDraw({ className }: { className?: string }) {
 
   return (
     <div className={cn("relative", className)}>
-      <div className="relative ml-auto w-[86%] pt-[26%]">
+      <div className="relative ml-auto w-[80%] pt-[26%] sm:w-[86%]">
         <NameHat />
       </div>
       <Elf pose="hold" className="absolute bottom-[4%] left-0 h-[46%]" />
@@ -50,14 +51,17 @@ export function HatDraw({ className }: { className?: string }) {
         </button>
       ) : (
         <div
+          ref={groupRef}
           role="group"
           aria-label="Example draw"
-          className="slip slip-plain absolute top-[2%] left-[10%] z-20 w-[min(18rem,84%)] -rotate-2 animate-unfold p-5 text-center sm:p-6"
+          // Once unfolded, bring the whole result, including "Put it back", on screen (short phones).
+          onAnimationEnd={() => groupRef.current?.scrollIntoView({ block: "nearest" })}
+          className="slip slip-plain absolute top-0 left-0 z-20 w-[64%] -rotate-2 animate-unfold p-4 text-center sm:top-[2%] sm:left-[10%] sm:w-[min(18rem,84%)] sm:p-6"
         >
           <span aria-hidden className="absolute -top-3 left-1/2 h-6 w-14 -translate-x-1/2 rotate-2 rounded-sm bg-gold-200/90 shadow-sm" />
           <p ref={resultRef} tabIndex={-1} className="text-sm text-ink-700">
             You’re the Secret Santa for
-            <HandName className="block text-[2rem] leading-tight font-bold text-berry-700">Grandma Rosie</HandName>
+            <HandName className="block text-[1.625rem] leading-tight font-bold text-berry-700 sm:text-[2rem]">Grandma Rosie</HandName>
           </p>
           <p className="mt-1 text-sm text-ink-700">
             Your secret alias: <span className="font-display font-bold text-pine-800">Dasher</span>
