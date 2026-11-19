@@ -85,7 +85,7 @@ export default function Home() {
             </div>
             <div className="rounded-lg bg-teal-wash p-6 text-ink sm:p-8">
               <h2 className="font-display text-[clamp(2.25rem,5vw,3.25rem)] leading-[0.95] font-bold text-teal-deep">How we keep it private</h2>
-              <ul className="mt-5 divide-y divide-pine-300/60">
+              <ul className="mt-5 divide-y divide-teal/20">
                 {RULES.map((r) => (
                   <li key={r.title} className="py-4">
                     <h3 className="font-bold">{r.title}</h3>

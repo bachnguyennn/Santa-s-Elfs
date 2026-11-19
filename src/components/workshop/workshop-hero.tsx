@@ -31,7 +31,7 @@ const RIBBON_ANGLE = Math.round(((Math.atan2(RIBBON_TO.y - RIBBON_FROM.y, RIBBON
  * Santa holds the ribbon while the elf pulls it taut around the teal parcel. One coordinate system
  * for the painted plate, the separate elf and the parcel button, so every crop keeps them aligned.
  * Tapping the parcel (optional, replayable): the elf tugs and the gold ribbon in its fists snaps taut,
- * sparks catch the bow, the elf tips back 5° and settles (180 + 160 + 280 ms). Purely decorative; the page's actions never depend on it.
+ * sparks catch the bow, the elf tips back 5° and settles (180 + 160 + 280 ms). Under reduced motion the ribbon and sparkle change state without moving. Purely decorative; the page's actions never depend on it.
  */
 export function WorkshopScene({ className, children }: { className?: string; children?: React.ReactNode }) {
   const elfRef = React.useRef<HTMLImageElement>(null);
@@ -40,8 +40,16 @@ export function WorkshopScene({ className, children }: { className?: string; chi
   const running = React.useRef<Animation[]>([]);
 
   function tug() {
-    if (reduced()) return;
     running.current.forEach((a) => a.cancel());
+    if (reduced()) {
+      // No movement: the ribbon snaps taut and the bow catches the light, held briefly, then lets go.
+      const hold = { duration: 620, easing: "step-end" };
+      running.current = [
+        ribbonRef.current?.animate([{ transform: "scale(1.02, 0.62)" }, { transform: "scale(1.02, 0.62)" }], hold),
+        sparkRef.current?.animate([{ opacity: 1 }, { opacity: 1 }], hold),
+      ].filter(Boolean) as Animation[];
+      return;
+    }
     const elf = elfRef.current?.animate(
       [
         { transform: "rotate(0deg) translateX(0)", easing: EASE },
@@ -117,7 +125,7 @@ export function WorkshopScene({ className, children }: { className?: string; chi
       <span
         ref={sparkRef}
         aria-hidden
-        className="pointer-events-none absolute top-[37%] left-[64%] size-[4%] opacity-0"
+        className="pointer-events-none absolute top-[40%] left-[64%] aspect-square w-[4%] opacity-0"
         style={{ background: "radial-gradient(circle, #fff6c8 0 18%, #eebc65 30%, transparent 62%)" }}
       />
       <button

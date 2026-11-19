@@ -312,7 +312,20 @@ body {
     animation-play-state: paused;
   }
 
-  /* A building that is a link: the painting lightens and the sign lifts 2px on hover and focus. */
+  /* A building that is a link: lamplight pools over the painting and the sign lifts 2px on hover and focus. */
+  .building-link::before {
+    content: "";
+    position: absolute;
+    inset: -4% -8%;
+    border-radius: 50%;
+    background: radial-gradient(closest-side, rgb(255 214 140 / 0.26), rgb(255 214 140 / 0.08) 60%, transparent);
+    opacity: 0;
+    transition: opacity 200ms var(--ease-out-quint);
+    pointer-events: none;
+  }
+  .building-link:is(:hover, :focus-visible)::before {
+    opacity: 1;
+  }
   .building-link .building-sign {
     transition: transform 200ms var(--ease-out-quint), box-shadow 200ms var(--ease-out-quint);
   }

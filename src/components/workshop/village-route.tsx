@@ -1,5 +1,6 @@
 "use client";
 
+import { Lock } from "lucide-react";
 import Link from "next/link";
 import * as React from "react";
 import { SnowLayer } from "@/components/village/snow";
@@ -203,7 +204,14 @@ function StopLink({ stop }: { stop: StreetStop }) {
   );
   // Teal enamel, like the hanging signs on the painted street.
   const cls = "block min-h-16 rounded-md bg-teal px-4 py-3 text-buttercream shadow-[0_3px_0_var(--color-walnut)]";
-  if (!stop.href) return <div className={cn(cls, "bg-teal/60")}>{body}</div>;
+  // A place this visitor can't enter yet reads as a notice (dashed outline, lock), not a disabled button.
+  if (!stop.href)
+    return (
+      <div className="flex min-h-16 items-center gap-3 rounded-md border border-dashed border-buttercream/50 px-4 py-3 text-buttercream">
+        <Lock className="size-4 shrink-0 text-brass" aria-hidden />
+        <div>{body}</div>
+      </div>
+    );
   const linkCls = cn(cls, "transition-colors hover:bg-teal-deep");
   return stop.door ? (
     <WorkshopEntranceLink className={linkCls}>{body}</WorkshopEntranceLink>
@@ -235,7 +243,9 @@ function StreetBuilding({
   const sign = (
     <span
       className={cn(
-        "building-sign absolute hidden items-center md:inline-flex gap-2 rounded-md bg-teal px-3 py-1.5 whitespace-nowrap text-buttercream shadow-[0_3px_0_var(--color-walnut)]",
+        "building-sign absolute hidden items-center gap-2 rounded-md px-3 py-1.5 whitespace-nowrap text-buttercream md:inline-flex",
+        // Links are teal enamel on a walnut ledge; a sign that only explains is a flat oxblood plaque with a lock.
+        stop.href ? "bg-teal shadow-[0_3px_0_var(--color-walnut)]" : "border border-brass/60 bg-oxblood-deep",
         lit && "ring-2 ring-brass",
       )}
       // Signs near the right edge hang from their right end so they never run off the painting.
@@ -249,6 +259,7 @@ function StreetBuilding({
           </svg>
         </span>
       )}
+      {!stop.href && <Lock className="size-3.5 text-brass" aria-hidden />}
       <span className="font-display text-lg leading-none font-bold tracking-[0.06em] uppercase">{stop.name}</span>
       <span aria-hidden className="text-brass">
         ·
@@ -264,7 +275,7 @@ function StreetBuilding({
     );
   }
   // The id is the doorstep: rooms link back to it ("Back to the village").
-  const cls = "building-link focus-art absolute block scroll-mt-24 rounded-2xl transition-[background-color] duration-200 hover:bg-[rgb(255_214_140/0.12)]";
+  const cls = "building-link focus-art absolute block scroll-mt-24 rounded-2xl";
   return stop.door ? (
     <WorkshopEntranceLink id={stop.key} className={cls} style={box} {...quiet}>
       {sign}
