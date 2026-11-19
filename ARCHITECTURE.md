@@ -10,7 +10,7 @@ Browser ──► Next.js pages (server components read via services)
                                          └─► Db interface ──► Postgres (Supabase) | PGlite (local demo/tests)
 Cron (GitHub Actions / Supabase pg_cron / Vercel cron) ──► GET /api/cron/tick
                                                             ├─ processDueDraws()
-                                                            ├─ processEmailJobs() ──► Resend | dev outbox
+                                                            ├─ processEmailJobs() ──► Resend | Gmail SMTP | dev outbox
                                                             └─ retention purge
 ```
 
@@ -67,7 +67,7 @@ Organizer selects one participant → server creates a challenge and emails a 6-
 
 ## Email
 
-`enqueueEmail()` inside the same transaction as the state change. Worker claims jobs with `FOR UPDATE SKIP LOCKED`, mints access links at send time, sends via Resend REST API (or writes to `dev_outbox` in simulate mode), retries with exponential backoff (max 5 attempts; Resend `Idempotency-Key` = job id, and a 409 idempotency conflict means an earlier attempt was accepted), and respects a daily cap (`EMAIL_DAILY_LIMIT`) and per-second pacing.
+`enqueueEmail()` inside the same transaction as the state change. Worker claims jobs with `FOR UPDATE SKIP LOCKED`, mints access links at send time, sends via Resend REST API or Gmail SMTP (or writes to `dev_outbox` in simulate mode), retries with exponential backoff (max 5 attempts; Resend `Idempotency-Key` = job id, and a 409 idempotency conflict means an earlier attempt was accepted), and respects a daily cap (`EMAIL_DAILY_LIMIT`) and per-second pacing. Gmail uses TLS on port 465 with a Google App Password and sends from `GMAIL_USER`. SMTP has no delivery-idempotency guarantee: a timeout after acceptance can produce a duplicate on retry, even with a stable Message-ID. Credentials and raw SMTP responses never enter job errors or logs.
 
 ## Retention
 

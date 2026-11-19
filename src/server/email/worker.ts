@@ -9,7 +9,7 @@ import { renderEmail } from "./render";
 import * as T from "./templates/emails";
 
 export const MAX_ATTEMPTS = 5;
-/** Pause between real provider calls (Resend default limit: 10 req/s per team). */
+/** Pause between real sends in each worker batch. */
 const SEND_PACING_MS = 300;
 
 interface JobRow {

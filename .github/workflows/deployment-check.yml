@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
     inputs:
       rehearsal:
-        description: Create a temporary three-person group and send real emails to the configured test inboxes
+        description: Run the Resend delivery rehearsal (creates a temporary group and sends real emails)
         type: boolean
         default: false
 

@@ -14,12 +14,12 @@ SantaElf is a free Secret Santa web app for groups of 3 to 20 people. The organi
 - **Animated Christmas-card reveal** (skippable, reduced-motion aware) that never redraws.
 - **Anonymous messaging** between each Santa and their recipient, with mute and report.
 - **Audited emergency reveal** of one participant's assignment, protected by an emailed one-time code.
-- **Email notifications** via Resend with a durable queue, retries and duplicate protection. Emails can also be simulated locally.
+- **Email notifications** via Resend or Gmail with a durable queue and retries. Resend also provides duplicate-delivery protection. Emails can be simulated locally.
 - **Privacy by default:** hashed tokens, strict response DTOs, no-referrer/no-index private pages, privacy-preserving audit log, automatic data deletion after the exchange. See [SECURITY.md](SECURITY.md).
 
 ## Tech stack
 
-Next.js 16 (App Router) · React 19 · TypeScript · Tailwind CSS v4 · Radix primitives · Lucide icons · Zod · PostgreSQL (Supabase in production, [PGlite](https://pglite.dev) locally) · React Email + Resend · Vitest · Playwright.
+Next.js 16 (App Router) · React 19 · TypeScript · Tailwind CSS v4 · Radix primitives · Lucide icons · Zod · PostgreSQL (Supabase in production, [PGlite](https://pglite.dev) locally) · React Email + Resend or Gmail · Vitest · Playwright.
 
 One Next.js app; Postgres is also the job queue and rate limiter. See [ARCHITECTURE.md](ARCHITECTURE.md), [PRODUCT.md](PRODUCT.md) and [DESIGN.md](DESIGN.md).
 
@@ -48,9 +48,11 @@ Copy `.env.example` to `.env.local` and fill in what you need:
 |---|---|
 | `APP_URL` | Public base URL used in emailed links, e.g. `https://santaelf.example.com` |
 | `DATABASE_URL` | Postgres connection string. Empty → local PGlite. **Required when deployed.** |
-| `RESEND_API_KEY` | Enables real email via Resend. Empty → simulated email. |
-| `EMAIL_FROM` | Sender, e.g. `SantaElf <santa@yourdomain.com>` (domain must be verified in Resend) |
-| `EMAIL_MODE` | Force `simulate` even with a key (useful for staging) |
+| `RESEND_API_KEY` | Enables Resend when `EMAIL_MODE` is unset. Not needed for Gmail. |
+| `EMAIL_FROM` | Resend sender, e.g. `SantaElf <santa@yourdomain.com>` (domain must be verified). Gmail always uses `GMAIL_USER`. |
+| `EMAIL_MODE` | `simulate`, `resend` or `gmail`. Explicit real providers fail instead of silently simulating when credentials are missing. |
+| `GMAIL_USER` | Gmail address used to send all app emails. |
+| `GMAIL_APP_PASSWORD` | Google App Password for that mailbox. Never use your normal Google password. |
 | `EMAIL_DAILY_LIMIT` | Daily send cap (default 100, matching Resend's free tier) |
 | `CRON_SECRET` | Bearer secret for `GET /api/cron/tick` (`openssl rand -hex 32`) |
 | `TRUSTED_IP_HEADER` | Header with the real client IP for per-IP rate limits. Must be one your platform/proxy **overwrites** (clients can forge anything else, e.g. `X-Forwarded-For`). Default: `x-real-ip` on Vercel; elsewhere unset, so all clients share one rate-limit bucket. `none` disables it. |
@@ -84,7 +86,7 @@ Run the same read-only check locally:
 SANTAELF_URL=https://santa-s-elfs.vercel.app npm run test:deployment
 ```
 
-For a complete rehearsal, add two more **GitHub repository secrets**:
+For the Resend-specific delivery rehearsal, add two more **GitHub repository secrets**:
 
 | Secret | Value |
 |---|---|
@@ -93,7 +95,7 @@ For a complete rehearsal, add two more **GitHub repository secrets**:
 
 Select **Actions → Deployment check → Run workflow** and enable **rehearsal**. This is manual because it creates a temporary group and sends real email. It checks three participants, wishlist persistence, organizer access from an emailed link, an actual scheduled draw, assignment emails and private links, stable reveals, anonymous messages and replies, role isolation, and access recovery. It never calls cron itself, so a passing draw verifies the configured scheduler. Allow up to 20 minutes for the draw, plus email delivery time. Keep the existing scheduler enabled with its `SANTAELF_URL` and `CRON_SECRET` secrets.
 
-The rehearsal checks Resend's delivery event, which means acceptance by the recipient mail server. It cannot establish inbox-versus-spam placement; inspect the three inboxes separately. It uses the HTTP API and rendered page responses; the existing Playwright suite covers browser interactions. Successful writes exercise the deployed database schema but do not certify backups, capacity or every migration.
+This delivery rehearsal requires Resend; it cannot inspect Gmail delivery. For Gmail, use the read-only deployment check and verify emailed links through the website and test inboxes. The rehearsal checks Resend's delivery event, which means acceptance by the recipient mail server. It cannot establish inbox-versus-spam placement; inspect the three inboxes separately. It uses the HTTP API and rendered page responses; the existing Playwright suite covers browser interactions. Successful writes exercise the deployed database schema but do not certify backups, capacity or every migration.
 
 For a local rehearsal, put those three variables in a git-ignored `.env.deployment.local`, then run:
 
@@ -103,9 +105,33 @@ node --env-file=.env.deployment.local --import tsx scripts/check-deployment.ts r
 
 The rehearsal prints fixed progress messages without identities, assignments, tokens, message bodies or HTTP dumps. It deletes its own group on success and on ordinary failures, retrying deletion three times. If the process is forcibly killed or cleanup fails, use the organizer email for the group named **Deployment check** to delete it before rerunning. Delivered emails remain in the test inboxes and provider records. Each rehearsal normally sends about 11 emails and uses normal rate limits; rerunning consumes additional email quota. Avoid running it alongside a real exchange near the daily cap.
 
+## Sending through Gmail without a custom domain
+
+Gmail mode sends from an existing Gmail mailbox using Nodemailer over TLS (`smtp.gmail.com:465`). It does not require Resend or a custom domain.
+
+1. Enable [2-Step Verification](https://myaccount.google.com/security) on the Google account you want SantaElf to send from.
+2. Create a Google [App Password](https://myaccount.google.com/apppasswords), named SantaElf. Use that password for the app, never your normal Google login password. Google may not offer App Passwords for some managed accounts or security configurations; see [Google's requirements](https://support.google.com/mail/answer/185833).
+3. In **Vercel → Settings → Environment Variables**, set these for **Production**:
+
+   ```text
+   EMAIL_MODE=gmail
+   GMAIL_USER=your-sending-account@gmail.com
+   GMAIL_APP_PASSWORD=your-google-app-password
+   EMAIL_DAILY_LIMIT=100
+   ```
+
+4. Save and redeploy. `EMAIL_MODE=gmail` takes precedence over an old `RESEND_API_KEY`. Gmail mode ignores `EMAIL_FROM` and uses `SantaElf <GMAIL_USER>`, so an old Resend sender cannot interfere. Set the same variables in `.env.local` to test locally.
+5. Request one new private link and check its inbox and spam folder. Pending jobs use the new provider on their next retry. Jobs already marked failed need a new resend or recovery request.
+
+All app messages come from this mailbox, so recipients will see its address. A dedicated SantaElf Gmail account keeps it separate from personal mail. Replies arrive in that mailbox; use the app's anonymous chat for gift questions. Assignment emails still omit the recipient's name, and notification emails omit message bodies.
+
+Gmail applies account-wide sending limits and anti-abuse checks. Personal accounts generally have a limit of 500 recipients in a rolling day; ordinary mailbox activity counts too, and sending can be blocked sooner. SantaElf keeps its own default cap of 100 per rolling 24 hours across all groups. Gmail is suitable for a small trial, with less predictable delivery and capacity than a transactional email service. See [Nodemailer's Gmail guide](https://nodemailer.com/guides/using-gmail).
+
+SMTP does not provide Resend's idempotency guarantee. A connection failure after Gmail accepts an email can cause a duplicate on retry. SantaElf uses a stable, opaque Message-ID for each job, but does not promise Gmail will deduplicate it. Failed sends never redraw assignments.
+
 ## Email & scheduled drawings
 
-- **Email:** create a free [Resend](https://resend.com) account, verify a sending domain, set `RESEND_API_KEY` and `EMAIL_FROM`. Emails are queued in the `email_jobs` table, sent right after each action, and retried with backoff (up to 5 attempts) by the cron tick. Resend idempotency keys prevent double delivery on retries.
+- **Email:** create a free [Resend](https://resend.com) account, verify a sending domain, set `RESEND_API_KEY` and `EMAIL_FROM`. Emails are queued in the `email_jobs` table, sent right after each action, and retried with backoff (up to 5 attempts) by the cron tick. Resend uses idempotency keys for duplicate protection within its retention window. Gmail uses SMTP, where retries can duplicate a message.
 - **Cron tick:** `GET /api/cron/tick` with `Authorization: Bearer $CRON_SECRET` runs due scheduled drawings, retries emails and purges expired data. Trigger it every 5–15 minutes with any of:
   - **GitHub Actions** (included: `.github/workflows/cron.yml`, every 10 minutes). Add repository secrets `SANTAELF_URL` and `CRON_SECRET`.
   - **Supabase pg_cron + pg_net:**
@@ -118,15 +144,15 @@ The rehearsal prints fixed progress messages without identities, assignments, to
     ```
   - **Vercel Cron** (`vercel.json` includes a once-daily backstop — Hobby plans only allow daily crons).
 
-## Deploying (Vercel + Supabase + Resend)
+## Deploying on Vercel
 
 1. **Supabase:** create a project. Copy the *transaction pooler* connection string (port 6543) as `DATABASE_URL`. Apply migrations from your machine:
    ```bash
    DATABASE_URL="postgres://..." npm run db:migrate
    ```
    (RLS is enabled on all tables with no policies — the app talks to Postgres server-side only. Do not expose the database through client SDKs.)
-2. **Resend:** verify your domain, create an API key.
-3. **Vercel:** import the GitHub repo, set `APP_URL`, `DATABASE_URL`, `RESEND_API_KEY`, `EMAIL_FROM`, `CRON_SECRET`. Deploy.
+2. **Email:** configure Gmail using the steps above, or verify a domain in Resend and create an API key.
+3. **Vercel:** import the GitHub repo and set `APP_URL`, `DATABASE_URL` and `CRON_SECRET`. For Gmail, add `EMAIL_MODE=gmail`, `GMAIL_USER` and `GMAIL_APP_PASSWORD`. For Resend, add `RESEND_API_KEY` and `EMAIL_FROM`. Deploy.
 4. **Cron:** add `SANTAELF_URL` and `CRON_SECRET` as GitHub Actions secrets (or use pg_cron) so scheduled drawings happen on time.
 
 ## Free-tier limitations (verify current limits before launch)

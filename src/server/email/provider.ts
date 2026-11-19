@@ -1,3 +1,6 @@
+import { createHash } from "node:crypto";
+import nodemailer from "nodemailer";
+import { emailSchema } from "@/lib/contracts";
 import type { Db } from "../db/types";
 import { env } from "../env";
 import type { RenderedEmail } from "./render";
@@ -16,8 +19,8 @@ export class ProviderError extends Error {
 export type SendResult = { providerId: string } | { alreadySent: true };
 
 /**
- * Deliver one email. Simulate mode writes to dev_outbox; resend mode calls the
- * Resend REST API with `Idempotency-Key: <job id>` so retries never double-send.
+ * Deliver through the configured provider or local outbox.
+ * Resend supports idempotency; Gmail SMTP can duplicate mail after an ambiguous failure.
  * No Reply-To: replies must not bypass the anonymous messaging.
  */
 export async function deliver(db: Db, to: string, email: RenderedEmail, idempotencyKey: string): Promise<SendResult> {
@@ -29,6 +32,38 @@ export async function deliver(db: Db, to: string, email: RenderedEmail, idempote
     return { providerId: `simulated:${rows[0].id}` };
   }
 
+  if (env.emailMode === "gmail") {
+    const user = emailSchema.safeParse(env.gmailUser);
+    if (!user.success || !env.gmailAppPassword) throw new ProviderError("gmail_config_missing", true);
+    const transport = nodemailer.createTransport({
+      host: "smtp.gmail.com", port: 465, secure: true,
+      auth: { user: user.data, pass: env.gmailAppPassword },
+      connectionTimeout: 10_000, greetingTimeout: 10_000, socketTimeout: 15_000,
+      logger: false, debug: false,
+    });
+    try {
+      const sent = await transport.sendMail({
+        // Always use the authenticated mailbox, even if EMAIL_FROM still names Resend.
+        from: { name: "SantaElf", address: user.data }, to,
+        subject: email.subject, html: email.html, text: email.text,
+        // A stable, opaque Message-ID helps threading; SMTP does not guarantee deduplication.
+        messageId: `<${createHash("sha256").update(idempotencyKey).digest("hex")}@gmail.com>`,
+        disableFileAccess: true, disableUrlAccess: true,
+      });
+      if (!sent.accepted?.length) throw new ProviderError("gmail_no_recipient_accepted", true);
+      return { providerId: `gmail:${createHash("sha256").update(idempotencyKey).digest("hex")}` };
+    } catch (err) {
+      if (err instanceof ProviderError) throw err;
+      const smtp = err as { code?: string; responseCode?: number; command?: string };
+      // SMTP errors can contain credentials, addresses and full server replies. Never retain them.
+      const code = ["EAUTH", "ECONNECTION", "ESOCKET", "ETIMEDOUT", "EENVELOPE", "EMESSAGE", "EDNS", "ESTREAM"].includes(smtp.code ?? "") ? smtp.code : "ERROR";
+      const status = Number.isInteger(smtp.responseCode) && smtp.responseCode! >= 400 && smtp.responseCode! <= 599 ? smtp.responseCode : undefined;
+      const badRecipient = smtp.command === "RCPT TO" && status !== undefined && status >= 500;
+      throw new ProviderError(`gmail_${code}${status ? `_${status}` : ""}`, !badRecipient);
+    }
+  }
+
+  if (!env.resendApiKey) throw new ProviderError("resend_config_missing", true);
   let res: Response;
   try {
     res = await fetch("https://api.resend.com/emails", {

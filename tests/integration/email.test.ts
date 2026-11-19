@@ -1,3 +1,4 @@
+import nodemailer from "nodemailer";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { createTestDb } from "../helpers/db";
 import { insertGroup } from "../helpers/fixtures";
@@ -244,5 +245,101 @@ describe("email worker (resend mode)", () => {
     await enqueueEmail(db, "olive@example.com", { template: "organizer_welcome", groupId });
     await db.query(`update email_jobs set status = 'sending', attempts = 1, next_attempt_at = now() - interval '11 minutes'`);
     expect((await processEmailJobs(db)).sent).toBe(1);
+  });
+});
+
+
+describe("email worker (Gmail mode)", () => {
+  beforeEach(() => {
+    vi.stubEnv("EMAIL_MODE", "gmail");
+    vi.stubEnv("GMAIL_USER", "sender@gmail.com");
+    vi.stubEnv("GMAIL_APP_PASSWORD", "abcd efgh ijkl mnop");
+    vi.stubEnv("EMAIL_FROM", "Stale sender <onboarding@resend.dev>");
+    vi.stubEnv("RESEND_API_KEY", "re_stale_key");
+  });
+
+  function gmail(sendMail: ReturnType<typeof vi.fn>) {
+    return vi.spyOn(nodemailer, "createTransport").mockReturnValue({ sendMail } as unknown as ReturnType<typeof nodemailer.createTransport>);
+  }
+
+  it("sends private assignment content with TLS from the Gmail mailbox, without Resend or a raw token in job records", async () => {
+    const sendMail = vi.fn().mockResolvedValue({ accepted: ["p0@example.com"] });
+    const create = gmail(sendMail);
+    const fetchMock = vi.fn();
+    vi.stubGlobal("fetch", fetchMock);
+    const { groupId, ids } = await seedDrawn(db);
+    await enqueueEmail(db, "p0@example.com", { template: "assignment_ready", groupId, participantId: ids[0] });
+    expect(await processEmailJobs(db)).toEqual({ sent: 1, failed: 0, deferred: 0 });
+    expect(create).toHaveBeenCalledWith(expect.objectContaining({
+      host: "smtp.gmail.com", port: 465, secure: true,
+      auth: { user: "sender@gmail.com", pass: "abcdefghijklmnop" },
+      logger: false, debug: false,
+    }));
+    const mail = sendMail.mock.calls[0][0];
+    expect(mail.from).toEqual({ name: "SantaElf", address: "sender@gmail.com" });
+    expect(mail.to).toBe("p0@example.com");
+    expect(mail.replyTo).toBeUndefined();
+    expect(mail.disableFileAccess).toBe(true);
+    expect(mail.disableUrlAccess).toBe(true);
+    for (const name of NAMES) expect(`${mail.subject}${mail.html}${mail.text}`).not.toContain(name);
+    const token = mail.text.match(/https:\/\/santa\.test\/a\/([A-Za-z0-9_-]+)/)![1];
+    expect(await resolveToken(db, token)).toEqual({ kind: "participant", groupId, participantId: ids[0] });
+    const [job] = await jobs(db);
+    expect(job.status).toBe("sent");
+    expect(job.provider_id).toMatch(/^gmail:[a-f0-9]{64}$/);
+    expect(JSON.stringify(job)).not.toContain(token);
+    expect(await outbox(db)).toHaveLength(0);
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  it("retries authentication/configuration failures without logging SMTP responses or credentials", async () => {
+    const sendMail = vi.fn().mockRejectedValue(Object.assign(new Error("sender@gmail.com password abcdefghijklmnop"), {
+      code: "EAUTH", responseCode: 535, command: "AUTH PLAIN", response: "private SMTP response",
+    }));
+    gmail(sendMail);
+    const { groupId } = await seedDrawn(db, "open");
+    await enqueueEmail(db, "olive@example.com", { template: "organizer_welcome", groupId });
+    expect(await processEmailJobs(db)).toEqual({ sent: 0, failed: 0, deferred: 1 });
+    const [job] = await jobs(db);
+    expect([job.status, job.last_error]).toEqual(["pending", "gmail_EAUTH_535"]);
+    const logs = JSON.stringify(vi.mocked(console.error).mock.calls);
+    for (const secret of ["sender@gmail.com", "abcdefghijklmnop", "private SMTP response"]) {
+      expect(logs).not.toContain(secret);
+      expect(JSON.stringify(job)).not.toContain(secret);
+    }
+    sendMail.mockResolvedValue({ accepted: ["olive@example.com"] });
+    await db.query(`update email_jobs set next_attempt_at = now()`);
+    expect((await processEmailJobs(db)).sent).toBe(1);
+    expect(sendMail.mock.calls[0][0].messageId).toBe(sendMail.mock.calls[1][0].messageId);
+  });
+
+  it("stops retrying a permanently rejected recipient", async () => {
+    gmail(vi.fn().mockRejectedValue(Object.assign(new Error("recipient rejected"), { code: "EENVELOPE", responseCode: 550, command: "RCPT TO" })));
+    const { groupId } = await seedDrawn(db, "open");
+    await enqueueEmail(db, "olive@example.com", { template: "organizer_welcome", groupId });
+    expect(await processEmailJobs(db)).toEqual({ sent: 0, failed: 1, deferred: 0 });
+    expect((await jobs(db))[0].last_error).toBe("gmail_EENVELOPE_550");
+  });
+
+  it("does not claim a send succeeded if Gmail accepted no recipients", async () => {
+    gmail(vi.fn().mockResolvedValue({ accepted: [], rejected: ["olive@example.com"] }));
+    const { groupId } = await seedDrawn(db, "open");
+    await enqueueEmail(db, "olive@example.com", { template: "organizer_welcome", groupId });
+    expect(await processEmailJobs(db)).toEqual({ sent: 0, failed: 0, deferred: 1 });
+    expect((await jobs(db))[0].last_error).toBe("gmail_no_recipient_accepted");
+  });
+
+  it("fails closed when Gmail credentials are missing, even with a stale Resend key", async () => {
+    vi.stubEnv("GMAIL_APP_PASSWORD", "");
+    const create = gmail(vi.fn());
+    const fetchMock = vi.fn();
+    vi.stubGlobal("fetch", fetchMock);
+    const { groupId } = await seedDrawn(db, "open");
+    await enqueueEmail(db, "olive@example.com", { template: "organizer_welcome", groupId });
+    expect(await processEmailJobs(db)).toEqual({ sent: 0, failed: 0, deferred: 1 });
+    expect((await jobs(db))[0].last_error).toBe("gmail_config_missing");
+    expect(create).not.toHaveBeenCalled();
+    expect(fetchMock).not.toHaveBeenCalled();
+    expect(await outbox(db)).toHaveLength(0);
   });
 });

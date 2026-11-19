@@ -5,9 +5,17 @@ export const env = {
   get appUrl() {
     return (process.env.APP_URL ?? "http://localhost:3000").replace(/\/$/, "");
   },
-  get emailMode(): "resend" | "simulate" {
-    if (process.env.EMAIL_MODE === "simulate") return "simulate";
+  get emailMode(): "resend" | "gmail" | "simulate" {
+    const mode = process.env.EMAIL_MODE;
+    if (mode === "simulate" || mode === "resend" || mode === "gmail") return mode;
+    if (mode) throw new Error("EMAIL_MODE must be simulate, resend or gmail.");
     return process.env.RESEND_API_KEY ? "resend" : "simulate";
+  },
+  get gmailUser() {
+    return process.env.GMAIL_USER?.trim() ?? "";
+  },
+  get gmailAppPassword() {
+    return (process.env.GMAIL_APP_PASSWORD ?? "").replace(/\s/g, "");
   },
   get resendApiKey() {
     return process.env.RESEND_API_KEY ?? "";
