@@ -22,14 +22,14 @@ export function OrganizerNav({ groupId, drawn }: { groupId: string; drawn: boole
   ];
 
   return (
-    <nav aria-label="Workshop rooms" className="mt-6 pb-4">
-      <ul className="flex flex-wrap gap-2">
+    <nav aria-label="Workshop rooms" className="mt-6 pb-4 md:pb-0">
+      <ul className="flex flex-wrap gap-2 md:flex-nowrap">
         {items.map((item) => {
           const current = pathname === item.href;
           if (item.locked) {
             return (
               <li key={item.href} className="shrink-0">
-                <span className="inline-flex min-h-11 items-center gap-1.5 rounded-xl border-2 border-dashed border-midnight-soft/50 px-3.5 text-[0.9375rem] font-bold text-midnight-soft">
+                <span className="inline-flex min-h-11 items-center gap-1.5 px-3.5 text-[0.9375rem] font-bold text-midnight-soft md:min-h-12 md:px-4">
                   <Lock className="size-3.5" aria-hidden /> {item.label}
                   <span className="sr-only"> (available after the draw)</span>
                 </span>
@@ -42,11 +42,16 @@ export function OrganizerNav({ groupId, drawn }: { groupId: string; drawn: boole
                 href={item.href}
                 aria-current={current ? "page" : undefined}
                 className={cn(
-                  "inline-flex min-h-11 items-center rounded-xl border-2 border-midnight px-3.5 text-[0.9375rem] font-bold transition-[background-color,transform] duration-200 hover:-translate-y-0.5",
-                  current ? "bg-golden text-midnight" : "bg-paper text-evergreen underline decoration-2 underline-offset-4",
+                  // Phones: wrapping signs. From md: the approved folder tabs, the current one joined to the room.
+                  "relative inline-flex min-h-11 items-center rounded-xl border-2 border-midnight px-3.5 text-[0.9375rem] font-bold transition-colors duration-200",
+                  "md:-mb-[2.5px] md:min-h-12 md:rounded-b-none md:rounded-t-xl md:border-[2.5px] md:border-b-0 md:px-4",
+                  current
+                    ? "bg-golden text-midnight md:border-midnight md:bg-[#F6EBD6]"
+                    : "bg-paper text-evergreen md:border-transparent md:bg-transparent md:underline md:decoration-2 md:underline-offset-4 md:hover:bg-paper/60",
                 )}
               >
                 {item.label}
+                {current && <span aria-hidden className="absolute inset-x-3 top-1.5 hidden h-1 rounded-full bg-golden md:block" />}
               </Link>
             </li>
           );

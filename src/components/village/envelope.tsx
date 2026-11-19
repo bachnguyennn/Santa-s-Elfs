@@ -266,8 +266,11 @@ export function Envelope({
           <span
             aria-hidden
             className={cn(
-              "pointer-events-none absolute left-[7%] max-w-[46%] font-hand text-[clamp(1.05rem,4.2vw,1.4rem)] leading-tight font-bold break-words text-midnight",
-              sealed ? "top-[7%] z-[45]" : "bottom-[9%] z-30",
+              "pointer-events-none absolute font-hand leading-tight font-bold break-words text-midnight",
+              // Sealed: centred high on the flap, where the paper is widest and no fold line crosses it.
+              sealed
+                ? "top-[8%] left-1/2 z-[45] max-w-[54%] -translate-x-1/2 text-center text-[clamp(1rem,3.8vw,1.3rem)]"
+                : "bottom-[9%] left-[7%] z-30 max-w-[46%] text-[clamp(1.05rem,4.2vw,1.4rem)]",
             )}
           >
             For {participantName}
