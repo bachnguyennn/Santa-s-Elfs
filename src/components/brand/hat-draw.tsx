@@ -61,7 +61,7 @@ export function HatDraw({ className }: { className?: string }) {
           <span aria-hidden className="absolute -top-3 left-1/2 h-6 w-14 -translate-x-1/2 rotate-2 rounded-sm bg-gold-200/90 shadow-sm" />
           <p ref={resultRef} tabIndex={-1} className="text-sm text-ink-700">
             You’re the Secret Santa for
-            <HandName className="block text-[1.625rem] leading-tight font-bold text-berry-700 sm:text-[2rem]">Grandma Rosie</HandName>
+            <HandName className="block text-[2rem] leading-tight font-bold text-berry-700">Grandma Rosie</HandName>
           </p>
           <p className="mt-1 text-sm text-ink-700">
             Your secret alias: <span className="font-display font-bold text-pine-800">Dasher</span>

@@ -38,7 +38,7 @@ const STEPS = [
   },
 ] as const;
 
-const ALIASES = ["Rudolph", "Dasher", "Tinsel", "Sugarplum", "Cocoa", "Northstar"];
+const ALIASES = ["Rudolph", "Dasher", "Tinsel", "Sugarplum", "Cocoa"];
 
 const RULES = [
   { title: "Your link is your key", body: "Each person gets a private link by email. Lost it? We send a fresh one to the same address." },
@@ -140,7 +140,7 @@ export default function Home() {
                     <span className="sr-only">Step {i + 1}: </span>
                     {s.title}
                   </h3>
-                  <p className="mt-2 leading-relaxed text-ink-700">{s.body}</p>
+                  <p className="mt-2 leading-relaxed text-ink-700 [text-wrap:balance]">{s.body}</p>
                   {i === 2 && (
                     <p className="mt-3 flex items-center gap-2 text-sm text-ink-500">
                       <CalendarClock className="size-4 text-pine-700" aria-hidden /> Manual or scheduled
@@ -191,7 +191,7 @@ export default function Home() {
               <p className="text-sm font-bold text-pine-300">Each Santa gets one of 20 aliases, like</p>
               <ul className="mt-3 flex flex-wrap gap-2" aria-label="Example aliases">
                 {ALIASES.map((a, i) => (
-                  <li key={a} className={i >= 4 ? "hidden sm:block" : undefined}>
+                  <li key={a} className={i >= 3 ? "hidden sm:block" : undefined}>
                     <PaperSlip tilt={i % 2 ? 2 : -2} className="px-3 py-1.5">
                       <HandName className="text-lg text-pine-900">{a}</HandName>
                     </PaperSlip>
@@ -249,7 +249,7 @@ export default function Home() {
                     <Tick className="mt-0.5 size-7 shrink-0 text-pine-600" />
                     <div>
                       <h3 className="font-display text-lg font-bold tracking-[-0.01em] text-pine-900">{title}</h3>
-                      <p className="mt-1 max-w-prose leading-relaxed text-ink-700">{body}</p>
+                      <p className="mt-1 max-w-prose leading-relaxed text-ink-700 [text-wrap:balance]">{body}</p>
                     </div>
                   </li>
                 ))}
@@ -267,7 +267,7 @@ export default function Home() {
             The elves are ready when you are
           </h2>
           <p className="mt-3 max-w-md text-lg text-pine-200 [text-wrap:balance]">
-            No account needed. Invite people now and draw names whenever you like.
+            Invite people now and draw names whenever you like.
           </p>
           <Button asChild variant="festive" size="lg" className="mt-8 w-full sm:w-auto">
             <Link href="/new">Start a group</Link>
