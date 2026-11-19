@@ -8,9 +8,9 @@ import { HandName } from "./paper-slip";
 
 /**
  * The landing hero's signature interaction: a folded slip sticks out of the hat; pressing it
- * draws the slip and unfolds it in place into an example card (recipient + alias), as the
- * surface brief specifies. "Put it back" returns the slip.
- * Example content only. Under reduced motion the global rule makes the unfold instant.
+ * draws the slip and unfolds it in place. The hat hands out only the alias; who you're buying
+ * for stays sealed, and the example envelope further down the page reveals that half.
+ * "Put it back" returns the slip. Example content only. Under reduced motion the unfold is instant.
  */
 export function HatDraw({ className }: { className?: string }) {
   const [drawn, setDrawn] = React.useState(false);
@@ -60,20 +60,26 @@ export function HatDraw({ className }: { className?: string }) {
         >
           <span aria-hidden className="absolute -top-3 left-1/2 h-6 w-14 -translate-x-1/2 rotate-2 rounded-sm bg-gold-200/90 shadow-sm" />
           <p ref={resultRef} tabIndex={-1} className="text-sm text-ink-700">
-            You’re the Secret Santa for
-            <HandName className="block text-[2rem] leading-tight font-bold text-berry-700">Grandma Rosie</HandName>
+            The elves named you
+            <HandName className="block text-[2rem] leading-tight font-bold text-berry-700">Dasher</HandName>
           </p>
-          <p className="mt-1 text-sm text-ink-700">
-            Your secret alias: <span className="font-display font-bold text-pine-800">Dasher</span>
-          </p>
-          <p className="mt-2 text-xs text-ink-500">An example draw. Real names stay sealed until the organizer draws.</p>
-          <button
-            type="button"
-            onClick={() => toggle(false)}
-            className="mt-1 inline-flex min-h-11 items-center rounded-lg px-2 text-sm font-bold text-pine-700 underline decoration-gold-500 underline-offset-4 hover:text-pine-900"
-          >
-            Put it back
-          </button>
+          <p className="mt-1 text-sm text-ink-700 [text-wrap:balance]">Sign your messages with it. Who you’re buying for stays sealed.</p>
+          <p className="mt-1 text-xs text-ink-500">An example draw.</p>
+          <div className="mt-1 flex flex-wrap items-center justify-center gap-x-3">
+            <a
+              href="#reveal-title"
+              className="inline-flex min-h-11 items-center rounded-lg px-1 text-sm font-bold text-pine-700 underline decoration-gold-500 underline-offset-4 hover:text-pine-900"
+            >
+              See the sealed card
+            </a>
+            <button
+              type="button"
+              onClick={() => toggle(false)}
+              className="inline-flex min-h-11 items-center rounded-lg px-1 text-sm font-bold text-pine-700 underline decoration-gold-500 underline-offset-4 hover:text-pine-900"
+            >
+              Put it back
+            </button>
+          </div>
         </div>
       )}
     </div>

@@ -173,7 +173,7 @@ export default function Home() {
         {/* Phones: intro, then the envelope, then aliases and chat. Desktop: text left, envelope right. */}
         <div className="mx-auto grid max-w-6xl gap-10 px-4 py-16 sm:px-6 sm:py-24 lg:grid-cols-2 lg:gap-x-16 lg:gap-y-10">
           <div className="lg:col-start-1 lg:row-start-1">
-            <h2 id="reveal-title" className="font-display text-[clamp(2rem,5vw,3rem)] leading-[1.05] font-extrabold tracking-[-0.03em]">
+            <h2 id="reveal-title" className="scroll-mt-8 font-display text-[clamp(2rem,5vw,3rem)] leading-[1.05] font-extrabold tracking-[-0.03em]">
               Open your Christmas card
             </h2>
             <p className="mt-4 max-w-xl text-lg leading-relaxed text-pine-200">
