@@ -181,7 +181,7 @@ export function emergencyCode(p: { groupName: string; code: string }): EmailCont
           Enter this code on your <strong>{p.groupName}</strong> organizer dashboard. It expires in 10 minutes and can be used once.
         </P>
         <P>
-          <span style={{ fontSize: 32, fontWeight: 700, letterSpacing: 8, fontFamily: "monospace" }}>{p.code}</span>
+          <span style={{ fontSize: 32, fontWeight: 700, letterSpacing: 8, fontFamily: "monospace", color: "#430c15" }}>{p.code}</span>
         </P>
         <P>Using it reveals one participant&apos;s assignment and is recorded in the group&apos;s audit log. If you didn&apos;t request it, ignore this email.</P>
         <P>Please don&apos;t forward this email.</P>
