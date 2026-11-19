@@ -395,7 +395,7 @@ export function Mailroom({
                 )}
               >
                 <SlotLetters count={active ? Math.max(2, s.letters) : s.letters} />
-                <span className="relative rounded-[3px] bg-[linear-gradient(#f6d58b,#eebc65)] px-2.5 py-1.5 text-ink shadow-[0_1px_0_#b98431]">
+                <span className="relative rounded-[3px] bg-brass px-2.5 py-1.5 text-ink shadow-[0_3px_6px_-2px_rgb(48_28_34/0.45)]">
                   <span className="block font-display text-[1.25rem] leading-tight font-bold break-words">{s.title}</span>
                   <span className="block text-sm font-bold">{s.sub}</span>
                 </span>

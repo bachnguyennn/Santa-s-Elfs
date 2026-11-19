@@ -240,7 +240,7 @@ body {
     background-color: var(--color-teal);
   }
 
-  /* Paper: a warm sheet with an ink outline and a short blue shadow. Text stays real HTML. */
+  /* Paper: a cream sheet with a hairline edge and a soft walnut contact shadow. Text stays real HTML. */
   .slip {
     background-color: var(--color-cream-50);
     border: 1px solid var(--color-paper-line);
@@ -303,8 +303,8 @@ body {
     position: absolute;
     top: 0;
     border-radius: 9999px;
-    background: var(--color-snow);
-    box-shadow: 0 0 0 1px rgb(168 205 223 / 0.5);
+    background: #fff8e6;
+    opacity: 0.85;
     animation: snow-fall var(--dur, 14s) linear var(--delay, 0s) infinite;
     will-change: transform;
   }
@@ -312,32 +312,13 @@ body {
     animation-play-state: paused;
   }
 
-  /* A building that is a link: windows brighten and the sign lifts on hover and focus. */
-  .building-link .building-window {
-    transition: fill 200ms var(--ease-out-quint);
-  }
-  .building-link:is(:hover, :focus-visible) .building-window {
-    fill: #ffe39e;
-  }
+  /* A building that is a link: the painting lightens and the sign lifts 2px on hover and focus. */
   .building-link .building-sign {
     transition: transform 200ms var(--ease-out-quint), box-shadow 200ms var(--ease-out-quint);
   }
   .building-link:is(:hover, :focus-visible) .building-sign {
     transform: translateY(-2px);
-    box-shadow: 0 6px 0 -2px rgb(23 45 56 / 0.18);
-  }
-  .building-link .building-door {
-    transform-box: fill-box;
-    transform-origin: left center;
-    transition: transform 200ms var(--ease-out-quint);
-  }
-  .building-link[data-entering="true"] .building-door {
-    transform: perspective(300px) rotateY(-68deg);
-  }
-  .building-link:focus-visible {
-    outline: 3px solid var(--color-midnight);
-    outline-offset: 4px;
-    border-radius: 1rem;
+    box-shadow: 0 6px 0 -2px rgb(96 55 30 / 0.45);
   }
 
   /* Cream reading surface on the Workshop's wood. */

@@ -7,9 +7,9 @@ import { artA11y, lineProps, type ArtProps } from "./motifs";
 export function ElfHatMark({ title, className, ...props }: ArtProps) {
   return (
     <svg viewBox="0 0 40 40" className={cn("size-8", className)} {...artA11y(title)} {...props}>
-      <path d="M7 31C8 20 14 10 25 6c4-1.4 8-1 9.5 1.6-4 .9-7 3.6-7.6 7.4-.6 4.6.4 10.6 1.6 16z" fill="#2E7A5C" {...lineProps} />
-      <path d="M5 29.5c9-2.8 17-2.8 25.6 0V35c-8.6-2.6-16.6-2.6-25.6 0z" fill="#B52F46" {...lineProps} />
-      <circle cx="34.6" cy="9.4" r="3.2" fill="#FFD166" {...lineProps} />
+      <path d="M7 31C8 20 14 10 25 6c4-1.4 8-1 9.5 1.6-4 .9-7 3.6-7.6 7.4-.6 4.6.4 10.6 1.6 16z" fill="#1B6A62" {...lineProps} />
+      <path d="M5 29.5c9-2.8 17-2.8 25.6 0V35c-8.6-2.6-16.6-2.6-25.6 0z" fill="#962E40" {...lineProps} />
+      <circle cx="34.6" cy="9.4" r="3.2" fill="#EEBC65" {...lineProps} />
     </svg>
   );
 }

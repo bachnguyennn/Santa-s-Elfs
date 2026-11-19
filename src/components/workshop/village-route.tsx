@@ -41,7 +41,8 @@ const reduced = () => typeof window !== "undefined" && window.matchMedia("(prefe
  * Workshop"): 0–40% it rides from the Workshop to the Post Office steps; 45–55% the Post Office bell
  * tilts 12°; 65–90% an elf steps out and catches it; by 100% the Post Office door is lit. It reverses
  * on upward scroll, never locks scrolling, and only listens while the scene is on screen. Reduced
- * motion shows the scene still. Buildings are real links with HTML signs; phones get large links below.
+ * motion shows the scene still. Buildings are real links with HTML signs. On phones the painting is wider
+ * than the screen and pans to keep the active landmark centred; large sign-style links follow below.
  */
 export function VillageRoute({ stops = PUBLIC_STOPS, heading, intro }: { stops?: StreetStop[]; heading: React.ReactNode; intro?: React.ReactNode }) {
   const trackRef = React.useRef<HTMLDivElement>(null);
@@ -49,6 +50,7 @@ export function VillageRoute({ stops = PUBLIC_STOPS, heading, intro }: { stops?:
   const parcelRef = React.useRef<SVGGElement>(null);
   const bellRef = React.useRef<HTMLSpanElement>(null);
   const elfRef = React.useRef<HTMLImageElement>(null);
+  const boxRef = React.useRef<HTMLDivElement>(null);
   const [lit, setLit] = React.useState(false);
 
   React.useEffect(() => {
@@ -79,6 +81,20 @@ export function VillageRoute({ stops = PUBLIC_STOPS, heading, intro }: { stops?:
         elfRef.current.style.transform = `translateX(${((1 - catchT) * 30).toFixed(1)}%)`;
       }
       setLit(p >= 0.98);
+      // Phones: the painting is wider than the screen; keep the active landmark centred
+      // (Workshop at 19% → Post Office at 54% while the parcel rides, then hold on the Post Office).
+      const box = boxRef.current;
+      if (box) {
+        const vw = box.parentElement?.clientWidth ?? window.innerWidth;
+        const bw = box.offsetWidth;
+        if (bw > vw + 1) {
+          const focus = 19 + (54 - 19) * ride;
+          const x = Math.max(-(bw - vw), Math.min(0, vw / 2 - (focus / 100) * bw));
+          box.style.transform = `translateX(${x.toFixed(1)}px)`;
+        } else {
+          box.style.transform = "";
+        }
+      }
     };
     const onScroll = () => {
       if (active && !frame) frame = requestAnimationFrame(render);
@@ -110,9 +126,9 @@ export function VillageRoute({ stops = PUBLIC_STOPS, heading, intro }: { stops?:
             {intro && <div className="mt-3 max-w-[46ch] text-lg text-buttercream/90">{intro}</div>}
           </div>
 
-          <div className="relative mx-auto w-full max-w-[1672px]">
+          <div className="relative mx-auto w-full max-w-[1672px] overflow-hidden">
             <SnowLayer className="inset-x-0 top-0 h-[22%]" density={0.5} />
-            <div className="relative aspect-[1672/941] w-full">
+            <div ref={boxRef} className="relative aspect-[1672/941] w-[260%] sm:w-full">
               <ArtImage name="village-street" sizes="(min-width: 1672px) 1672px, 100vw" className="absolute inset-0 size-full" />
               <svg viewBox="0 0 1672 941" className="pointer-events-none absolute inset-0 size-full" aria-hidden focusable="false">
                 <path ref={pathRef} d={ROUTE} fill="none" stroke="none" />
@@ -148,8 +164,8 @@ export function VillageRoute({ stops = PUBLIC_STOPS, heading, intro }: { stops?:
       </div>
 
       {/* The conventional way: large, labelled links (the only way on phones, a shortcut elsewhere). */}
-      <nav aria-label="Village stops" className="mx-auto max-w-6xl px-4 pb-14 sm:px-8">
-        <ul className="grid gap-3 sm:grid-cols-3">
+      <nav aria-label="Village stops" className="mx-auto max-w-6xl px-4 pb-14 sm:hidden">
+        <ul className="grid gap-3">
           {stops.map((s) => (
             <li key={s.key}>
               <StopLink stop={s} />
@@ -168,16 +184,14 @@ function StopLink({ stop }: { stop: StreetStop }) {
       <span className="block text-[0.9375rem] text-buttercream/85">{stop.purpose}</span>
     </>
   );
-  const cls = "block min-h-16 rounded-lg border border-buttercream/25 bg-oxblood-soft/60 px-4 py-3 text-buttercream";
-  if (!stop.href) return <div className={cn(cls, "border-dashed")}>{body}</div>;
-  const linkCls = cn(cls, "scroll-mt-24 transition-colors hover:border-brass hover:bg-oxblood-soft");
-  // The id is the doorstep: rooms link back to it ("Back to the village").
+  // Teal enamel, like the hanging signs on the painted street.
+  const cls = "block min-h-16 rounded-md bg-teal px-4 py-3 text-buttercream shadow-[0_3px_0_var(--color-walnut)]";
+  if (!stop.href) return <div className={cn(cls, "bg-teal/60")}>{body}</div>;
+  const linkCls = cn(cls, "transition-colors hover:bg-teal-deep");
   return stop.door ? (
-    <WorkshopEntranceLink id={stop.key} className={linkCls}>
-      {body}
-    </WorkshopEntranceLink>
+    <WorkshopEntranceLink className={linkCls}>{body}</WorkshopEntranceLink>
   ) : (
-    <Link id={stop.key} href={stop.href} className={linkCls}>
+    <Link href={stop.href} className={linkCls}>
       {body}
     </Link>
   );
@@ -216,18 +230,19 @@ function StreetBuilding({ stop, lit, bellRef }: { stop: StreetStop; lit: boolean
   );
   if (!stop.href) {
     return (
-      <div aria-hidden className="pointer-events-none absolute max-sm:hidden" style={box}>
+      <div aria-hidden className="pointer-events-none absolute" style={box}>
         {sign}
       </div>
     );
   }
-  const cls = "building-link focus-art absolute hidden rounded-2xl transition-[background-color] duration-200 hover:bg-[rgb(255_214_140/0.12)] sm:block";
+  // The id is the doorstep: rooms link back to it ("Back to the village").
+  const cls = "building-link focus-art absolute block scroll-mt-24 rounded-2xl transition-[background-color] duration-200 hover:bg-[rgb(255_214_140/0.12)]";
   return stop.door ? (
-    <WorkshopEntranceLink className={cls} style={box}>
+    <WorkshopEntranceLink id={stop.key} className={cls} style={box}>
       {sign}
     </WorkshopEntranceLink>
   ) : (
-    <Link href={stop.href} className={cls} style={box}>
+    <Link id={stop.key} href={stop.href} className={cls} style={box}>
       {sign}
     </Link>
   );

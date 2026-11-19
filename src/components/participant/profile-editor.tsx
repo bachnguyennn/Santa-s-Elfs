@@ -381,12 +381,12 @@ export function ProfileEditor({ participantId, initial, readOnly = false }: { pa
 function NoddingElf() {
   return (
     <svg viewBox="0 0 40 40" className="size-8 origin-bottom motion-safe:animate-[elf-nod_700ms_var(--ease-out-quint)_1]" aria-hidden focusable="false">
-      <path d="M9 22c-4-1-7-4-9-6 1 6 4 10 9 11zM31 22c4-1 7-4 9-6-1 6-4 10-9 11z" fill="#F2C6A0" stroke="#172D38" strokeWidth={1.5} strokeLinejoin="round" />
-      <circle cx={20} cy={24} r={12} fill="#F2C6A0" stroke="#172D38" strokeWidth={1.5} />
-      <path d="M15.5 23.5q1.5-1.6 3 0M21.5 23.5q1.5-1.6 3 0" fill="none" stroke="#172D38" strokeWidth={1.5} strokeLinecap="round" />
-      <path d="M16.5 28.5q3.5 3 7 0" fill="none" stroke="#172D38" strokeWidth={1.5} strokeLinecap="round" />
-      <path d="M8 17c1-8 9-14 18-14 4 0 8 1 9 4-5 1-8 4-8 8z" fill="#175541" stroke="#172D38" strokeWidth={1.5} strokeLinejoin="round" />
-      <path d="M7 15.5c9-2.5 18-2.5 26 0V19c-8-2.5-17-2.5-26 0z" fill="#B52F46" stroke="#172D38" strokeWidth={1.5} strokeLinejoin="round" />
+      <path d="M9 22c-4-1-7-4-9-6 1 6 4 10 9 11zM31 22c4-1 7-4 9-6-1 6-4 10-9 11z" fill="#F2C6A0" stroke="#301C22" strokeWidth={1.5} strokeLinejoin="round" />
+      <circle cx={20} cy={24} r={12} fill="#F2C6A0" stroke="#301C22" strokeWidth={1.5} />
+      <path d="M15.5 23.5q1.5-1.6 3 0M21.5 23.5q1.5-1.6 3 0" fill="none" stroke="#301C22" strokeWidth={1.5} strokeLinecap="round" />
+      <path d="M16.5 28.5q3.5 3 7 0" fill="none" stroke="#301C22" strokeWidth={1.5} strokeLinecap="round" />
+      <path d="M8 17c1-8 9-14 18-14 4 0 8 1 9 4-5 1-8 4-8 8z" fill="#145851" stroke="#301C22" strokeWidth={1.5} strokeLinejoin="round" />
+      <path d="M7 15.5c9-2.5 18-2.5 26 0V19c-8-2.5-17-2.5-26 0z" fill="#962E40" stroke="#301C22" strokeWidth={1.5} strokeLinejoin="round" />
     </svg>
   );
 }

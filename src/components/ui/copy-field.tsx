@@ -29,6 +29,7 @@ export function CopyField({
   const [failed, setFailed] = React.useState(false);
   const letterRef = React.useRef<SVGGElement>(null);
   const flagRef = React.useRef<SVGPathElement>(null);
+  const trayRef = React.useRef<SVGSVGElement>(null);
 
   React.useEffect(() => {
     if (!copied) return;
@@ -54,6 +55,8 @@ export function CopyField({
   function post() {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const ease = "cubic-bezier(0.22, 1, 0.36, 1)";
+    // The tray only appears while the little envelope is posted.
+    trayRef.current?.animate([{ opacity: 1 }, { opacity: 1, offset: 0.9 }, { opacity: 0 }], { duration: 2300, easing: "linear" });
     letterRef.current?.animate(
       [
         { transform: "translate(0,0) scaleY(1)", opacity: 1, easing: ease },
@@ -103,7 +106,7 @@ export function CopyField({
           )}
         >
           {copied ? <Check className="size-4" aria-hidden /> : <Copy className="size-4" aria-hidden />}
-          <svg viewBox="0 0 34 18" className="-mr-1 ml-0.5 h-4 w-8 overflow-visible" aria-hidden focusable="false">
+          <svg ref={trayRef} viewBox="0 0 34 18" className="-mr-1 ml-0.5 h-4 w-8 overflow-visible opacity-0" aria-hidden focusable="false">
             {/* tray, mailbox flag, and the miniature envelope that folds into the tray */}
             <path d="M18 14h14v3H18z" fill="currentColor" opacity="0.35" />
             <path ref={flagRef} d="M31 14V5h-4" fill="none" stroke="#eebc65" strokeWidth="2" strokeLinecap="round" style={{ transformOrigin: "31px 14px" }} />

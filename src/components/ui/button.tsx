@@ -20,7 +20,10 @@ export const buttonVariants = cva(
     "relative inline-flex min-h-12 items-center justify-center gap-2 rounded-full font-sans font-bold whitespace-nowrap select-none",
     "transition-[background-color,box-shadow,transform,color] duration-200 ease-[var(--ease-workshop)]",
     "hover:-translate-y-px active:translate-y-0 active:duration-75",
-    "disabled:pointer-events-none disabled:opacity-55 aria-busy:cursor-progress",
+    "disabled:pointer-events-none aria-busy:cursor-progress",
+    // Disabled (not loading): a quiet cream state from the palette, never a faded wine.
+    "[&:disabled:not([aria-busy=true])]:border-paper-line [&:disabled:not([aria-busy=true])]:bg-cream-200 [&:disabled:not([aria-busy=true])]:text-ink-500 [&:disabled:not([aria-busy=true])]:shadow-none",
+    "aria-busy:opacity-80",
     "[&_svg]:size-[1.1em] [&_svg]:shrink-0",
   ],
   {

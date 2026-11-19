@@ -67,16 +67,16 @@ export function Invitation({
       )}
     >
       {!compact && <span className="absolute inset-x-0 top-0 h-[5px] rounded-t-[4px] bg-[repeating-linear-gradient(120deg,#962e40_0_8px,#fff0cc_8px_16px,#145851_16px_24px,#fff0cc_24px_32px)]" />}
-      <p className={cn("font-bold tracking-[0.08em] text-ink-500 uppercase", compact ? "text-[0.6875rem]" : "text-xs")}>Secret Santa invitation</p>
       <p
         className={cn(
-          "mt-1 font-hand leading-tight font-semibold break-words",
+          "font-hand leading-tight font-semibold break-words",
           compact ? "text-xl" : "text-[clamp(1.6rem,3.2vw,2.25rem)]",
           name.trim() ? "text-oxblood" : "text-ink-500",
         )}
       >
         {shown}
       </p>
+      <p className={cn("text-ink-700", compact ? "mt-0.5 text-xs" : "mt-1 text-sm")}>A Secret Santa invitation</p>
       {!compact && (
         <p className="mt-4 border-t border-dashed border-[#c89a6b] pt-3 text-sm text-ink-700">
           {organizer?.trim() ? `From ${organizer.trim()}, with a private link for everyone.` : "Everyone gets a private link. Nobody needs an account."}

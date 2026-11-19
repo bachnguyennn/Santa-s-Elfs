@@ -92,7 +92,6 @@ export function Roster({
 
       {pending.length > 0 && (
         <Card className="relative border-gold-500 bg-gold-200">
-          <Pin className="-top-2.5 left-1/2 -translate-x-1/2" />
           <CardHeader
             title={`Waiting for you (${pending.length})`}
             description={
@@ -280,12 +279,3 @@ function EmailStatus({ email }: { email: OrganizerParticipantDTO["lastEmail"] })
   );
 }
 
-/** A brass drawing pin holding a note to the noticeboard. Decorative. */
-function Pin({ className }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 20 20" className={cn("absolute size-5", className)} aria-hidden focusable="false">
-      <circle cx={10} cy={10} r={7} fill="#FFD166" stroke="#172D38" strokeWidth={2} />
-      <circle cx={8} cy={8} r={2} fill="#FFF7E8" />
-    </svg>
-  );
-}

@@ -52,7 +52,11 @@ test.describe("Village journeys", () => {
     for (const width of [375, 1440]) {
       await me.page.setViewportSize({ width, height: width < 600 ? 812 : 900 });
       await me.page.goto(`/p/${me.pid}`);
-      const door = me.page.locator("#post-office");
+      // Phones use the large sign links under the panning street; wider screens use the painted building.
+      const door =
+        width < 640
+          ? me.page.getByRole("navigation", { name: "Village stops" }).getByRole("link", { name: /Post Office/ })
+          : me.page.locator("#post-office");
       await door.evaluate((el) => el.scrollIntoView({ block: "center" }));
       await door.hover(); // settles any scroll the tap itself would cause, so we measure where the tap happens
       await me.page.waitForTimeout(200);
