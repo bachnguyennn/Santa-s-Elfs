@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Atkinson_Hyperlegible_Next, Bricolage_Grotesque, Shantell_Sans } from "next/font/google";
+import { DoorstepMemory } from "@/components/village/doorstep-memory";
 import "./globals.css";
 
 // Font choices are documented in DESIGN.md (Typography).
@@ -20,7 +21,10 @@ export const viewport: Viewport = { themeColor: "#BDEBFA" };
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en" className={`${display.variable} ${body.variable} ${hand.variable} h-full antialiased`}>
-      <body className="flex min-h-full flex-col font-sans">{children}</body>
+      <body className="flex min-h-full flex-col font-sans">
+        {children}
+        <DoorstepMemory />
+      </body>
     </html>
   );
 }
