@@ -21,7 +21,7 @@ export default async function ExpiredPage({ searchParams }: PageProps<"/expired"
             <Link href="/recover">Email me a new link</Link>
           </Button>
           <Button asChild variant="secondary">
-            <Link href="/">Back to the Village Square</Link>
+            <Link href="/">Back to the homepage</Link>
           </Button>
         </>
       }

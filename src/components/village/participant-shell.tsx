@@ -1,6 +1,7 @@
 import * as React from "react";
 import { SiteFooter, SkipLink } from "@/components/ui/page-shell";
 import { cn } from "@/lib/utils";
+import { SceneBanner, type ArtName } from "@/components/workshop/art";
 import { ParticipantHeader } from "./participant-header";
 
 /** The participant's places. Rejected or removed participants only keep their village page. */
@@ -39,30 +40,24 @@ export function ParticipantShell({
   );
 }
 
-/** An interior's entrance band: the building's door detail, its name and one line of context. */
+/** An interior's entrance: a crop of the room's painting with the room name on a scrim. */
 export function RoomHeader({
-  door,
+  art,
+  position,
   title,
   children,
-  tone = "bg-[#CFE5DA]",
 }: {
-  door: React.ReactNode;
+  art: ArtName;
+  position?: string;
   title: React.ReactNode;
   children?: React.ReactNode;
-  tone?: string;
 }) {
   return (
-    <div className={cn("relative border-b-[2.5px] border-midnight", tone)}>
-      <div aria-hidden className="absolute inset-x-0 top-0 h-3 bg-timber" />
-      <div className="mx-auto flex max-w-6xl items-end gap-4 px-4 pt-8 pb-5 sm:gap-6 sm:px-6 sm:pt-10">
-        <span className="shrink-0">{door}</span>
-        <div className="min-w-0">
-          <h1 className="font-display text-[clamp(2rem,5vw,3rem)] leading-[1.02] font-extrabold tracking-[-0.03em] break-words [text-wrap:balance]">
-            {title}
-          </h1>
-          {children && <div className="mt-1 text-[0.9375rem] text-midnight-soft sm:text-lg">{children}</div>}
-        </div>
+    <SceneBanner name={art} position={position} className="h-[clamp(12rem,26vw,19rem)]">
+      <div className="min-w-0">
+        <h1 className="font-display text-[clamp(2.5rem,6vw,4rem)] leading-[0.95] font-bold break-words [text-wrap:balance]">{title}</h1>
+        {children && <div className="mt-1.5 max-w-[56ch] text-[0.9375rem] text-buttercream/90 sm:text-lg">{children}</div>}
       </div>
-    </div>
+    </SceneBanner>
   );
 }

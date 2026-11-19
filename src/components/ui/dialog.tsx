@@ -40,17 +40,17 @@ export function Dialog({
     <D.Root open={open} onOpenChange={onOpenChange}>
       {trigger && <D.Trigger asChild>{trigger}</D.Trigger>}
       <D.Portal>
-        <D.Overlay className="fixed inset-0 z-50 bg-midnight/55 data-[state=open]:animate-[fade-in_200ms_ease-out]" />
+        <D.Overlay className="fixed inset-0 z-50 bg-oxblood-deep/60 data-[state=open]:animate-[fade-in_200ms_ease-out]" />
         <D.Content
           className={cn(
-            "fixed inset-x-0 bottom-0 z-50 max-h-[90dvh] overflow-y-auto rounded-t-[var(--radius-card)] border-[2.5px] border-midnight bg-paper p-6 pb-[max(1.5rem,env(safe-area-inset-bottom))] shadow-[var(--shadow-lifted)]",
+            "fixed inset-x-0 bottom-0 z-50 max-h-[90dvh] overflow-y-auto rounded-t-[var(--radius-card)] border border-paper-line bg-cream-50 p-6 pb-[max(1.5rem,env(safe-area-inset-bottom))] shadow-[var(--shadow-lifted)]",
             "sm:inset-x-auto sm:bottom-auto sm:top-1/2 sm:left-1/2 sm:w-[min(32rem,calc(100vw-2rem))] sm:-translate-x-1/2 sm:-translate-y-1/2 sm:rounded-[var(--radius-card)]",
             "data-[state=open]:animate-[dialog-in_320ms_var(--ease-out-expo)]",
             className,
           )}
           {...(description ? {} : { "aria-describedby": undefined })}
         >
-          <D.Title className="pr-10 font-display text-xl leading-tight font-bold tracking-[-0.015em] text-midnight">{title}</D.Title>
+          <D.Title className="pr-10 font-display text-xl leading-tight font-bold tracking-normal text-oxblood">{title}</D.Title>
           {description && <D.Description className="mt-2 text-ink-700">{description}</D.Description>}
           {children && <div className="mt-4">{children}</div>}
           {footer && <div className="mt-6 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">{footer}</div>}

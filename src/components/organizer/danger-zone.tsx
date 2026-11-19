@@ -5,7 +5,7 @@ import * as React from "react";
 import { Alert } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader } from "@/components/ui/card";
-import { Dialog, DialogClose } from "@/components/ui/dialog";
+import { ConfirmDialog } from "@/components/ui/alert-dialog";
 import { Field, Input } from "@/components/ui/field";
 import { ApiRequestError, apiFetch } from "@/lib/api-client";
 import type { GroupStatus } from "@/lib/contracts";
@@ -35,8 +35,7 @@ export function DangerZone({ groupId, groupName, status }: { groupId: string; gr
     }
   }
 
-  async function deleteGroup(e: React.FormEvent) {
-    e.preventDefault();
+  async function deleteGroup() {
     if (!matches) return;
     setBusy("delete");
     setError(null);
@@ -63,7 +62,7 @@ export function DangerZone({ groupId, groupName, status }: { groupId: string; gr
             </p>
           </div>
           {status !== "closed" && (
-            <Dialog
+            <ConfirmDialog
               open={closeOpen}
               onOpenChange={setCloseOpen}
               trigger={
@@ -75,18 +74,12 @@ export function DangerZone({ groupId, groupName, status }: { groupId: string; gr
               description={
                 status === "open"
                   ? "Names haven’t been drawn yet. Closing now ends the exchange without a drawing, and no one can join."
-                  : "Everyone keeps their card and wishlist, but messages become read-only. The group is still deleted 60 days after the exchange."
+                  : "Everyone keeps their envelope and wishlist, but letters become read-only. The group is still deleted 60 days after the exchange."
               }
-              footer={
-                <>
-                  <DialogClose asChild>
-                    <Button variant="secondary">Keep it open</Button>
-                  </DialogClose>
-                  <Button variant="danger" onClick={closeExchange} loading={busy === "close"}>
-                    Close exchange
-                  </Button>
-                </>
-              }
+              cancelLabel="Keep it open"
+              actionLabel="Close exchange"
+              onAction={closeExchange}
+              busy={busy === "close"}
             />
           )}
         </div>
@@ -95,7 +88,7 @@ export function DangerZone({ groupId, groupName, status }: { groupId: string; gr
             <h3 className="font-bold text-ink-900">Delete the group</h3>
             <p className="text-sm text-ink-700">Removes everyone, every wishlist and every message right away. All private links stop working.</p>
           </div>
-          <Dialog
+          <ConfirmDialog
             open={deleteOpen}
             onOpenChange={(o) => {
               setDeleteOpen(o);
@@ -107,24 +100,17 @@ export function DangerZone({ groupId, groupName, status }: { groupId: string; gr
               </Button>
             }
             title="Delete this group permanently?"
-            description="Everyone loses access and all wishlists and messages are erased. This can’t be undone."
+            description="Everyone loses access and all wishlists and letters are erased. This can’t be undone."
+            cancelLabel="Keep the group"
+            actionLabel="Delete forever"
+            actionDisabled={!matches}
+            onAction={deleteGroup}
+            busy={busy === "delete"}
           >
-            <form onSubmit={deleteGroup} className="flex flex-col gap-6">
-              <Field id="confirm-delete" label={`Type the group name to confirm: ${confirmText}`}>
-                {(a) => <Input {...a} value={typed} onChange={(e) => setTyped(e.target.value)} autoComplete="off" spellCheck={false} />}
-              </Field>
-              <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
-                <DialogClose asChild>
-                  <Button type="button" variant="secondary">
-                    Keep the group
-                  </Button>
-                </DialogClose>
-                <Button type="submit" variant="danger" disabled={!matches} loading={busy === "delete"}>
-                  Delete forever
-                </Button>
-              </div>
-            </form>
-          </Dialog>
+            <Field id="confirm-delete" label={`Type the group name to confirm: ${confirmText}`}>
+              {(a) => <Input {...a} value={typed} onChange={(e) => setTyped(e.target.value)} autoComplete="off" spellCheck={false} />}
+            </Field>
+          </ConfirmDialog>
         </div>
       </div>
       {error && (

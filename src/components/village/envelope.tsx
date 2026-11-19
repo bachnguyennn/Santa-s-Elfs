@@ -5,7 +5,22 @@ import * as React from "react";
 import { Alert } from "@/components/ui/alert";
 import { Spinner } from "@/components/ui/spinner";
 import { cn } from "@/lib/utils";
-import { C, line } from "./art";
+/* Workshop paper and wax for the envelope (DESIGN.md): cream paper, petrol-teal lining, cherry seal. */
+const C = {
+  golden: "#EEBC65",
+  paper: "#FFF1CE",
+  paperDeep: "#EED5A6",
+  evergreenSoft: "#1B6A62",
+  snowShadow: "#C89A6B",
+  cranberryDeep: "#6B1F2D",
+} as const;
+const line = {
+  stroke: "#60371E",
+  strokeWidth: 2,
+  strokeLinejoin: "round" as const,
+  strokeLinecap: "round" as const,
+  vectorEffect: "non-scaling-stroke" as const,
+};
 
 export interface EnvelopeLetter {
   recipientName: string;
@@ -206,7 +221,7 @@ export function Envelope({
           className="relative aspect-[7/5] w-full [clip-path:inset(-400%_-12%_0_-12%)]"
         >
           {/* inside back, lined in evergreen */}
-          <div className="absolute inset-0 rounded-[14px] border-[2.5px] border-midnight bg-evergreen">
+          <div className="absolute inset-0 rounded-[10px] border-2 border-walnut bg-teal">
             <svg viewBox="0 0 700 500" className="size-full" aria-hidden focusable="false">
               {Array.from({ length: 9 }).map((_, i) => (
                 <circle key={i} cx={60 + i * 72} cy={60 + (i % 2) * 40} r={6} fill={C.golden} opacity={0.6} />
@@ -239,18 +254,18 @@ export function Envelope({
             <div
               ref={letterRef}
               // The foot (bottom padding) stays tucked in the pocket: 60% of the width ≈ 0.85 of the envelope's height.
-              className="absolute inset-x-[6%] z-20 rounded-lg border-[2.5px] border-midnight bg-paper px-5 pt-5 pb-[60%] text-center text-midnight sm:px-7 sm:pt-6"
+              className="absolute inset-x-[6%] z-20 rounded-md border border-paper-line bg-[#fff6df] px-5 pt-5 pb-[60%] text-center text-ink shadow-[0_2px_6px_rgb(96_55_30/0.25)] sm:px-7 sm:pt-6"
               style={{ bottom: `${LETTER_FOOT * 100}%` }}
             >
               <h2 ref={headingRef} tabIndex={-1} className="outline-none">
-                <span className="block text-[0.9375rem] font-bold text-midnight-soft">You’re the Secret Santa for</span>
-                <span className="mt-1 block font-hand text-[clamp(1.9rem,8vw,2.6rem)] leading-[1.05] font-bold break-words text-cranberry">
+                <span className="block text-[0.9375rem] font-bold text-ink-700">You’re the Secret Santa for</span>
+                <span className="mt-1 block font-hand text-[clamp(1.9rem,8vw,2.6rem)] leading-[1.05] font-semibold break-words text-oxblood">
                   {letter.recipientName}
                 </span>
               </h2>
-              <p className="mx-auto mt-4 max-w-[26ch] border-t-2 border-dashed border-snow-shadow pt-3 text-[0.9375rem] leading-snug text-midnight-soft">
+              <p className="mx-auto mt-4 max-w-[26ch] border-t border-dashed border-[#c89a6b] pt-3 text-[0.9375rem] leading-snug text-ink-700">
                 Your messages to them are signed{" "}
-                <span className="font-hand text-xl font-bold whitespace-nowrap text-evergreen">{letter.alias}</span>
+                <span className="font-hand text-xl font-semibold whitespace-nowrap text-teal">{letter.alias}</span>
               </p>
             </div>
           )}
@@ -266,7 +281,7 @@ export function Envelope({
           <span
             aria-hidden
             className={cn(
-              "pointer-events-none absolute font-hand leading-tight font-bold break-words text-midnight",
+              "pointer-events-none absolute font-hand leading-tight font-semibold break-words text-ink",
               // Sealed: centred high on the flap, where the paper is widest and no fold line crosses it.
               sealed
                 ? "top-[8%] left-1/2 z-[45] max-w-[54%] -translate-x-1/2 text-center text-[clamp(1rem,3.8vw,1.3rem)]"
@@ -293,33 +308,33 @@ export function Envelope({
             >
               <span
                 aria-hidden
-                className="grid size-[4.5rem] place-items-center rounded-full border-[2.5px] border-midnight bg-cranberry shadow-[3px_4px_0_rgb(23_45_56/0.25)] transition-transform duration-200 ease-[var(--ease-out-quint)] group-hover:-translate-y-0.5 group-active:translate-y-0"
+                className="grid size-[4.5rem] place-items-center rounded-full bg-cherry shadow-[inset_0_-3px_0_rgb(0_0_0/0.25),0_4px_8px_rgb(48_28_34/0.45)] ring-4 ring-[#b04558]/60 transition-transform duration-200 ease-[var(--ease-out-quint)] group-hover:-translate-y-0.5 group-active:translate-y-0"
               >
                 <svg viewBox="0 0 40 40" className="size-9">
                   <circle cx={20} cy={20} r={15} fill="none" stroke={C.cranberryDeep} strokeWidth={2.5} />
                   <path d="M20 9l3.2 7 7.6.7-5.8 5 1.8 7.4L20 25.3l-6.8 3.8 1.8-7.4-5.8-5 7.6-.7z" fill={C.golden} stroke={C.cranberryDeep} strokeWidth={1.2} strokeLinejoin="round" />
                 </svg>
               </span>
-              <span className="rounded-full bg-midnight px-3 py-1 text-sm font-bold whitespace-nowrap text-paper">Open my envelope</span>
+              <span className="rounded-full bg-oxblood px-3.5 py-1.5 text-sm font-bold whitespace-nowrap text-buttercream">Open my envelope</span>
             </button>
           )}
         </div>
       </div>
 
       <div className="mt-5 flex min-h-11 flex-col items-center gap-3 text-center">
-        {sealed && !error && <p className="text-[0.9375rem] text-midnight-soft">Open it somewhere nobody’s peeking.</p>}
+        {sealed && !error && <p className="text-[0.9375rem] text-ink-700">Open it somewhere nobody’s peeking.</p>}
         {animating && (
           <button
             ref={skipRef}
             type="button"
             onClick={skip}
-            className="inline-flex min-h-11 items-center rounded-full px-4 text-sm font-bold text-evergreen underline decoration-2 underline-offset-4 hover:bg-paper"
+            className="inline-flex min-h-11 items-center rounded-full px-4 text-sm font-bold text-teal underline decoration-2 underline-offset-4 hover:bg-cream-100"
           >
             Skip animation
           </button>
         )}
         {slow && (
-          <p className="inline-flex items-center gap-2 text-[0.9375rem] text-midnight-soft">
+          <p className="inline-flex items-center gap-2 text-[0.9375rem] text-ink-700">
             <Spinner className="size-4" /> The elves are fetching your letter…
           </p>
         )}
@@ -327,7 +342,7 @@ export function Envelope({
           <button
             type="button"
             onClick={replay}
-            className="inline-flex min-h-11 items-center gap-2 rounded-full px-4 text-sm font-bold text-evergreen hover:bg-paper motion-reduce:hidden"
+            className="inline-flex min-h-11 items-center gap-2 rounded-full px-4 text-sm font-bold text-teal hover:bg-cream-100 motion-reduce:hidden"
           >
             <RotateCcw className="size-4" aria-hidden /> Open it again
           </button>

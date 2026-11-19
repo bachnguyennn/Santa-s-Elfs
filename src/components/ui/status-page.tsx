@@ -1,46 +1,42 @@
 import * as React from "react";
-import { C, LampPost, line, Pine } from "@/components/village/art";
-import { PageShell } from "./page-shell";
-
-/** A quiet corner of the village: one lamp, one tree, fresh snow. Decorative. */
-function QuietScene({ className }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 400 150" className={className} aria-hidden focusable="false">
-      <path d="M0 112c70-16 150-20 220-12s130 8 180 0V150H0z" fill={C.snow} />
-      <path d="M-4 112c70-16 154-20 224-12s130 8 184 0" fill="none" {...line} />
-      <Pine x={98} y={116} s={0.55} />
-      <LampPost x={290} y={110} s={0.75} />
-    </svg>
-  );
-}
+import { SceneBanner, type ArtName } from "@/components/workshop/art";
+import { SiteFooter, SiteHeader, SkipLink } from "./page-shell";
 
 /**
- * OWNER: design agent. Dead ends (not found, error, expired link, closed groups): quiet scenery,
- * a plain explanation and one clear next action, on a solid paper reading surface.
+ * OWNER: design agent. Dead ends (not found, error, expired or denied link, closed group): restrained
+ * scenery, a cream reading panel with a short heading, a plain explanation and one useful next action.
  */
 export function StatusPage({
   title,
   children,
   actions,
+  art = "post-office",
+  position = "84% 74%",
 }: {
   title: string;
   children?: React.ReactNode;
   actions?: React.ReactNode;
+  /** Which room frames the message. Defaults to the Post Office, near the stamp. */
+  art?: ArtName;
+  position?: string;
 }) {
   return (
-    <PageShell width="narrow" className="flex flex-col items-center justify-center">
-      <div className="w-full">
-        <div className="-mx-4 rounded-t-[var(--radius-card)] bg-sky px-4 pt-6 sm:mx-0">
-          <QuietScene className="mx-auto block h-auto w-full max-w-sm" />
+    <>
+      <SkipLink />
+      <SiteHeader />
+      <main id="main" tabIndex={-1} className="flex-1 bg-parchment pb-16 outline-none">
+        {/* Not high priority: Next renders the not-found tree with every page, and a priority image here
+            would make React preload this painting everywhere. On screen, it still loads at once. */}
+        <SceneBanner name={art} position={position} priority={false} className="h-[clamp(8rem,20vw,14rem)]" />
+        <div className="relative z-10 mx-auto -mt-10 w-full max-w-xl px-4 sm:-mt-14 sm:px-8">
+          <div className="rounded-lg border border-paper-line bg-cream-50 p-6 text-center shadow-[var(--shadow-lifted)] sm:p-9">
+            <h1 className="font-display text-[clamp(2.25rem,7vw,3rem)] leading-[0.98] font-bold text-oxblood [text-wrap:balance]">{title}</h1>
+            {children && <div className="mx-auto mt-4 max-w-md text-lg leading-relaxed text-ink-700">{children}</div>}
+            {actions && <div className="mt-7 flex flex-col justify-center gap-3 sm:flex-row">{actions}</div>}
+          </div>
         </div>
-        <div className="slip p-6 text-center sm:p-9">
-          <h1 className="font-display text-[clamp(1.75rem,6vw,2.5rem)] leading-[1.05] font-extrabold tracking-[-0.03em] text-midnight [text-wrap:balance]">
-            {title}
-          </h1>
-          {children && <div className="mx-auto mt-4 max-w-md text-lg leading-relaxed text-midnight-soft">{children}</div>}
-          {actions && <div className="mt-7 flex flex-col justify-center gap-3 sm:flex-row">{actions}</div>}
-        </div>
-      </div>
-    </PageShell>
+      </main>
+      <SiteFooter />
+    </>
   );
 }

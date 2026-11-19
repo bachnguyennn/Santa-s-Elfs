@@ -15,7 +15,7 @@ export default function Error({ error, retry }: { error: unknown; retry: () => v
             Try again
           </Button>
           <Button asChild variant="secondary">
-            <Link href="/">Back to the Village Square</Link>
+            <Link href="/">Back to the homepage</Link>
           </Button>
         </>
       }

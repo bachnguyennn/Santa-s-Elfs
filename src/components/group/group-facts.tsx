@@ -64,7 +64,7 @@ export function GroupFacts({
       {rows.map(({ icon: Icon, term, value }) => (
         <div key={term} className="relative min-h-9 pl-12">
           <dt className="text-sm text-ink-500">
-            <span aria-hidden className="absolute top-0.5 left-0 grid size-9 place-items-center rounded-full bg-pine-100 text-pine-800">
+            <span aria-hidden className="absolute top-0.5 left-0 grid size-9 place-items-center rounded-full border border-paper-line bg-cream-50 text-teal">
               <Icon className="size-[1.1rem]" />
             </span>
             {term}
@@ -81,7 +81,7 @@ export function GroupRules({ group, className }: { group: Pick<GroupPublicDTO, "
   if (!group.rules) return null;
   return (
     <div className={className}>
-      <h3 className="font-display text-lg font-bold tracking-[-0.01em] text-pine-900">Notes from {group.organizerName}</h3>
+      <h3 className="font-display text-lg font-bold tracking-normal text-pine-900">Notes from {group.organizerName}</h3>
       <p className="mt-2 leading-relaxed whitespace-pre-line text-ink-700">{group.rules}</p>
     </div>
   );

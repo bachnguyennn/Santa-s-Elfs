@@ -1,156 +1,114 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { SkipLink } from "@/components/ui/page-shell";
-import { BuildingLink } from "@/components/village/building-link";
-import { PathBand, PostOfficeArt, SquareSceneNarrow, SquareSceneWide, WorkshopArt } from "@/components/village/scenes";
-import { SnowLayer, SnowToggle } from "@/components/village/snow";
-import { VillageFooter, VillageLogo, villageButton as vb } from "@/components/village/village-chrome";
+import { buttonVariants } from "@/components/ui/button";
+import { SiteFooter, SiteHeader, SkipLink } from "@/components/ui/page-shell";
+import { WorkshopEntranceLink } from "@/components/workshop/door-entry";
+import { VillageRoute } from "@/components/workshop/village-route";
+import { WorkshopScene } from "@/components/workshop/workshop-hero";
 import { cn } from "@/lib/utils";
 
 export const metadata: Metadata = {
   title: { absolute: "SantaElf: free Secret Santa, drawn by elves" },
 };
 
-const WORKSHOP_STEPS = [
+const STEPS = [
   { title: "Start a group", body: "Name it, set a budget and pick the exchange date. We email you a private organizer link." },
-  { title: "Share one invite link", body: "Paste it in the group chat. You can approve each person before they’re in." },
-  { title: "Add exclusions", body: "Keep partners or housemates from drawing each other." },
-  { title: "Let the elves draw", body: "Draw now or schedule it. Nobody sees the full list of who drew whom, you included." },
+  { title: "Share one invite link", body: "Paste it in the group chat. Approve each person first if you like." },
+  { title: "Keep a few people apart", body: "Add exclusions so partners or housemates don’t draw each other." },
+  { title: "Let the elves draw", body: "Draw now or at a set time. Everyone opens a sealed envelope with their person inside." },
+];
+
+const RULES = [
+  { title: "Nobody sees the full list", body: "That includes the organizer. If someone disappears, the organizer can look up that one match with a code sent to their email, and the lookup is logged." },
+  { title: "People may still guess", body: "Your person sees your secret alias, not your name. In a small group they might still work it out from your messages or your gift." },
+  { title: "Free, for 3 to 20 people", body: "You don’t sign up, install an app or pay. You get in with the private link we email you." },
+  { title: "Gone after the gifts", body: "Groups and everything in them are deleted automatically 60 days after the exchange." },
 ];
 
 export default function Home() {
   return (
-    <div className="flex min-h-full flex-col bg-snow text-midnight">
+    <div className="flex min-h-full flex-col">
       <SkipLink />
-
-      {/* ───────── Village Square ───────── */}
-      <header className="relative z-20 bg-sky">
-          <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 pt-3 sm:px-6">
-            <VillageLogo />
-            <SnowToggle />
-          </div>
-      </header>
-
-      <main id="main" tabIndex={-1} className="outline-none">
-          <section aria-labelledby="square-title" className="relative overflow-x-clip bg-sky xl:h-[44rem]">
-            <SnowLayer className="top-0 right-0 hidden h-[24rem] w-[48%] xl:block" />
-
-            <div className="relative z-10 mx-auto max-w-6xl px-4 pt-4 sm:px-6 sm:pt-6 xl:pt-16">
-              <div className="max-w-[36rem]">
-                <h1
-                  id="square-title"
-                  className="font-display text-[clamp(2.6rem,8vw,4.75rem)] leading-[0.95] font-extrabold tracking-[-0.035em] [text-wrap:balance]"
-                >
-                  Secret Santa, drawn by <span className="text-cranberry">elves</span>.
-                </h1>
-                <p className="mt-4 max-w-[32rem] text-lg leading-snug sm:mt-5 sm:text-xl sm:leading-relaxed">
-                  Start a group and share one invite link. The elves draw names, and everyone opens a sealed envelope with their
-                  person inside.
-                </p>
-                <div className="mt-5 flex flex-col gap-3 sm:mt-7 sm:flex-row sm:items-center">
-                  <Link href="/new" className={cn(vb.base, vb.primary, vb.lg, "w-full sm:w-auto")}>
-                    Start a group
+      <SiteHeader />
+      <main id="main" tabIndex={-1} className="flex-1 outline-none">
+        {/* ───────── The Workshop bench: Santa and the elf pull the ribbon tight ───────── */}
+        <section aria-labelledby="hero-title" className="on-dark relative overflow-hidden bg-oxblood text-buttercream">
+          <div className="relative mx-auto max-w-[1672px]">
+            <div className="relative z-10 px-4 pt-6 pb-2 sm:px-8 sm:pt-10 xl:absolute xl:inset-y-0 xl:left-0 xl:flex xl:w-[34%] xl:flex-col xl:justify-start xl:pt-[6.5%] xl:pr-0 xl:pb-0 xl:pl-[4%]">
+              <h1 id="hero-title" className="font-display text-[clamp(2.75rem,11vw,3.5rem)] leading-[0.92] font-bold [text-wrap:balance] sm:text-[clamp(3.5rem,8vw,5.5rem)] xl:text-[min(5.6vw,5.5rem)]">
+                Secret Santa starts here.
+              </h1>
+              <p className="mt-4 max-w-[34ch] text-lg leading-snug text-buttercream/90 sm:text-xl">
+                Start a group, share one invite link, and the elves draw names. Free, no accounts, for 3 to 20 people.
+              </p>
+              <div className="mt-6 flex flex-col gap-4 sm:flex-row sm:items-center">
+                <WorkshopEntranceLink className={cn(buttonVariants({ variant: "light", size: "lg" }), "w-full shrink-0 sm:w-auto")}>Start a group</WorkshopEntranceLink>
+                <p className="max-w-[30ch] text-base leading-snug text-buttercream">
+                  Invited already? Use the private link in your email. Lost it?{" "}
+                  <Link href="/recover" className="font-bold whitespace-nowrap underline decoration-brass decoration-2 underline-offset-4">
+                    Get it again
                   </Link>
-                  <Link href="/recover" className={cn(vb.base, vb.secondary, vb.lg, "w-full sm:w-auto")}>
-                    Recover my link
-                  </Link>
-                </div>
-                <p className="mt-3 text-[0.9375rem] font-bold text-midnight-soft sm:mt-4">Free · No accounts · 3 to 20 people</p>
-                <p className="mt-3 inline-block rounded-xl border-2 border-midnight bg-paper px-3.5 py-2 text-[0.9375rem] leading-snug sm:mt-5 sm:px-4 sm:py-3">
-                  <span className="sm:hidden">Already invited? Open your invite link.</span>
-                  <span className="hidden sm:inline">
-                    Invited to a group? Open the invitation link you were sent. It takes you straight to the welcome desk.
-                  </span>
                 </p>
               </div>
             </div>
-
-            {/* the square itself */}
-            <div className="relative mx-auto -mt-2 max-w-3xl xl:hidden">
-              <SnowLayer className="inset-x-0 top-0 h-1/2" density={0.5} />
-              <SquareSceneNarrow className="block h-auto w-full" />
+            <div className="relative overflow-hidden xl:overflow-visible">
+              {/* Phones: a crop that keeps Santa (from ~9%) and the elf (to ~93%) both inside the frame. */}
+              <WorkshopScene className="-ml-[10%] w-[112%] sm:-ml-[4%] sm:w-[108%] xl:ml-0 xl:w-full" />
             </div>
-            <SquareSceneWide className="absolute inset-x-0 bottom-0 hidden h-[32.5rem] w-full xl:block" />
-          </section>
-
-      {/* ───────── Workshop Lane ───────── */}
-      <section aria-labelledby="workshop-title" className="relative bg-snow">
-        <PathBand className="absolute inset-x-0 top-0 h-24 w-full" />
-        <div className="relative mx-auto grid max-w-6xl gap-10 px-4 pt-10 pb-16 sm:px-6 lg:grid-cols-[minmax(0,6fr)_minmax(0,5fr)] lg:items-start lg:gap-14 lg:pt-0 lg:pb-24">
-          <BuildingLink
-            href="/new"
-            name="Workshop"
-            purpose="Start a group"
-            art={<WorkshopArt className="-mt-3 h-auto w-full" />}
-            className="mx-auto w-full max-w-[34rem] lg:order-1 xl:-mt-28"
-          />
-          <div className="lg:order-2 lg:pt-10">
-            <h2 id="workshop-title" className="font-display text-[clamp(2rem,5vw,3rem)] leading-[1.05] font-extrabold tracking-[-0.03em] [text-wrap:balance]">
-              Organizers work in the Workshop
-            </h2>
-            <p className="mt-3 max-w-prose text-lg leading-relaxed text-midnight-soft">
-              Set up your group on the workbench. It takes about two minutes.
-            </p>
-            <ol className="village-paper mt-6 divide-y-2 divide-dashed divide-snow-shadow px-5 py-2 sm:px-6">
-              {WORKSHOP_STEPS.map((s, i) => (
-                <li key={s.title} className="flex gap-4 py-4">
-                  <span aria-hidden className="font-display text-2xl leading-none font-extrabold text-cranberry">
-                    {i + 1}
-                  </span>
-                  <div>
-                    <h3 className="font-display text-lg leading-tight font-bold">
-                      <span className="sr-only">Step {i + 1}: </span>
-                      {s.title}
-                    </h3>
-                    <p className="mt-1 leading-relaxed text-midnight-soft">{s.body}</p>
-                  </div>
-                </li>
-              ))}
-            </ol>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* ───────── Post Office ───────── */}
-      <section aria-labelledby="post-title" className="relative bg-snow">
-        <PathBand flip className="absolute inset-x-0 top-0 h-24 w-full" />
-        <div className="relative mx-auto grid max-w-6xl gap-10 px-4 pt-10 pb-16 sm:px-6 lg:grid-cols-[minmax(0,5fr)_minmax(0,6fr)] lg:items-end lg:gap-14 lg:pb-24">
-          <div className="lg:pb-6">
-            <h2 id="post-title" className="font-display text-[clamp(2rem,5vw,3rem)] leading-[1.05] font-extrabold tracking-[-0.03em] [text-wrap:balance]">
-              Letters signed with a secret alias
-            </h2>
-            <p className="mt-3 max-w-prose text-lg leading-relaxed text-midnight-soft">
-              Each Santa gets an alias like Dasher or Tinsel. Ask your person about sizes or favourite colours, and they only see
-              the alias.
-            </p>
-            <figure className="mt-6 max-w-md">
-              <div className="space-y-2">
-                <p className="ml-auto w-fit max-w-[88%] rounded-2xl rounded-br-md border-2 border-midnight bg-paper px-4 py-2.5">
-                  <span className="block text-xs font-bold text-evergreen">You, signed as Dasher</span>
-                  Is there room on your shelf for one more mug?
-                </p>
-                <p className="w-fit max-w-[88%] rounded-2xl rounded-bl-md border-2 border-midnight bg-sky px-4 py-2.5">
-                  <span className="block text-xs font-bold text-cranberry-deep">Grandma Rosie</span>
-                  Always. Something green, please!
-                </p>
-              </div>
-              <figcaption className="mt-3 text-[0.9375rem] text-midnight-soft">
-                Example conversation. In a small group, people can still guess from your messages or your gift.
-              </figcaption>
-            </figure>
+        {/* ───────── The notice on the Workshop door ───────── */}
+        <section aria-labelledby="how-title" className="bg-parchment">
+          <div className="mx-auto grid max-w-6xl gap-8 px-4 py-14 sm:px-8 sm:py-20 lg:grid-cols-2 lg:gap-12">
+            <div className="rounded-lg border border-paper-line bg-cream-50 p-6 shadow-[var(--shadow-paper)] sm:p-8">
+              <h2 id="how-title" className="font-display text-[clamp(2.25rem,5vw,3.25rem)] leading-[0.95] font-bold text-oxblood">
+                How it works
+              </h2>
+              <ol className="mt-5 divide-y divide-line">
+                {STEPS.map((s, i) => (
+                  <li key={s.title} className="flex gap-4 py-4">
+                    <span aria-hidden className="font-display text-3xl leading-none font-bold text-persimmon-dark">
+                      {i + 1}
+                    </span>
+                    <div>
+                      <h3 className="font-bold text-ink">
+                        <span className="sr-only">Step {i + 1}: </span>
+                        {s.title}
+                      </h3>
+                      <p className="mt-1 leading-relaxed text-ink-700">{s.body}</p>
+                    </div>
+                  </li>
+                ))}
+              </ol>
+              <WorkshopEntranceLink className={cn(buttonVariants({ variant: "primary" }), "mt-4 w-full sm:w-auto")}>Start a group</WorkshopEntranceLink>
+            </div>
+            <div className="rounded-lg bg-teal-wash p-6 text-ink sm:p-8">
+              <h2 className="font-display text-[clamp(2.25rem,5vw,3.25rem)] leading-[0.95] font-bold text-teal-deep">How we keep it private</h2>
+              <ul className="mt-5 divide-y divide-teal/20">
+                {RULES.map((r) => (
+                  <li key={r.title} className="py-4">
+                    <h3 className="font-bold">{r.title}</h3>
+                    <p className="mt-1 leading-relaxed text-ink-700">{r.body}</p>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
-          <BuildingLink
-            href="/recover"
-            name="Post Office"
-            purpose="Recover my link"
-            art={<PostOfficeArt className="-mt-3 h-auto w-full" />}
-            className="mx-auto w-full max-w-[32rem]"
-          />
-        </div>
-      </section>
+        </section>
+
+        {/* ───────── Then the village: where everything lives ───────── */}
+        <VillageRoute
+          heading="Follow the ribbon"
+          intro={
+            <p>
+              Organizers start in the Workshop, and the Post Office resends lost links. Once you’re in a group, your envelope, letters and
+              wishlist are on your own street.
+            </p>
+          }
+        />
       </main>
-
-      <VillageFooter />
+      <SiteFooter showHome={false} />
     </div>
   );
 }

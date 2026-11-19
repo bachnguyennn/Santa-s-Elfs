@@ -1,6 +1,5 @@
 import * as React from "react";
-import { Elf } from "@/components/brand/elf";
-import { GiftBox } from "@/components/brand/gift-box";
+import { ElfFigure } from "@/components/workshop/art";
 import { cn } from "@/lib/utils";
 
 /**
@@ -24,9 +23,8 @@ export function EmptyState({
 }) {
   return (
     <div className={cn("flex flex-col items-center px-4 py-10 text-center", className)}>
-      {art === "elf" && <Elf pose="wave" className="h-28" />}
-      {art === "gift" && <GiftBox tone="berry" className="size-20" />}
-      <Heading className="mt-4 font-display text-xl font-bold tracking-[-0.015em] text-midnight">{title}</Heading>
+      {art !== "none" && <ElfFigure className="w-24" />}
+      <Heading className="mt-4 font-display text-xl font-bold tracking-normal text-midnight">{title}</Heading>
       {children && <div className="mt-2 max-w-sm text-midnight-soft">{children}</div>}
       {action && <div className="mt-5">{action}</div>}
     </div>

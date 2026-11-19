@@ -22,7 +22,7 @@ export function RecipientProfile({ view }: { view: RecipientViewDTO }) {
 
   return (
     <Card className="sm:p-8">
-      <h2 className="font-display text-2xl leading-tight font-bold tracking-[-0.02em] break-words text-pine-900">What {name} would love</h2>
+      <h2 className="font-display text-2xl leading-tight font-bold tracking-normal break-words text-pine-900">What {name} would love</h2>
       {empty ? (
         <p className="mt-3 rounded-xl bg-cream-100 px-4 py-5 text-ink-700">
           {name} hasn’t filled in a wishlist yet. Check back closer to the exchange, or ask them a question below. They won’t know it’s you.
@@ -98,7 +98,7 @@ export function RecipientProfile({ view }: { view: RecipientViewDTO }) {
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <section>
-      <h3 className="mb-2 font-display text-lg font-bold tracking-[-0.01em] text-pine-900">{title}</h3>
+      <h3 className="mb-2 font-display text-lg font-bold tracking-normal text-pine-900">{title}</h3>
       {children}
     </section>
   );

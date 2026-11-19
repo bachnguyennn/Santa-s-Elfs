@@ -1,0 +1,51 @@
+/* A finger-sized clear patch hints at the toy scene underneath the glass. */
+.workshop-frost {
+  position: absolute;
+  left: 77.7%;
+  top: 18%;
+  width: 13.3%;
+  height: 29%;
+  min-width: 44px;
+  min-height: 44px;
+  overflow: hidden;
+  border-radius: 52% 52% 2px 2px / 38% 38% 2px 2px;
+  border: 2px solid #79482d;
+  background: #60371e url("/art/workshop-skis.webp") center / cover;
+  touch-action: pan-y;
+  cursor: pointer;
+}
+.workshop-frost::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 64% 50%, transparent 5%, #d0e3df99 18%, #e2e9dfda 71%, #fff0dfee);
+  backdrop-filter: blur(2px);
+  transition: opacity 240ms ease-out;
+}
+.workshop-frost[aria-pressed="true"]::before { opacity: 0; }
+.workbench-lamp {
+  box-shadow: 0 0 0 2px #eebc6580, 0 4px 22px 4px #e9a64759;
+  animation: workbench-light-on 350ms ease-out;
+}
+@keyframes workbench-light-on {
+  from { box-shadow: 0 0 0 transparent; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .workshop-frost::before { transition: none; }
+  .workbench-lamp { animation: none; }
+}
+
+@media (max-width: 767.98px) {
+  /* The mobile painting is 260% of its viewport. Half the viewport is 19.23% of the painting. */
+  .village-panorama {
+    transform: translateX(clamp(-61.5385%, calc(19.2308% - var(--house-x)), 0%));
+  }
+}
+@media (max-width: 767.98px) and (prefers-reduced-motion: no-preference) {
+  .village-panorama { transition: transform 600ms cubic-bezier(.35,0,.2,1); }
+  .village-guide { transition: left 600ms cubic-bezier(.45,0,.22,1); }
+  .guide-step { animation: village-footstep 200ms ease-in-out 3; }
+}
+@keyframes village-footstep {
+  50% { translate: 0 -5%; rotate: 2deg; }
+}

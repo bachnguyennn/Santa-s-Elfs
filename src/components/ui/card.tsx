@@ -2,9 +2,9 @@ import * as React from "react";
 import { cn } from "@/lib/utils";
 
 /**
- * OWNER: design agent. A sheet of warm paper with an ink outline (DESIGN.md).
- * tone: "paper" (default, short blue shadow), "plain" (no shadow: dense lists, noticeboard sheets),
- * "felt" (evergreen sign ground, paper text: one per screen at most).
+ * OWNER: design agent. A cream reading surface on the workshop's wood (DESIGN.md).
+ * tone: "paper" (default, lamplit contact shadow), "plain" (no shadow: dense lists),
+ * "felt" (petrol-teal panel, buttercream text: one per screen at most).
  * Never nest Cards; use dividers or PaperSlip inside.
  */
 export function Card({
@@ -13,11 +13,11 @@ export function Card({
   ...props
 }: React.HTMLAttributes<HTMLDivElement> & { tone?: "paper" | "plain" | "felt" }) {
   const tones = {
-    paper: "border-[2.5px] border-midnight bg-paper shadow-[var(--shadow-paper)]",
-    plain: "border-[2.5px] border-midnight bg-paper",
-    felt: "felt on-pine border-[2.5px] border-midnight text-paper shadow-[var(--shadow-paper)]",
+    paper: "border border-paper-line bg-cream-50 shadow-[var(--shadow-paper)]",
+    plain: "border border-paper-line bg-cream-50",
+    felt: "on-dark bg-teal text-buttercream shadow-[var(--shadow-paper)]",
   };
-  return <div className={cn("rounded-[var(--radius-card)] p-5 sm:p-6", tones[tone], className)} {...props} />;
+  return <div className={cn("rounded-lg p-5 sm:p-7", tones[tone], className)} {...props} />;
 }
 
 /** Card heading row: title + optional action on the right. */
@@ -37,7 +37,7 @@ export function CardHeader({
   return (
     <div className={cn("mb-4 flex flex-wrap items-start justify-between gap-3", className)}>
       <div className="min-w-0">
-        <Heading className="font-display text-xl leading-tight font-bold tracking-[-0.015em] text-midnight">{title}</Heading>
+        <Heading className="font-display text-[1.6rem] leading-tight font-bold tracking-normal text-oxblood">{title}</Heading>
         {description && <p className="mt-1 text-sm text-midnight-soft">{description}</p>}
       </div>
       {action}

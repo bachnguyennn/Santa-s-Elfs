@@ -4,7 +4,6 @@ import { ArrowRight, X } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import * as React from "react";
-import { HandName } from "@/components/brand/paper-slip";
 import { Alert } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader } from "@/components/ui/card";
@@ -222,9 +221,9 @@ export function ExclusionsManager({
                   className="flex flex-col gap-3 border-t-2 border-pine-800/15 py-3 first:border-t-0 first:pt-0 sm:flex-row sm:items-center sm:justify-between"
                 >
                   <p className="min-w-0 text-ink-700">
-                    <HandName className="text-lg text-pine-900">{name(r.a)}</HandName>{" "}
+                    <span className="font-bold text-ink">{name(r.a)}</span>{" "}
                     {r.symmetric ? "and" : <span className="whitespace-nowrap">won’t give to</span>}{" "}
-                    <HandName className="text-lg text-pine-900">{name(r.b)}</HandName>
+                    <span className="font-bold text-ink">{name(r.b)}</span>
                     {r.symmetric ? " won’t draw each other" : ""}
                     {(inactive(r.a) || inactive(r.b)) && (
                       <span className="block text-sm text-ink-500">Someone here isn’t taking part, so this rule has no effect.</span>

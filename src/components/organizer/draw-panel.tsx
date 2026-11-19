@@ -4,13 +4,13 @@ import { Check, CircleAlert, Info } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import * as React from "react";
-import { Elf } from "@/components/brand/elf";
+import { ElfFigure } from "@/components/workshop/art";
 import { Sparkle, Star } from "@/components/brand/motifs";
 import { PaperSlip } from "@/components/brand/paper-slip";
 import { Alert } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Dialog, DialogClose } from "@/components/ui/dialog";
+import { ConfirmDialog } from "@/components/ui/alert-dialog";
 import { ApiRequestError, apiFetch } from "@/lib/api-client";
 import { MIN_PARTICIPANTS, type DrawReadinessDTO, type GroupStatus } from "@/lib/contracts";
 import { cn } from "@/lib/utils";
@@ -65,7 +65,7 @@ export function DrawPanel({
     return (
       <Card tone="felt" className="overflow-hidden p-6 text-center sm:p-10">
         <div className="relative mx-auto w-fit">
-          <Elf pose="hold" className="h-36 sm:h-44" />
+          <ElfFigure className="w-28 sm:w-36" />
           {justDrew &&
             ["-left-6 top-2 size-5", "-right-4 top-8 size-4", "left-2 -top-3 size-3", "-right-8 top-24 size-3"].map((pos, i) => (
               <Sparkle
@@ -76,7 +76,7 @@ export function DrawPanel({
             ))}
         </div>
         <PaperSlip tilt={-1.2} className={cn("mx-auto mt-2 max-w-md p-6 sm:p-8", justDrew && "motion-safe:animate-unfold")}>
-          <h2 ref={headingRef} tabIndex={-1} className="font-display text-[clamp(1.75rem,5vw,2.25rem)] leading-tight font-extrabold tracking-[-0.03em] text-pine-900 outline-none">
+          <h2 ref={headingRef} tabIndex={-1} className="font-display text-[clamp(1.75rem,5vw,2.25rem)] leading-tight font-bold tracking-[-0.005em] text-pine-900 outline-none">
             {status === "closed" && !justDrew ? "This exchange is closed" : "The names are drawn!"}
           </h2>
           <p className="mt-2 text-ink-700">
@@ -122,7 +122,7 @@ export function DrawPanel({
       )}
 
       <Card>
-        <h2 className="font-display text-xl font-bold tracking-[-0.015em] text-pine-900">Before the elves draw</h2>
+        <h2 className="font-display text-xl font-bold tracking-normal text-pine-900">Before the elves draw</h2>
         <ul className="mt-4 flex flex-col gap-3">
           <CheckItem
             ok={!notEnough}
@@ -181,7 +181,7 @@ export function DrawPanel({
         )}
 
         <div className="mt-6 border-t-2 border-pine-800/15 pt-6">
-          <Dialog
+          <ConfirmDialog
             open={confirmOpen}
             onOpenChange={setConfirmOpen}
             trigger={
@@ -190,23 +190,18 @@ export function DrawPanel({
               </Button>
             }
             title="Draw names now?"
-            description="This can’t be undone. Everyone gets an email with a private link; membership locks."
-            footer={
-              <>
-                <DialogClose asChild>
-                  <Button variant="secondary">Not yet</Button>
-                </DialogClose>
-                <Button variant="festive" onClick={draw} loading={drawing}>
-                  Yes, draw names
-                </Button>
-              </>
-            }
+            description="This can’t be undone. Everyone gets an email with a private link, and the group stops changing."
+            cancelLabel="Not yet"
+            actionLabel="Yes, draw names"
+            actionVariant="festive"
+            onAction={draw}
+            busy={drawing}
           >
             <p className="text-sm text-ink-700">
-              {readiness.approvedCount} people go into the hat.
+              {readiness.approvedCount} people go into the draw.
               {readiness.pendingCount > 0 ? ` ${readiness.pendingCount} pending ${readiness.pendingCount === 1 ? "request stays" : "requests stay"} out.` : ""}
             </p>
-          </Dialog>
+          </ConfirmDialog>
           {!readiness.ready && <p className="mt-3 text-sm text-ink-700">Fix the items above and the button wakes up.</p>}
         </div>
       </Card>

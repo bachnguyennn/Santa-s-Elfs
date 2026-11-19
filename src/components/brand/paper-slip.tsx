@@ -26,5 +26,5 @@ export function PaperSlip({
 
 /** A handwritten name, as written on a slip. */
 export function HandName({ className, ...props }: React.HTMLAttributes<HTMLSpanElement>) {
-  return <span className={cn("font-hand font-semibold tracking-[-0.01em]", className)} {...props} />;
+  return <span className={cn("font-hand font-semibold tracking-normal", className)} {...props} />;
 }

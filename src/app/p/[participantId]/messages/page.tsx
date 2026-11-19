@@ -3,7 +3,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Mailroom } from "@/components/messages/mailroom";
 import { Button } from "@/components/ui/button";
-import { PostOfficeDoor } from "@/components/village/doors";
 import { ParticipantShell, RoomHeader } from "@/components/village/participant-shell";
 import type { Thread, ThreadDTO } from "@/lib/contracts";
 import { AppError } from "@/server/errors";
@@ -71,8 +70,8 @@ export default async function MessagesPage({ params, searchParams }: PageProps<"
   );
 
   return (
-    <ParticipantShell participantId={participantId} className="bg-[#E4F0EA]">
-      <RoomHeader door={<PostOfficeDoor className="h-20 w-auto sm:h-28" />} title="Post Office">
+    <ParticipantShell participantId={participantId} className="bg-parchment">
+      <RoomHeader art="post-office" position="24% 46%" title="Post Office">
         Your letters, {home.participant.name}. Pick a slot to read and reply.
       </RoomHeader>
       <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 sm:py-10">

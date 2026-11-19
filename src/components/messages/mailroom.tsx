@@ -1,12 +1,15 @@
 "use client";
 
 import { Bell, BellOff, Flag, Send } from "lucide-react";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { Tabs } from "radix-ui";
 import * as React from "react";
 import { Alert } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogClose } from "@/components/ui/dialog";
-import { C, line } from "@/components/village/art";
+/* Paper and wax for the slot letters and the postmark. */
+const C = { paper: "#FFF1CE", snow: "#FFF8E6", cranberry: "#962E40" } as const;
+const line = { stroke: "#60371E", strokeLinejoin: "round" as const, strokeLinecap: "round" as const, vectorEffect: "non-scaling-stroke" as const };
 import { ApiRequestError, apiFetch } from "@/lib/api-client";
 import { MESSAGE_MAX_LENGTH, type MessageDTO, type Thread, type ThreadDTO } from "@/lib/contracts";
 import { formatInZone } from "@/lib/time";
@@ -59,7 +62,7 @@ function SlotLetters({ count }: { count: number }) {
  */
 export function Mailroom({
   participantId,
-  current,
+  current: initialThread,
   threads,
   myAlias,
   timezone,
@@ -76,6 +79,21 @@ export function Mailroom({
   /** Shown on the counter when the current slot has no conversation yet. */
   emptyState: React.ReactNode;
 }) {
+  // The open slot. Switching is instant (Radix Tabs) and mirrored into ?thread= with replace, so deep
+  // links keep working and Back still returns to the village doorstep.
+  const router = useRouter();
+  const [current, setCurrent] = React.useState<Thread>(initialThread);
+  const [seenInitial, setSeenInitial] = React.useState(initialThread);
+  if (seenInitial !== initialThread) {
+    setSeenInitial(initialThread);
+    setCurrent(initialThread);
+  }
+  function choose(next: string) {
+    if (next !== "recipient" && next !== "santa") return;
+    setCurrent(next);
+    router.replace(`/p/${participantId}/messages?thread=${next}`, { scroll: false });
+  }
+
   const [desks, setDesks] = React.useState<Partial<Record<Thread, Desk>>>(() => ({
     ...(threads.recipient ? { recipient: deskFor(threads.recipient) } : {}),
     ...(threads.santa ? { santa: deskFor(threads.santa) } : {}),
@@ -220,43 +238,8 @@ export function Mailroom({
     { k: "santa", title: "From your Santa", sub: santa ? `Signed ${santa.santaAlias}` : "Your Santa’s alias", letters: santa?.messages.length ?? 0 },
   ];
 
-  return (
-    <div className="grid gap-8 lg:grid-cols-[18rem_minmax(0,1fr)] lg:items-start">
-      {/* ───────── The slot cabinet ───────── */}
-      <nav aria-label="Mail slots" className="rounded-2xl border-[2.5px] border-midnight bg-timber p-2.5 lg:sticky lg:top-6">
-        <ul className="grid grid-cols-2 gap-2.5 lg:grid-cols-1">
-          {slots.map((s) => {
-            const active = s.k === current;
-            return (
-              <li key={s.k}>
-                <Link
-                  href={`/p/${participantId}/messages?thread=${s.k}`}
-                  replace
-                  scroll={false}
-                  aria-current={active ? "page" : undefined}
-                  className={cn(
-                    "relative flex min-h-28 flex-col justify-end rounded-lg border-[2.5px] border-midnight bg-evergreen-deep p-2.5 transition-transform duration-200 ease-[var(--ease-out-quint)] hover:-translate-y-0.5 sm:min-h-32",
-                    active && "ring-4 ring-golden",
-                  )}
-                >
-                  <SlotLetters count={active ? Math.max(2, s.letters) : s.letters} />
-                  <span className="relative rounded-md border-2 border-midnight bg-golden px-2.5 py-1.5 text-midnight">
-                    <span className="block font-display text-[1.0625rem] leading-tight font-extrabold break-words">{s.title}</span>
-                    <span className="block text-sm font-bold">{s.sub}</span>
-                  </span>
-                </Link>
-              </li>
-            );
-          })}
-        </ul>
-        <div aria-hidden className="mt-2.5 hidden grid-cols-3 gap-2.5 lg:grid">
-          {[0, 1, 2].map((i) => (
-            <span key={i} className="h-12 rounded-md border-[2.5px] border-midnight bg-evergreen-deep" />
-          ))}
-        </div>
-      </nav>
-
-      {/* ───────── The counter: the active conversation ───────── */}
+  // The counter: the open conversation.
+  const counter = (
       <section aria-labelledby="thread-title" className="village-paper overflow-hidden">
         {!desk ? (
           <div className="px-5 py-6 sm:px-7">
@@ -271,21 +254,21 @@ export function Mailroom({
               <div className="min-w-0">
                 {current === "recipient" ? (
                   <>
-                    <h2 id="thread-title" className="font-display text-2xl leading-tight font-extrabold tracking-[-0.02em] break-words">
+                    <h2 id="thread-title" className="font-display text-2xl leading-tight font-bold tracking-normal break-words">
                       <span className="sr-only">Conversation with </span>
                       <span className="font-hand text-[1.75rem] text-cranberry">{desk.thread.counterpartLabel}</span>
                     </h2>
-                    <p className="mt-1 text-midnight-soft">
-                      You appear as <span className="font-hand text-lg font-bold text-evergreen">{desk.thread.santaAlias}</span>. Your recipient
+                    <p className="mt-1 text-ink-700">
+                      You appear as <span className="font-hand text-lg font-bold text-teal">{desk.thread.santaAlias}</span>. Your recipient
                       sees your alias, and in a small group they might still guess.
                     </p>
                   </>
                 ) : (
                   <>
-                    <h2 id="thread-title" className="font-display text-2xl leading-tight font-extrabold tracking-[-0.02em]">
-                      <span className="font-hand text-[1.75rem] text-evergreen">{desk.thread.santaAlias}</span> — Your Secret Santa
+                    <h2 id="thread-title" className="font-display text-2xl leading-tight font-bold tracking-normal">
+                      <span className="font-hand text-[1.75rem] text-teal">{desk.thread.santaAlias}</span> — Your Secret Santa
                     </h2>
-                    <p className="mt-1 text-midnight-soft">The Santa who drew you sees your name. You only see their alias.</p>
+                    <p className="mt-1 text-ink-700">The Santa who drew you sees your name. You only see their alias.</p>
                   </>
                 )}
               </div>
@@ -305,7 +288,7 @@ export function Mailroom({
 
             <ol className="flex flex-col gap-3 px-5 py-5 sm:px-7" aria-label="Letters, oldest first">
               {desk.thread.messages.length === 0 && (
-                <li className="rounded-xl bg-cream-100 px-4 py-8 text-center text-midnight-soft">
+                <li className="rounded-xl bg-cream-100 px-4 py-8 text-center text-ink-700">
                   {current === "recipient"
                     ? `No letters yet. Ask ${desk.thread.counterpartLabel} about sizes, colours or anything on their list.`
                     : "No letters from your Santa yet. You can write first: a thank-you, or a hint."}
@@ -318,13 +301,13 @@ export function Mailroom({
                   </span>
                   <p
                     className={cn(
-                      "relative rounded-xl border-2 border-midnight px-4 py-2.5 whitespace-pre-wrap [overflow-wrap:anywhere]",
+                      "relative rounded-xl border border-paper-line px-4 py-2.5 whitespace-pre-wrap [overflow-wrap:anywhere]",
                       m.fromMe ? "rounded-br-sm bg-cream-200" : "rounded-bl-sm bg-sky",
                     )}
                   >
                     {m.body}
                     {desk.stamped.includes(m.id) && (
-                      <Postmark className="absolute -top-4 -right-3 size-11 motion-safe:animate-[stamp-in_260ms_var(--ease-out-expo)_both]" />
+                      <Postmark className="absolute -top-4 -right-3 size-11 motion-safe:animate-[stamp-in_260ms_linear_both]" />
                     )}
                   </p>
                   <span className="flex items-center gap-2 px-1 text-xs text-ink-500">
@@ -333,7 +316,7 @@ export function Mailroom({
                       <button
                         type="button"
                         onClick={() => setReporting(m)}
-                        className="-my-3 inline-flex min-h-11 items-center gap-1 rounded-md px-2 font-bold text-midnight-soft underline-offset-2 hover:text-cranberry-deep hover:underline"
+                        className="-my-3 inline-flex min-h-11 items-center gap-1 rounded-md px-2 font-bold text-ink-700 underline-offset-2 hover:text-cranberry-deep hover:underline"
                       >
                         <Flag className="size-3.5" aria-hidden /> Report<span className="sr-only"> this message</span>
                       </button>
@@ -353,7 +336,7 @@ export function Mailroom({
                 You can’t send letters right now. Their wishlist is still in your envelope.
               </Alert>
             ) : (
-              <form key={current} onSubmit={send} className="border-t-2 border-dashed border-snow-shadow bg-snow px-5 py-5 sm:px-7">
+              <form key={current} onSubmit={send} className="border-t border-dashed border-line bg-cream-100 px-5 py-5 sm:px-7">
                 <label htmlFor="message-body" className="block text-[0.9375rem] font-bold">
                   {current === "recipient" ? `Message to ${desk.thread.counterpartLabel}` : `Message to ${desk.thread.santaAlias}, your Secret Santa`}
                 </label>
@@ -366,7 +349,7 @@ export function Mailroom({
                   rows={3}
                   aria-describedby={cn("message-hint", desk.error && "message-error")}
                   aria-invalid={desk.error ? true : undefined}
-                  className="mt-1.5 block max-h-60 min-h-24 w-full resize-y rounded-xl border-2 border-midnight bg-white px-3.5 py-3 text-base leading-relaxed [field-sizing:content]"
+                  className="mt-1.5 block max-h-60 min-h-24 w-full resize-y rounded-xl border border-paper-line bg-white px-3.5 py-3 text-base leading-relaxed [field-sizing:content]"
                 />
                 <p id="message-hint" className="mt-1.5 flex justify-between gap-3 text-xs text-ink-500">
                   <span className="hidden [@media(hover:hover)_and_(pointer:fine)]:inline">Enter to send, Shift+Enter for a new line</span>
@@ -378,7 +361,7 @@ export function Mailroom({
                   <Button type="submit" variant="festive" loading={desk.sending} disabled={!desk.draft.trim()} className="w-full sm:w-auto">
                     {!desk.sending && <Send aria-hidden />} {desk.sending ? "Sending…" : "Send letter"}
                   </Button>
-                  <p role="status" aria-live="polite" className="text-[0.9375rem] font-bold text-evergreen">
+                  <p role="status" aria-live="polite" className="text-[0.9375rem] font-bold text-teal">
                     {desk.notice}
                   </p>
                 </div>
@@ -392,6 +375,42 @@ export function Mailroom({
           </>
         )}
       </section>
+  );
+
+  return (
+    <Tabs.Root value={current} onValueChange={choose} className="grid gap-8 lg:grid-cols-[18rem_minmax(0,1fr)] lg:items-start">
+      {/* ───────── The slot cabinet: exactly two slots, one per conversation ───────── */}
+      <div className="rounded-lg bg-[linear-gradient(#1b6a62,#145851)] p-2.5 shadow-[var(--shadow-paper)] lg:sticky lg:top-6">
+        <Tabs.List aria-label="Mail slots" className="grid grid-cols-2 gap-2.5 lg:grid-cols-1">
+          {slots.map((s) => {
+            const active = s.k === current;
+            return (
+              <Tabs.Trigger
+                key={s.k}
+                value={s.k}
+                className={cn(
+                  "relative flex min-h-28 flex-col justify-end rounded-md bg-teal-deep p-2.5 text-left shadow-[inset_0_6px_10px_rgb(0_0_0/0.35)] transition-transform duration-200 ease-[var(--ease-workshop)] hover:-translate-y-0.5 sm:min-h-32",
+                  "focus-visible:outline-brass",
+                  active && "ring-3 ring-brass",
+                )}
+              >
+                <SlotLetters count={active ? Math.max(2, s.letters) : s.letters} />
+                <span className="relative rounded-[3px] bg-brass px-2.5 py-1.5 text-ink shadow-[0_3px_6px_-2px_rgb(48_28_34/0.45)]">
+                  <span className="block font-display text-[1.25rem] leading-tight font-bold break-words">{s.title}</span>
+                  <span className="block text-sm font-bold">{s.sub}</span>
+                </span>
+              </Tabs.Trigger>
+            );
+          })}
+        </Tabs.List>
+      </div>
+
+
+      {slots.map((s) => (
+        <Tabs.Content key={s.k} value={s.k} className="min-w-0 focus-visible:outline-offset-4">
+          {s.k === current && counter}
+        </Tabs.Content>
+      ))}
 
       <Dialog
         open={reporting !== null}
@@ -409,8 +428,8 @@ export function Mailroom({
           </>
         }
       >
-        {reporting && <p className="rounded-xl bg-cream-100 px-4 py-3 text-sm whitespace-pre-wrap text-midnight-soft [overflow-wrap:anywhere]">{reporting.body}</p>}
+        {reporting && <p className="rounded-xl bg-cream-100 px-4 py-3 text-sm whitespace-pre-wrap text-ink-700 [overflow-wrap:anywhere]">{reporting.body}</p>}
       </Dialog>
-    </div>
+    </Tabs.Root>
   );
 }

@@ -13,7 +13,7 @@ export function artA11y(title?: string) {
   return title ? { role: "img" as const, "aria-label": title } : { "aria-hidden": true as const, focusable: "false" as const };
 }
 
-export const LINE = "#172D38";
+export const LINE = "#301C22";
 export const lineProps = {
   stroke: LINE,
   strokeWidth: 2,
@@ -69,7 +69,7 @@ export function Holly({ title, className, ...props }: ArtProps) {
     <svg viewBox="0 0 64 40" className={cn("h-8 w-auto", className)} {...artA11y(title)} {...props}>
       <path
         d="M31 22c-6-9-16-14-27-12 3 2 3 5 1 7 4 0 6 2 6 5 3-2 6-2 8 1 1-3 4-4 7-3-1-2 1-4 5 2z"
-        fill="#2E7A5C"
+        fill="#1B6A62"
         {...lp}
       />
       <path
@@ -77,9 +77,9 @@ export function Holly({ title, className, ...props }: ArtProps) {
         fill="#3f8a66"
         {...lp}
       />
-      <circle cx="27" cy="26" r="5" fill="#B52F46" {...lp} />
-      <circle cx="37" cy="26" r="5" fill="#B52F46" {...lp} />
-      <circle cx="32" cy="18" r="5" fill="#C9485D" {...lp} />
+      <circle cx="27" cy="26" r="5" fill="#962E40" {...lp} />
+      <circle cx="37" cy="26" r="5" fill="#962E40" {...lp} />
+      <circle cx="32" cy="18" r="5" fill="#B04558" {...lp} />
     </svg>
   );
 }
