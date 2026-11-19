@@ -63,10 +63,10 @@ export function EnvelopeDemo({ opened, delay, fail }: { opened: boolean; delay: 
             </p>
           </section>
           <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center">
-            <Link href="#" className={cn(vb.base, vb.evergreen, "w-full sm:w-auto")}>
+            <Link href="/preview/participant/post-office?thread=recipient" className={cn(vb.base, vb.evergreen, "w-full sm:w-auto")}>
               <MessageCircle aria-hidden /> Ask {letter.recipientName.split(" ")[0]} a question
             </Link>
-            <Link href="#" className="inline-flex min-h-11 items-center justify-center px-2 font-bold text-evergreen underline decoration-2 underline-offset-4">
+            <Link href="/preview/participant" className="inline-flex min-h-11 items-center justify-center px-2 font-bold text-evergreen underline decoration-2 underline-offset-4">
               Back to your village
             </Link>
           </div>

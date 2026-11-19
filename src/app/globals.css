@@ -258,6 +258,18 @@ body {
   }
 }
 
+/* The elf's postmark landing on a letter that was just sent. */
+@keyframes stamp-in {
+  from {
+    opacity: 0;
+    transform: scale(1.6) rotate(-24deg);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) rotate(-12deg);
+  }
+}
+
 @layer components {
   .snow-layer {
     container-type: size;

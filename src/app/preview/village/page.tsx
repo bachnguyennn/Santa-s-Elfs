@@ -33,7 +33,7 @@ export default function VillagePreview() {
           <section aria-labelledby="square-title" className="relative bg-sky lg:h-[44rem]">
             <SnowLayer className="top-0 right-0 hidden h-[24rem] w-[48%] lg:block" />
 
-            <div className="relative z-10 mx-auto max-w-6xl px-4 pt-6 sm:px-6 lg:pt-16">
+            <div className="relative z-10 mx-auto max-w-6xl px-4 pt-4 sm:px-6 sm:pt-6 lg:pt-16">
               <div className="max-w-[36rem]">
                 <h1
                   id="square-title"
@@ -41,11 +41,11 @@ export default function VillagePreview() {
                 >
                   Secret Santa, drawn by <span className="text-cranberry">elves</span>.
                 </h1>
-                <p className="mt-5 max-w-[32rem] text-lg leading-relaxed sm:text-xl">
+                <p className="mt-4 max-w-[32rem] text-lg leading-snug sm:mt-5 sm:text-xl sm:leading-relaxed">
                   Start a group and share one invite link. The elves draw names, and everyone opens a sealed envelope with their
                   person inside.
                 </p>
-                <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:items-center">
+                <div className="mt-5 flex flex-col gap-3 sm:mt-7 sm:flex-row sm:items-center">
                   <Link href="/new" className={cn(vb.base, vb.primary, vb.lg, "w-full sm:w-auto")}>
                     Start a group
                   </Link>
@@ -53,15 +53,18 @@ export default function VillagePreview() {
                     Recover my link
                   </Link>
                 </div>
-                <p className="mt-4 text-[0.9375rem] font-bold text-midnight-soft">Free · No accounts · 3 to 20 people</p>
-                <p className="mt-5 inline-block rounded-xl border-2 border-midnight bg-paper px-4 py-3 text-[0.9375rem] leading-snug">
-                  Invited to a group? Open the invitation link you were sent. It takes you straight to the welcome desk.
+                <p className="mt-3 text-[0.9375rem] font-bold text-midnight-soft sm:mt-4">Free · No accounts · 3 to 20 people</p>
+                <p className="mt-3 inline-block rounded-xl border-2 border-midnight bg-paper px-3.5 py-2 text-[0.9375rem] leading-snug sm:mt-5 sm:px-4 sm:py-3">
+                  <span className="sm:hidden">Already invited? Open your invite link.</span>
+                  <span className="hidden sm:inline">
+                    Invited to a group? Open the invitation link you were sent. It takes you straight to the welcome desk.
+                  </span>
                 </p>
               </div>
             </div>
 
             {/* the square itself */}
-            <div className="relative -mt-4 lg:hidden">
+            <div className="relative -mt-2 lg:hidden">
               <SnowLayer className="inset-x-0 top-0 h-1/2" density={0.5} />
               <SquareSceneNarrow className="block h-auto w-full" />
             </div>

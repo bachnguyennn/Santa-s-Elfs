@@ -341,6 +341,26 @@ export function GiftHouse({ x, y, s = 1 }: BuildingProps) {
   );
 }
 
+/** A post-box on a stake, its flag up and a letter peeking out. For the participant's own envelope. */
+export function Mailbox({ x, y, s = 1, flagUp = true }: At & { flagUp?: boolean }) {
+  return (
+    <g transform={place({ x, y, s })}>
+      <SnowShadow cx={16} cy={1} rx={34} ry={5} />
+      <rect x={-5} y={-78} width={10} height={78} fill={C.timber} {...line} />
+      <path d="M-34 -78v-30a22 22 0 0 1 22-22h44a22 22 0 0 1 22 22v30z" fill={C.cranberry} {...line} />
+      <path d="M-30 -116a20 20 0 0 1 16-12" fill="none" stroke="#C9485D" strokeWidth={5} strokeLinecap="round" />
+      <path d="M-36 -126c8-10 26-12 44-10 12 1 22 4 28 10-8 4-18 4-26 0-10 4-24 4-34 0-4 3-8 2-12 0z" fill={C.snow} {...line} />
+      <rect x={-22} y={-104} width={30} height={18} rx={2} fill={C.paper} {...line} transform="rotate(-12 -7 -95)" />
+      <path d="M-22 -104l15 10 15-10" fill="none" {...thin} transform="rotate(-12 -7 -95)" />
+      {flagUp ? (
+        <path d="M34 -84v-44h20v14H38" fill={C.golden} {...line} />
+      ) : (
+        <path d="M34 -84h40v-12H38" fill={C.golden} {...line} />
+      )}
+    </g>
+  );
+}
+
 /** A lamp post with a golden lantern. */
 export function LampPost({ x, y, s = 1 }: At) {
   return (

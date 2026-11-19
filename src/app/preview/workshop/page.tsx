@@ -19,17 +19,19 @@ const GROUP = {
   invite: "https://santaelf.app/j/MAPLE-7QX4",
 };
 
-type Person = { name: string; email: string; organizer?: boolean; wishlist: boolean; email_: "sent" | "failed" | "sending" };
+/** Mirrors OrganizerParticipantDTO.lastEmail: the latest email's template and delivery status. */
+type Template = "participant_welcome" | "join_approved" | "participant_recovery";
+type Person = { name: string; email: string; organizer?: boolean; wishlist: boolean; email_: "sent" | "failed" | "sending"; template: Template };
 const PEOPLE: Person[] = [
-  { name: "Priya Raman", email: "priya.r@example.com", organizer: true, wishlist: true, email_: "sent" },
-  { name: "Tomás Ortega", email: "tomas.ortega@example.com", wishlist: true, email_: "sent" },
-  { name: "Margaret Okonkwo-Fitzgerald", email: "auntie.mags@example.com", wishlist: false, email_: "sent" },
-  { name: "Jonah Lee", email: "jonah@example.com", wishlist: true, email_: "sent" },
-  { name: "Mei Chen", email: "mei.chen@example.com", wishlist: true, email_: "sent" },
-  { name: "Sam Whitaker", email: "sam.whitaker@exmaple.com", wishlist: false, email_: "failed" },
-  { name: "Lina Haddad", email: "lina.h@example.com", wishlist: true, email_: "sent" },
-  { name: "Oskar Nilsson", email: "oskar.n@example.com", wishlist: false, email_: "sending" },
-  { name: "Rosie Delgado", email: "rosie.d@example.com", wishlist: true, email_: "sent" },
+  { name: "Priya Raman", email: "priya.r@example.com", organizer: true, wishlist: true, email_: "sent", template: "participant_welcome" },
+  { name: "Tomás Ortega", email: "tomas.ortega@example.com", wishlist: true, email_: "sent", template: "join_approved" },
+  { name: "Margaret Okonkwo-Fitzgerald", email: "auntie.mags@example.com", wishlist: false, email_: "sent", template: "join_approved" },
+  { name: "Jonah Lee", email: "jonah@example.com", wishlist: true, email_: "sent", template: "join_approved" },
+  { name: "Mei Chen", email: "mei.chen@example.com", wishlist: true, email_: "sent", template: "join_approved" },
+  { name: "Sam Whitaker", email: "sam.whitaker@exmaple.com", wishlist: false, email_: "failed", template: "join_approved" },
+  { name: "Lina Haddad", email: "lina.h@example.com", wishlist: true, email_: "sent", template: "participant_recovery" },
+  { name: "Oskar Nilsson", email: "oskar.n@example.com", wishlist: false, email_: "sending", template: "join_approved" },
+  { name: "Rosie Delgado", email: "rosie.d@example.com", wishlist: true, email_: "sent", template: "join_approved" },
 ];
 const PENDING = { name: "Theo Brandt", email: "theo.brandt@example.com", asked: "2 hours ago" };
 
@@ -84,10 +86,15 @@ function Pin({ className }: { className?: string }) {
 }
 
 const EMAIL = {
-  sent: { icon: MailCheck, text: "Private link emailed", cls: "text-midnight-soft" },
-  sending: { icon: Send, text: "Email on its way", cls: "text-midnight-soft" },
-  failed: { icon: MailWarning, text: "Email failed", cls: "font-bold text-cranberry-deep" },
+  sent: { icon: MailCheck, text: "sent", cls: "text-midnight-soft" },
+  sending: { icon: Send, text: "on its way", cls: "text-midnight-soft" },
+  failed: { icon: MailWarning, text: "failed", cls: "font-bold text-cranberry-deep" },
 } as const;
+const TEMPLATE: Record<Template, string> = {
+  participant_welcome: "Welcome email",
+  join_approved: "Approval email",
+  participant_recovery: "New-link email",
+};
 
 export default function WorkshopPreview() {
   const taking = PEOPLE.length;
@@ -236,7 +243,7 @@ export default function WorkshopPreview() {
                             </p>
                             <p className="mt-0.5 flex flex-wrap gap-x-4 gap-y-0.5 text-sm">
                               <span className={cn("inline-flex items-center gap-1.5", e.cls)}>
-                                <e.icon className="size-4" aria-hidden /> {e.text}
+                                <e.icon className="size-4" aria-hidden /> {TEMPLATE[p.template]} {e.text}
                               </span>
                               <span className="inline-flex items-center gap-1.5 text-midnight-soft">
                                 <Gift className="size-4" aria-hidden /> {p.wishlist ? "Wishlist added" : "No wishlist yet"}
@@ -332,6 +339,9 @@ export default function WorkshopPreview() {
                     </div>
                   ))}
                 </dl>
+                <p className="mt-3 text-sm leading-snug text-midnight-soft">
+                  These count single emails, not people. Everyone who joins gets two: one when they ask, one when you approve.
+                </p>
               </section>
             </aside>
           </div>

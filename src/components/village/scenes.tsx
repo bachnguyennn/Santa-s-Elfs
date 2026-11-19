@@ -1,5 +1,5 @@
 import * as React from "react";
-import { C, Cottage, ElfCourier, Footprints, GiftHouse, line, Pine, PostOffice, Santa, Sleigh, SnowShadow, Workshop } from "./art";
+import { C, Cottage, ElfCourier, Footprints, GiftHouse, line, Mailbox, Pine, PostOffice, Santa, Sleigh, SnowShadow, Workshop } from "./art";
 
 /**
  * Composed scenes. Every scene is one decorative <svg aria-hidden>; all text and controls live in HTML
@@ -47,7 +47,7 @@ export function SquareSceneWide({ className }: { className?: string }) {
 /** Village Square, phones: tree on the left, Santa and the sleigh on the right, the elf in front. */
 export function SquareSceneNarrow({ className }: { className?: string }) {
   return (
-    <svg viewBox="0 0 400 340" className={className} aria-hidden focusable="false">
+    <svg viewBox="0 84 400 256" className={className} aria-hidden focusable="false">
       <path d="M0 150c80-24 180-30 260-18s110 10 140 2V340H0z" fill="#E3F5FC" />
       <Cottage x={300} y={170} s={0.55} roof={C.evergreen} chimneyTilt={6} />
       <Cottage x={150} y={176} s={0.5} wall="#FCE2C2" roof={C.cranberry} chimneyTilt={-6} />
@@ -91,6 +91,19 @@ export function GiftHouseArt({ className }: { className?: string }) {
       <path d="M-200 6c80-12 140-14 200-8s130 6 200-4V20h-400z" fill={C.snow} />
       <path d="M-200 6c80-12 140-14 200-8s130 6 200-4" fill="none" {...line} />
       <GiftHouse x={0} y={6} />
+    </svg>
+  );
+}
+
+/** The participant's own cottage, with the post-box where their envelope waits. */
+export function MailboxArt({ className }: { className?: string }) {
+  return (
+    <svg viewBox="-200 -200 400 220" className={className} aria-hidden focusable="false">
+      <path d="M-200 6c80-12 140-14 200-8s130 6 200-4V20h-400z" fill={C.snow} />
+      <path d="M-200 6c80-12 140-14 200-8s130 6 200-4" fill="none" {...line} />
+      <Cottage x={-50} y={6} s={1.05} wall="#FCE2C2" roof={C.evergreen} chimneyTilt={6} />
+      <Mailbox x={110} y={6} s={1.05} />
+      <Pine x={176} y={8} s={0.42} />
     </svg>
   );
 }

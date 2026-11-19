@@ -1,19 +1,12 @@
-import { Lock } from "lucide-react";
 import type { Metadata } from "next";
-import Link from "next/link";
 import { SkipLink } from "@/components/ui/page-shell";
-import { SnowLayer, SnowToggle } from "@/components/village/snow";
-import { VillageFooter, VillageLogo } from "@/components/village/village-chrome";
+import { ParticipantHeader } from "@/components/village/participant-header";
+import { SnowLayer } from "@/components/village/snow";
+import { VillageFooter } from "@/components/village/village-chrome";
+import { PREVIEW_PLACES } from "../participant/places";
 import { EnvelopeDemo } from "./envelope-demo";
 
 export const metadata: Metadata = { title: "Preview · Your envelope" };
-
-const PLACES = [
-  { label: "Your envelope", current: true },
-  { label: "Post Office · Messages" },
-  { label: "Gift House · Wishlist" },
-  { label: "Your village" },
-];
 
 export default async function EnvelopePreview({ searchParams }: PageProps<"/preview/envelope">) {
   const sp = await searchParams;
@@ -24,37 +17,7 @@ export default async function EnvelopePreview({ searchParams }: PageProps<"/prev
   return (
     <div className="flex min-h-full flex-col bg-snow text-midnight">
       <SkipLink />
-      <header className="relative z-20 bg-sky">
-        <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-2 sm:px-6">
-          <VillageLogo />
-          <div className="flex items-center gap-1">
-            <SnowToggle className="hidden sm:inline-flex" />
-            <span className="inline-flex items-center gap-1.5 rounded-full border-2 border-midnight bg-paper px-3 py-1 text-sm font-bold">
-              <Lock className="size-3.5" aria-hidden /> Private page
-            </span>
-          </div>
-        </div>
-        <nav aria-label="Your village" className="mx-auto max-w-6xl">
-          <ul className="flex gap-1 overflow-x-auto px-2 [scrollbar-width:none] sm:px-4">
-            {PLACES.map((p) => (
-              <li key={p.label} className="shrink-0">
-                <Link
-                  href="#"
-                  aria-current={p.current ? "page" : undefined}
-                  className={
-                    p.current
-                      ? "relative inline-flex min-h-12 items-center px-3 text-[0.9375rem] font-bold text-midnight"
-                      : "inline-flex min-h-12 items-center px-3 text-[0.9375rem] font-bold text-evergreen underline decoration-2 underline-offset-4"
-                  }
-                >
-                  {p.label}
-                  {p.current && <span aria-hidden className="absolute inset-x-3 bottom-1.5 h-1 rounded-full bg-cranberry" />}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
-      </header>
+      <ParticipantHeader places={PREVIEW_PLACES} />
 
       <main id="main" tabIndex={-1} className="flex-1 outline-none">
         <div className="relative bg-sky pb-2">

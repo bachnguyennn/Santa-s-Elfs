@@ -11,6 +11,7 @@ import { cn } from "@/lib/utils";
  * The sign is real HTML text: "Post Office · Messages".
  */
 export function BuildingLink({
+  id,
   href,
   name,
   purpose,
@@ -19,6 +20,8 @@ export function BuildingLink({
   signClassName,
   artClassName,
 }: {
+  /** Anchor for ordinary links back to this doorstep, e.g. "post-office". */
+  id?: string;
   href: string;
   /** The building's name on the sign, e.g. "Post Office". */
   name: string;
@@ -31,8 +34,12 @@ export function BuildingLink({
   artClassName?: string;
 }) {
   const [entering, setEntering] = React.useState(false);
+  // Next keeps the previous page alive (React <Activity>) for Back. Close the door when this page is
+  // hidden, so the visitor returns to a closed door on the same doorstep.
+  React.useLayoutEffect(() => () => setEntering(false), []);
   return (
     <Link
+      id={id}
       href={href}
       data-entering={entering}
       onClick={() => setEntering(true)}
