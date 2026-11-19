@@ -51,17 +51,6 @@ export default function Home() {
           </div>
         </section>
 
-        {/* ───────── Down the ribbon to the village ───────── */}
-        <VillageRoute
-          heading="Follow the ribbon"
-          intro={
-            <p>
-              Organizers start in the Workshop, and the Post Office resends lost links. Once you’re in a group, your envelope, letters and
-              wishlist are on your own street.
-            </p>
-          }
-        />
-
         {/* ───────── The notice on the Workshop door ───────── */}
         <section aria-labelledby="how-title" className="bg-parchment">
           <div className="mx-auto grid max-w-6xl gap-8 px-4 py-14 sm:px-8 sm:py-20 lg:grid-cols-2 lg:gap-12">
@@ -100,6 +89,17 @@ export default function Home() {
             </div>
           </div>
         </section>
+
+        {/* ───────── Then the village: where everything lives ───────── */}
+        <VillageRoute
+          heading="Follow the ribbon"
+          intro={
+            <p>
+              Organizers start in the Workshop, and the Post Office resends lost links. Once you’re in a group, your envelope, letters and
+              wishlist are on your own street.
+            </p>
+          }
+        />
       </main>
       <SiteFooter showHome={false} />
     </div>

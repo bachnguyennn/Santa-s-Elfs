@@ -117,7 +117,7 @@ export function VillageRoute({ stops = PUBLIC_STOPS, heading, intro }: { stops?:
 
   return (
     <section aria-labelledby="street-title" className="on-dark relative bg-oxblood text-buttercream">
-      <div ref={trackRef} className="relative h-[125vh] sm:h-[175vh] motion-reduce:h-auto">
+      <div ref={trackRef} className="relative h-[140vh] sm:h-[150vh] motion-reduce:h-auto">
         <div className="sticky top-0 flex min-h-[100svh] flex-col justify-start gap-6 overflow-hidden py-10 sm:justify-center motion-reduce:static motion-reduce:min-h-0">
           <div className="mx-auto w-full max-w-6xl px-4 sm:px-8">
             <h2 id="street-title" className="font-display text-[clamp(2.5rem,6vw,4.5rem)] leading-[0.95] font-bold">
