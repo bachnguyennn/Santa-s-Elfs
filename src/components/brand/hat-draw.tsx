@@ -10,10 +10,12 @@ import { HandName } from "./paper-slip";
  * The landing hero's signature interaction: a folded slip sticks out of the hat; pressing it
  * draws the slip and unfolds it in place. The hat hands out only the alias; who you're buying
  * for stays sealed, and the example envelope further down the page reveals that half.
- * "Put it back" returns the slip. Example content only. Under reduced motion the unfold is instant.
+ * Each draw picks one of the example `aliases`, never the same one twice in a row; "Put it back"
+ * (or Escape) returns the slip. Example content only. Under reduced motion the unfold is instant.
  */
-export function HatDraw({ className }: { className?: string }) {
+export function HatDraw({ aliases, className }: { aliases: readonly string[]; className?: string }) {
   const [drawn, setDrawn] = React.useState(false);
+  const [alias, setAlias] = React.useState(aliases[0]);
   const resultRef = React.useRef<HTMLParagraphElement>(null);
   const groupRef = React.useRef<HTMLDivElement>(null);
   const drawRef = React.useRef<HTMLButtonElement>(null);
@@ -28,6 +30,7 @@ export function HatDraw({ className }: { className?: string }) {
 
   function toggle(next: boolean) {
     moveFocus.current = true;
+    if (next) setAlias((prev) => pickAlias(aliases, prev));
     setDrawn(next);
   }
 
@@ -58,12 +61,15 @@ export function HatDraw({ className }: { className?: string }) {
           aria-label="Example draw"
           // Once unfolded, bring the whole result, including "Put it back", on screen (short phones).
           onAnimationEnd={() => groupRef.current?.scrollIntoView({ block: "nearest" })}
-          className="slip slip-plain absolute top-0 right-0 z-20 w-[64%] -rotate-2 animate-unfold p-4 text-center sm:top-[2%] sm:right-auto sm:left-[10%] sm:w-[min(18rem,84%)] sm:p-6"
+          onKeyDown={(e) => {
+            if (e.key === "Escape") toggle(false);
+          }}
+          className="slip slip-plain absolute top-0 right-0 z-20 w-[64%] -rotate-2 animate-unfold px-3 py-4 text-center sm:top-[2%] sm:right-auto sm:left-[10%] sm:w-[min(18rem,84%)] sm:p-6"
         >
           <span aria-hidden className="absolute -top-3 left-1/2 h-6 w-14 -translate-x-1/2 rotate-2 rounded-sm bg-gold-200/90 shadow-sm" />
           <p ref={resultRef} tabIndex={-1} className="text-sm text-ink-700">
             The elves named you
-            <HandName className="block text-[2rem] leading-tight font-bold text-berry-700">Dasher</HandName>
+            <HandName className="block text-[1.75rem] leading-tight font-bold text-berry-700 sm:text-[2rem]">{alias}</HandName>
           </p>
           <p className="mt-1 text-sm text-ink-700 [text-wrap:balance]">Sign your messages with it. Who you’re buying for stays sealed.</p>
           <p className="mt-1 text-xs text-ink-500">An example draw.</p>
@@ -86,4 +92,11 @@ export function HatDraw({ className }: { className?: string }) {
       )}
     </div>
   );
+}
+
+/** A different example alias from last time. Decorative only, so no fairness or secrecy rides on it. */
+function pickAlias(aliases: readonly string[], previous: string): string {
+  const others = aliases.filter((a) => a !== previous);
+  const pool = others.length ? others : aliases;
+  return pool[crypto.getRandomValues(new Uint32Array(1))[0] % pool.length];
 }
