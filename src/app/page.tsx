@@ -18,9 +18,9 @@ const STEPS = [
 ];
 
 const RULES = [
-  { title: "Nobody sees the full list", body: "Not even the organizer. If someone disappears, the organizer can look up that one match with a code sent to their email, and it’s logged." },
+  { title: "Nobody sees the full list", body: "That includes the organizer. If someone disappears, the organizer can look up that one match with a code sent to their email, and the lookup is logged." },
   { title: "People may still guess", body: "Your person sees your secret alias, not your name. In a small group they might still work it out from your messages or your gift." },
-  { title: "Free, for 3 to 20 people", body: "No accounts, no app to install, no paid tier. Your private link is your key." },
+  { title: "Free, for 3 to 20 people", body: "You don’t sign up, install an app or pay. You get in with the private link we email you." },
   { title: "Gone after the gifts", body: "Groups and everything in them are deleted automatically 60 days after the exchange." },
 ];
 
@@ -56,8 +56,8 @@ export default function Home() {
           heading="Follow the ribbon"
           intro={
             <p>
-              Each building does one job. Organizers start in the Workshop, and the Post Office resends lost links. Once you’re in a group, your
-              envelope, letters and wishlist live on your own street.
+              Organizers start in the Workshop, and the Post Office resends lost links. Once you’re in a group, your envelope, letters and
+              wishlist are on your own street.
             </p>
           }
         />
@@ -88,7 +88,7 @@ export default function Home() {
               <WorkshopEntranceLink className={cn(buttonVariants({ variant: "primary" }), "mt-4 w-full sm:w-auto")}>Start a group</WorkshopEntranceLink>
             </div>
             <div className="rounded-lg bg-teal-wash p-6 text-ink sm:p-8">
-              <h2 className="font-display text-[clamp(2.25rem,5vw,3.25rem)] leading-[0.95] font-bold text-teal-deep">Private by design</h2>
+              <h2 className="font-display text-[clamp(2.25rem,5vw,3.25rem)] leading-[0.95] font-bold text-teal-deep">How we keep it private</h2>
               <ul className="mt-5 divide-y divide-pine-300/60">
                 {RULES.map((r) => (
                   <li key={r.title} className="py-4">

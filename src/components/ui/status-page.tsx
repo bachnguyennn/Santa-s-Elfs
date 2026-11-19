@@ -26,7 +26,7 @@ export function StatusPage({
       <SiteHeader />
       <main id="main" tabIndex={-1} className="flex-1 bg-parchment pb-16 outline-none">
         <SceneBanner name={art} position={position} className="h-[clamp(8rem,20vw,14rem)]" />
-        <div className="mx-auto -mt-10 w-full max-w-xl px-4 sm:-mt-14 sm:px-8">
+        <div className="relative z-10 mx-auto -mt-10 w-full max-w-xl px-4 sm:-mt-14 sm:px-8">
           <div className="rounded-lg border border-paper-line bg-cream-50 p-6 text-center shadow-[var(--shadow-lifted)] sm:p-9">
             <h1 className="font-display text-[clamp(2.25rem,7vw,3rem)] leading-[0.98] font-bold text-oxblood [text-wrap:balance]">{title}</h1>
             {children && <div className="mx-auto mt-4 max-w-md text-lg leading-relaxed text-ink-700">{children}</div>}

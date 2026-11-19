@@ -179,11 +179,11 @@ function StatusNote({ home, recipientName }: { home: ParticipantHomeDTO; recipie
   } else if (assignment.state === "none") {
     text = `Names have been drawn, but you weren’t part of this drawing. If you think that’s wrong, ask ${group.organizerName}.`;
   } else if (assignment.state === "ready") {
-    text = "The names are drawn. Your envelope is waiting in your post-box. Open it somewhere nobody’s peeking.";
+    text = "The names are drawn. Your envelope is waiting in the Workshop. Open it somewhere nobody’s peeking.";
   } else {
     text = recipientName
-      ? `You’re the Secret Santa for ${recipientName}. Read your letter again any time from your post-box.`
-      : "Your envelope is open. Read it again any time from your post-box.";
+      ? `You’re the Secret Santa for ${recipientName}. Read your letter again any time in the Workshop.`
+      : "Your envelope is open. Read it again any time in the Workshop.";
   }
   return <p className="mt-5 max-w-[40ch] rounded-xl border border-paper-line bg-paper px-4 py-3 leading-snug">{text}</p>;
 }

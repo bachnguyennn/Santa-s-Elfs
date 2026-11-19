@@ -25,12 +25,12 @@ export function WorkshopDesk() {
       <DoorArrival onOpened={onOpened} />
       <div className="mx-auto grid w-full max-w-6xl gap-6 px-4 sm:px-8 lg:grid-cols-[minmax(0,35rem)_minmax(0,1fr)] lg:gap-14">
         {/* Phones: the invitation first, small, so the mirrored name stays in view while typing. */}
-        <Invitation name={draft.name} arriveKey={arriveKey} settleKey={draft.step} compact className="-mt-10 lg:hidden" />
+        <Invitation name={draft.name} arriveKey={arriveKey} settleKey={draft.step} compact className="relative z-10 -mt-10 lg:hidden" />
         <div className="relative lg:-mt-24">
           <CreateGroupWizard onDraft={setDraft} />
         </div>
         <div className="hidden lg:block">
-          <div className="sticky top-8 -mt-28">
+          <div className="sticky top-8 z-10 -mt-28">
             <Invitation name={draft.name} organizer={draft.organizerName} arriveKey={arriveKey} settleKey={draft.step} className="max-w-sm" />
           </div>
         </div>

@@ -59,7 +59,7 @@ export default async function InvitePage({ params }: PageProps<"/j/[code]">) {
 
         {/* ───────── The welcome desk: who invited you, the group, the join form, first ───────── */}
         <div className="mx-auto grid w-full max-w-6xl gap-8 px-4 sm:px-8 lg:grid-cols-[minmax(0,36rem)_minmax(0,1fr)] lg:gap-12">
-          <section aria-labelledby="invite-title" className="-mt-14 sm:-mt-20">
+          <section aria-labelledby="invite-title" className="relative z-10 -mt-14 sm:-mt-20">
             <div className="relative rounded-[4px] bg-[linear-gradient(120deg,#fff4d6,#f3e0b8)] px-5 pt-7 pb-7 shadow-[0_2px_0_#d6c4a5,4px_14px_30px_-12px_rgb(51_9_20/0.55)] sm:px-8 sm:pt-8">
               <span aria-hidden className="absolute inset-x-0 top-0 h-[5px] rounded-t-[4px] bg-[repeating-linear-gradient(120deg,#962e40_0_8px,#fff0cc_8px_16px,#145851_16px_24px,#fff0cc_24px_32px)]" />
               <p className="text-ink-700">

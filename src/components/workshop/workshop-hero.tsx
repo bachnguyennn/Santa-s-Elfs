@@ -80,7 +80,7 @@ export function WorkshopScene({ className, children }: { className?: string; chi
         onClick={tug}
         className="focus-art absolute top-[38%] left-[59%] h-[24%] w-[16%] cursor-pointer rounded-xl"
       >
-        <span className="sr-only">Pull the ribbon tight (a little extra, just for fun)</span>
+        <span className="sr-only">Pull the ribbon tight on the parcel</span>
       </button>
       {children}
     </div>

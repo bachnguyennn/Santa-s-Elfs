@@ -15,7 +15,7 @@ export default function NotFound() {
       actions={
         <>
           <Button asChild variant="primary">
-            <Link href="/">Back to the Village Square</Link>
+            <Link href="/">Back to the homepage</Link>
           </Button>
           <Button asChild variant="secondary">
             <Link href="/recover">Recover my link</Link>

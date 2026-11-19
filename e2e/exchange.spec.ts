@@ -31,7 +31,7 @@ test.describe("A: three friends complete a normal exchange", () => {
     await page.getByRole("button", { name: "Next" }).click();
     await expect(page.getByText("When I press the button")).toBeVisible();
     await page.getByRole("button", { name: "Next" }).click();
-    await expect(page.getByText("Book Club Gift Swap")).toBeVisible();
+    await expect(page.getByRole("definition").filter({ hasText: "Book Club Gift Swap" })).toBeVisible();
     await page.getByRole("button", { name: "Create group" }).click();
     await page.waitForURL(/\/o\/[0-9a-f-]{36}\?created=1/);
     const groupId = new URL(page.url()).pathname.split("/")[2];
