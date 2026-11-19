@@ -198,7 +198,7 @@ export default function Home() {
             </p>
           </div>
 
-          <div id="example-card" tabIndex={-1} className="-mt-[8%] scroll-mt-8 text-gold-200 lg:col-start-2 lg:mt-0 lg:row-span-2 lg:row-start-1 lg:self-center">
+          <div className="-mt-[8%] text-gold-200 lg:col-start-2 lg:mt-0 lg:row-span-2 lg:row-start-1 lg:self-center">
             <ChristmasCardReveal recipientName="Grandma Rosie" alias="Dasher" label="Example card" />
           </div>
 
