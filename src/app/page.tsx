@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
 import { SiteFooter, SiteHeader, SkipLink } from "@/components/ui/page-shell";
 import { WorkshopEntranceLink } from "@/components/workshop/door-entry";
@@ -42,7 +43,12 @@ export default function Home() {
               </p>
               <div className="mt-6 flex flex-col gap-4 sm:flex-row sm:items-center">
                 <WorkshopEntranceLink className={cn(buttonVariants({ variant: "light", size: "lg" }), "w-full shrink-0 sm:w-auto")}>Start a group</WorkshopEntranceLink>
-                <p className="max-w-[26ch] text-[0.9375rem] leading-snug text-buttercream/85">Got an invitation? Open the private link you were sent.</p>
+                <p className="max-w-[30ch] text-base leading-snug text-buttercream">
+                  Invited already? Use the private link in your email. Lost it?{" "}
+                  <Link href="/recover" className="font-bold whitespace-nowrap underline decoration-brass decoration-2 underline-offset-4">
+                    Get it again
+                  </Link>
+                </p>
               </div>
             </div>
             <div className="relative overflow-hidden xl:overflow-visible">
