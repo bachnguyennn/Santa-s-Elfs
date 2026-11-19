@@ -43,6 +43,26 @@
   --color-line: #e3d5b8;
   --color-line-strong: #cdb98f;
 
+  /*
+   * Village (REDESIGN_BRIEF.md): bright winter daytime, light from the upper left.
+   * Contrast (WCAG 2.1): midnight on sky 10.9:1, on paper 13.6:1; paper on cranberry 6.3:1,
+   * on evergreen 8.9:1; midnight-soft on paper 7.1:1. Golden is never text on light grounds.
+   */
+  --color-sky: #bdebfa;
+  --color-snow: #f7fcff;
+  --color-snow-shadow: #a8cddf;
+  --color-evergreen: #175541;
+  --color-evergreen-deep: #0f3d2e;
+  --color-evergreen-soft: #2e7a5c;
+  --color-cranberry: #b52f46;
+  --color-cranberry-deep: #8f2236;
+  --color-golden: #ffd166;
+  --color-paper: #fff7e8;
+  --color-paper-deep: #f4e6c8;
+  --color-timber: #8a5a3c;
+  --color-midnight: #172d38;
+  --color-midnight-soft: #3e5866;
+
   /* next/font sets --font-display / --font-body / --font-hand on <html>. */
   --font-sans: var(--font-body), ui-sans-serif, system-ui, sans-serif;
   --font-display: var(--font-display), ui-sans-serif, system-ui, sans-serif;
@@ -223,6 +243,80 @@ body {
   /* A slip without the fold line, for slips that carry paragraphs. */
   .slip.slip-plain {
     background-image: none;
+  }
+}
+
+/* ───────── Village ───────── */
+
+/* Snow: a few slow flakes drifting down a sky band. Paused offscreen, by the toggle, and under reduced motion. */
+@keyframes snow-fall {
+  from {
+    transform: translate3d(0, -10%, 0);
+  }
+  to {
+    transform: translate3d(var(--drift, 24px), 110cqh, 0);
+  }
+}
+
+@layer components {
+  .snow-layer {
+    container-type: size;
+  }
+  .snow-flake {
+    position: absolute;
+    top: 0;
+    border-radius: 9999px;
+    background: var(--color-snow);
+    box-shadow: 0 0 0 1px rgb(168 205 223 / 0.5);
+    animation: snow-fall var(--dur, 14s) linear var(--delay, 0s) infinite;
+    will-change: transform;
+  }
+  .snow-layer[data-paused="true"] .snow-flake {
+    animation-play-state: paused;
+  }
+
+  /* A building that is a link: windows brighten and the sign lifts on hover and focus. */
+  .building-link .building-window {
+    transition: fill 200ms var(--ease-out-quint);
+  }
+  .building-link:is(:hover, :focus-visible) .building-window {
+    fill: #ffe39e;
+  }
+  .building-link .building-sign {
+    transition: transform 200ms var(--ease-out-quint), box-shadow 200ms var(--ease-out-quint);
+  }
+  .building-link:is(:hover, :focus-visible) .building-sign {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 0 -2px rgb(23 45 56 / 0.18);
+  }
+  .building-link .building-door {
+    transform-box: fill-box;
+    transform-origin: left center;
+    transition: transform 200ms var(--ease-out-quint);
+  }
+  .building-link[data-entering="true"] .building-door {
+    transform: perspective(300px) rotateY(-68deg);
+  }
+  .building-link:focus-visible {
+    outline: 3px solid var(--color-midnight);
+    outline-offset: 4px;
+    border-radius: 1rem;
+  }
+
+  /* Paper reading surfaces in the village. */
+  .village-paper {
+    background: var(--color-paper);
+    color: var(--color-midnight);
+    border: 2px solid var(--color-midnight);
+    border-radius: 1rem;
+    box-shadow: 6px 8px 0 -2px rgb(168 205 223 / 0.9);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .snow-flake {
+    animation: none !important;
+    display: none;
   }
 }
 
