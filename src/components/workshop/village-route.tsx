@@ -52,6 +52,17 @@ export function VillageRoute({ stops = PUBLIC_STOPS, heading, intro }: { stops?:
   const elfRef = React.useRef<HTMLImageElement>(null);
   const boxRef = React.useRef<HTMLDivElement>(null);
   const [lit, setLit] = React.useState(false);
+  // Below 768px the sign tiles are the way in: the painted hotspots (partly off-screen while the
+  // street pans) leave the tab order and the accessibility tree, so nothing is announced twice.
+  // Touch on the painting still works.
+  const [tilesOnly, setTilesOnly] = React.useState(false);
+  React.useEffect(() => {
+    const mq = window.matchMedia("(max-width: 767.98px)");
+    const sync = () => setTilesOnly(mq.matches);
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, []);
 
   React.useEffect(() => {
     const track = trackRef.current;
@@ -156,7 +167,13 @@ export function VillageRoute({ stops = PUBLIC_STOPS, heading, intro }: { stops?:
                 style={{ left: `${58 - 0.45 * 8}%`, top: `${67 - 0.97 * 8 * (1199 / 1312) * (1672 / 941)}%` }}
               />
               {stops.map((s) => (
-                <StreetBuilding key={s.key} stop={s} lit={lit && s.key === "post-office"} bellRef={s.key === "post-office" ? bellRef : undefined} />
+                <StreetBuilding
+                  key={s.key}
+                  stop={s}
+                  lit={lit && s.key === "post-office"}
+                  bellRef={s.key === "post-office" ? bellRef : undefined}
+                  tilesOnly={tilesOnly}
+                />
               ))}
             </div>
           </div>
@@ -198,7 +215,18 @@ function StopLink({ stop }: { stop: StreetStop }) {
 }
 
 /** A painted building with a hanging HTML sign: one link, one keyboard stop. Signs hide on phones (the sign tiles below do that job). */
-function StreetBuilding({ stop, lit, bellRef }: { stop: StreetStop; lit: boolean; bellRef?: React.Ref<HTMLSpanElement> }) {
+function StreetBuilding({
+  stop,
+  lit,
+  bellRef,
+  tilesOnly,
+}: {
+  stop: StreetStop;
+  lit: boolean;
+  bellRef?: React.Ref<HTMLSpanElement>;
+  tilesOnly: boolean;
+}) {
+  const quiet = tilesOnly ? ({ tabIndex: -1, "aria-hidden": true } as const) : {};
   const { area } = stop;
   // The link covers just its building; the sign is placed relative to that area (it may hang above it).
   const signLeft = ((stop.sign.x - area.left) / area.width) * 100;
@@ -238,11 +266,11 @@ function StreetBuilding({ stop, lit, bellRef }: { stop: StreetStop; lit: boolean
   // The id is the doorstep: rooms link back to it ("Back to the village").
   const cls = "building-link focus-art absolute block scroll-mt-24 rounded-2xl transition-[background-color] duration-200 hover:bg-[rgb(255_214_140/0.12)]";
   return stop.door ? (
-    <WorkshopEntranceLink id={stop.key} className={cls} style={box}>
+    <WorkshopEntranceLink id={stop.key} className={cls} style={box} {...quiet}>
       {sign}
     </WorkshopEntranceLink>
   ) : (
-    <Link id={stop.key} href={stop.href} className={cls} style={box} data-enter={stop.key === "post-office" ? "post-office" : undefined}>
+    <Link id={stop.key} href={stop.href} className={cls} style={box} data-enter={stop.key === "post-office" ? "post-office" : undefined} {...quiet}>
       {sign}
     </Link>
   );
