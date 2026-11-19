@@ -32,11 +32,11 @@ export function Logo({
       <ElfHatMark className="size-9 shrink-0" />
       <span
         className={cn(
-          "font-display text-[1.375rem] leading-none font-extrabold tracking-[-0.02em]",
-          tone === "light" ? "text-paper" : "text-midnight",
+          "font-display text-[1.6rem] leading-none font-bold tracking-normal",
+          tone === "light" ? "text-buttercream" : "text-oxblood",
         )}
       >
-        Santa<span className={tone === "light" ? "text-golden" : "text-cranberry"}>Elf</span>
+        Santa<span className={tone === "light" ? "text-brass" : "text-persimmon-dark"}>Elf</span>
       </span>
     </>
   );

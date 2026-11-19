@@ -7,62 +7,84 @@
  */
 @theme {
   /*
-   * Legacy token NAMES, repainted in the village palette (REDESIGN_BRIEF.md §2) so every screen shares one
-   * world: pine = evergreen, cream = warm paper, berry = cranberry, gold = golden/brass, ink = midnight.
-   * Contrast (WCAG 2.1): cream-50 on pine-800 8.9:1, on berry-600 6.3:1; pine-600 on cream-50 4.9:1;
-   * ink-500 on cream-50 5.2:1; gold-700 on cream-50 6.0:1. gold-400/500 are never text on light grounds.
+   * The Workshop (design/workshop-moodboard/SPEC.md): oxblood outside, amber lamplight inside,
+   * buttercream paper, petrol teal, brass, walnut. One fixed theme. Light from above-left.
+   * Contrast (WCAG 2.1, measured): buttercream on oxblood 14.3:1; ink on paper 14.8:1;
+   * ink-soft on paper 8.9:1; ink-500 on paper 6.4:1, on parchment 5.7:1; teal on paper 7.7:1;
+   * cherry on paper 7.1:1; paper on teal 7.7:1; brass on oxblood 9.2:1.
+   * Brass and persimmon are never text on paper.
    */
-  --color-pine-950: #0c2f24;
-  --color-pine-900: #0f3d2e;
-  --color-pine-800: #175541;
-  --color-pine-700: #1f6a50;
-  --color-pine-600: #2e7a5c;
-  --color-pine-300: #9fcbb7;
-  --color-pine-200: #c9e4d7;
-  --color-pine-100: #e1f1e8;
-
-  --color-cream-50: #fff7e8;
-  --color-cream-100: #fbefd8;
-  --color-cream-200: #f4e6c8;
-  --color-cream-300: #e9d6ae;
-
-  --color-berry-800: #6e1a2a;
-  --color-berry-700: #8f2236;
-  --color-berry-600: #b52f46;
-  --color-berry-500: #c9485d;
-  --color-berry-100: #fbe7ea;
-
-  --color-gold-700: #7a5a17;
-  --color-gold-600: #b07f26;
-  --color-gold-500: #e9a93a;
-  --color-gold-400: #ffd166;
-  --color-gold-200: #ffefc2;
-
-  --color-ink-900: #172d38;
-  --color-ink-700: #3e5866;
-  --color-ink-500: #546d7a;
-  --color-line: #d5e5ee;
-  --color-line-strong: #172d38;
+  --color-oxblood: #430c15;
+  --color-oxblood-deep: #2c0810;
+  --color-oxblood-soft: #5c1a24;
+  --color-persimmon: #c45a39;
+  --color-persimmon-light: #df7950;
+  --color-persimmon-dark: #a7462f;
+  --color-buttercream: #fff0cc;
+  --color-teal: #145851;
+  --color-teal-deep: #0e403b;
+  --color-teal-wash: #e3eddd;
+  --color-brass: #eebc65;
+  --color-brass-deep: #b98431;
+  --color-walnut: #60371e;
+  --color-ink: #301c22;
+  --color-ink-soft: #5a3e40;
+  --color-cherry: #962e40;
+  --color-cherry-wash: #f8e1e4;
+  --color-parchment: #f5e8cc;
+  --color-paper-line: #cbb690;
 
   /*
-   * Village (REDESIGN_BRIEF.md): bright winter daytime, light from the upper left.
-   * Contrast (WCAG 2.1): midnight on sky 10.9:1, on paper 13.6:1; paper on cranberry 6.3:1,
-   * on evergreen 8.9:1; midnight-soft on paper 7.1:1. Golden is never text on light grounds.
+   * Older token NAMES, repainted to the workshop so every screen shares one material world:
+   * pine = teal, cream = paper, berry = cherry, gold = brass, ink = letter ink.
    */
-  --color-sky: #bdebfa;
-  --color-snow: #f7fcff;
-  --color-snow-shadow: #a8cddf;
-  --color-evergreen: #175541;
-  --color-evergreen-deep: #0f3d2e;
-  --color-evergreen-soft: #2e7a5c;
-  --color-cranberry: #b52f46;
-  --color-cranberry-deep: #8f2236;
-  --color-golden: #ffd166;
-  --color-paper: #fff7e8;
-  --color-paper-deep: #f4e6c8;
-  --color-timber: #8a5a3c;
-  --color-midnight: #172d38;
-  --color-midnight-soft: #3e5866;
+  --color-pine-950: #0a302c;
+  --color-pine-900: #0e403b;
+  --color-pine-800: #145851;
+  --color-pine-700: #186559;
+  --color-pine-600: #145851;
+  --color-pine-300: #9cc3b8;
+  --color-pine-200: #c9ddd3;
+  --color-pine-100: #e3eddd;
+
+  --color-cream-50: #fff6df;
+  --color-cream-100: #f9ecd0;
+  --color-cream-200: #f2dfb9;
+  --color-cream-300: #e6cd9e;
+
+  --color-berry-800: #5e1a28;
+  --color-berry-700: #7c2434;
+  --color-berry-600: #962e40;
+  --color-berry-500: #b04558;
+  --color-berry-100: #f8e1e4;
+
+  --color-gold-700: #7a5417;
+  --color-gold-600: #a8731f;
+  --color-gold-500: #d9a34e;
+  --color-gold-400: #eebc65;
+  --color-gold-200: #f8e2b5;
+
+  --color-ink-900: #301c22;
+  --color-ink-700: #5a3e40;
+  --color-ink-500: #6e5355;
+  --color-line: #e3d2ad;
+  --color-line-strong: #8c776b;
+
+  /* Village-era names used by shared components, now workshop materials. */
+  --color-sky: #f5e8cc;
+  --color-snow: #fbf1dc;
+  --color-snow-shadow: #d9c4a0;
+  --color-evergreen: #145851;
+  --color-evergreen-deep: #0e403b;
+  --color-evergreen-soft: #1b6a62;
+  --color-cranberry: #430c15;
+  --color-cranberry-deep: #962e40;
+  --color-golden: #eebc65;
+  --color-paper: #fff6df;
+  --color-paper-deep: #f2dfb9;
+  --color-timber: #60371e;
+  --color-midnight: #301c22;
+  --color-midnight-soft: #5a3e40;
 
   /* next/font sets --font-display / --font-body / --font-hand on <html>. */
   --font-sans: var(--font-body), ui-sans-serif, system-ui, sans-serif;
@@ -72,12 +94,15 @@
   --radius-card: 1.25rem;
   --radius-slip: 0.375rem;
 
-  /* Village depth: a short blue shadow down and to the right (light from the upper left). */
-  --shadow-paper: 5px 6px 0 -1px rgb(168 205 223 / 0.9);
-  --shadow-lifted: 6px 8px 0 -1px rgb(168 205 223 / 0.95), 0 18px 36px -16px rgb(23 45 56 / 0.35);
+  /* Lamplight from above-left: paper sits on wood with a soft walnut contact shadow. */
+  --shadow-paper: 0 3px 0 #d6c4a5, 0 10px 22px -14px rgb(96 55 30 / 0.45);
+  --shadow-lifted: 0 4px 0 #d6c4a5, 0 22px 40px -18px rgb(48 28 34 / 0.55);
 
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
+  /* SPEC motion score: default ease-out, and the doorway camera. */
+  --ease-workshop: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-camera: cubic-bezier(0.45, 0, 0.15, 1);
 
   --animate-unfold: unfold 700ms var(--ease-out-expo) both;
   --animate-rise: rise 600ms var(--ease-out-expo) both;
@@ -157,8 +182,8 @@ html {
 }
 
 body {
-  background: var(--color-snow);
-  color: var(--color-midnight);
+  background: var(--color-parchment);
+  color: var(--color-ink);
   text-rendering: optimizeLegibility;
 }
 
@@ -174,14 +199,21 @@ body {
 }
 
 :focus-visible {
-  outline: 3px solid var(--color-midnight);
+  outline: 3px solid var(--color-teal);
   outline-offset: 2px;
 }
 
-/* On dark grounds (evergreen, midnight) the ring turns golden. */
+/* On dark grounds (oxblood, teal) the ring turns brass. On artwork it is two-colour (SPEC). */
 .on-pine :focus-visible,
-.on-pine:focus-visible {
-  outline-color: var(--color-golden);
+.on-pine:focus-visible,
+.on-dark :focus-visible,
+.on-dark:focus-visible {
+  outline-color: var(--color-brass);
+}
+.focus-art:focus-visible {
+  outline: 3px solid var(--color-brass);
+  outline-offset: 3px;
+  box-shadow: 0 0 0 6px var(--color-oxblood);
 }
 
 /* Programmatic focus targets (headings focused after a reveal) are not controls: no ring. */
@@ -203,15 +235,15 @@ body {
 }
 
 @layer components {
-  /* Evergreen ground (the old "felt" name): signs, the draw, ceremony blocks. Solid, no texture. */
+  /* Petrol-teal ground (the old "felt" name): the draw and other ceremony blocks. Solid, no texture. */
   .felt {
-    background-color: var(--color-evergreen);
+    background-color: var(--color-teal);
   }
 
   /* Paper: a warm sheet with an ink outline and a short blue shadow. Text stays real HTML. */
   .slip {
-    background-color: var(--color-paper);
-    border: 2px solid var(--color-midnight);
+    background-color: var(--color-cream-50);
+    border: 1px solid var(--color-paper-line);
     border-radius: var(--radius-slip);
     box-shadow: var(--shadow-paper);
   }
@@ -244,15 +276,22 @@ body {
   }
 }
 
-/* The elf's postmark landing on a letter that was just sent. */
+/* The postmark on a letter the server accepted (SPEC): falls 150 ms, compresses 5% for 50 ms, settles in 60 ms. */
 @keyframes stamp-in {
-  from {
+  0% {
     opacity: 0;
-    transform: scale(1.6) rotate(-24deg);
+    transform: translateY(-40%) scale(1.25) rotate(-20deg);
   }
-  to {
+  58% {
     opacity: 1;
-    transform: scale(1) rotate(-12deg);
+    transform: translateY(0) scale(1) rotate(-12deg);
+  }
+  77% {
+    transform: translateY(0) scale(1.05, 0.95) rotate(-12deg);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1) rotate(-12deg);
   }
 }
 
@@ -301,13 +340,13 @@ body {
     border-radius: 1rem;
   }
 
-  /* Paper reading surfaces in the village. */
+  /* Cream reading surface on the Workshop's wood. */
   .village-paper {
-    background: var(--color-paper);
-    color: var(--color-midnight);
-    border: 2px solid var(--color-midnight);
-    border-radius: 1rem;
-    box-shadow: 6px 8px 0 -2px rgb(168 205 223 / 0.9);
+    background: var(--color-cream-50);
+    color: var(--color-ink);
+    border: 1px solid var(--color-paper-line);
+    border-radius: 0.5rem;
+    box-shadow: var(--shadow-paper);
   }
 }
 

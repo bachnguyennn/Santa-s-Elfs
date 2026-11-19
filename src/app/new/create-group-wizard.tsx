@@ -36,7 +36,7 @@ interface FormState {
 type FieldKey = Exclude<keyof FormState, "timezone"> | "timezone";
 type Errors = Partial<Record<FieldKey | "_", string>>;
 
-const STEPS = ["You & your group", "Budget & dates", "The drawing", "Check & create"];
+const STEPS = ["Group", "Budget & dates", "Draw", "Review"];
 const STEP_FIELDS: FieldKey[][] = [
   ["name", "organizerName", "organizerEmail", "organizerParticipates"],
   ["budgetMin", "budgetMax", "currency", "exchangeDate", "signupDeadline", "timezone"],
@@ -135,7 +135,12 @@ function formatLocal(local: string) {
   return `${formatDateOnly(d)}, ${time}`;
 }
 
-export function CreateGroupWizard() {
+export function CreateGroupWizard({
+  onDraft,
+}: {
+  /** Mirrors the draft to the desk (the invitation card). Display only: the form stays the source of truth. */
+  onDraft?: (draft: { name: string; organizerName: string; step: number }) => void;
+} = {}) {
   const router = useRouter();
   const [form, setForm] = React.useState<FormState>(INITIAL);
   const [step, setStep] = React.useState(0);
@@ -150,6 +155,14 @@ export function CreateGroupWizard() {
   const tzList = React.useSyncExternalStore(noopSubscribe, getTzList, () => EMPTY);
   const tz = form.timezone ?? detectedTz;
   const tzOptions = tzList.includes(tz) ? tzList : [tz, ...tzList];
+
+  const draftRef = React.useRef(onDraft);
+  React.useEffect(() => {
+    draftRef.current = onDraft;
+  });
+  React.useEffect(() => {
+    draftRef.current?.({ name: form.name, organizerName: form.organizerName, step });
+  }, [form.name, form.organizerName, step]);
 
   React.useEffect(() => {
     const onBeforeUnload = (e: BeforeUnloadEvent) => {
@@ -239,12 +252,12 @@ export function CreateGroupWizard() {
   })();
 
   return (
-    <div className="mt-8">
-      <Stepper steps={STEPS} current={step} />
+    <div>
+      <Stepper steps={STEPS} current={step} className="rounded-lg border border-paper-line bg-cream-50 px-4 py-3 shadow-[var(--shadow-paper)] sm:px-6" />
 
       <form ref={formRef} onSubmit={onSubmit} noValidate className="mt-6">
         <Card className="sm:p-8">
-          <h2 ref={headingRef} tabIndex={-1} className="font-display text-2xl font-extrabold tracking-[-0.02em] text-pine-900 outline-none">
+          <h2 ref={headingRef} tabIndex={-1} className="font-display text-[1.75rem] leading-tight font-bold tracking-normal text-oxblood outline-none">
             {STEPS[step]}
           </h2>
 

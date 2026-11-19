@@ -207,9 +207,9 @@ export function ProfileEditor({ participantId, initial, readOnly = false }: { pa
             {state.wishlist.map((item, i) => {
               const base = `wishlist.${i}`;
               return (
-                <li key={item.key} className="rounded-xl border-2 border-midnight bg-paper p-4">
+                <li key={item.key} className="rounded-xl border border-paper-line bg-paper p-4">
                   <div className="flex items-center justify-between gap-2">
-                    <p className="font-display text-lg font-extrabold text-cranberry" aria-hidden>
+                    <p className="font-display text-lg font-bold text-cranberry" aria-hidden>
                       {i + 1}.
                     </p>
                     {!readOnly && (
@@ -347,7 +347,7 @@ export function ProfileEditor({ participantId, initial, readOnly = false }: { pa
       {readOnly && formError && <Alert tone="error">{formError}</Alert>}
 
       {!readOnly && (
-        <div className="sticky bottom-0 z-10 -mx-4 border-t-[2.5px] border-midnight bg-paper px-4 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] sm:mx-0 sm:rounded-xl sm:border-[2.5px] sm:px-5 sm:shadow-[var(--shadow-paper)]">
+        <div className="sticky bottom-0 z-10 -mx-4 border-t border-paper-line bg-cream-50 px-4 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] sm:mx-0 sm:rounded-lg sm:border sm:px-5 sm:shadow-[var(--shadow-paper)]">
           {/* A failed save keeps everything typed; the reason sits right beside the action. */}
           {formError && (
             <p role="alert" className="mb-3 rounded-xl border-2 border-cranberry-deep bg-berry-100 px-3 py-2 text-sm font-bold text-cranberry-deep">

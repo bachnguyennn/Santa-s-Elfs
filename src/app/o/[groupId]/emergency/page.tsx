@@ -18,7 +18,7 @@ export default async function EmergencyPage({ params }: PageProps<"/o/[groupId]/
   return (
     <div className="mx-auto flex max-w-2xl flex-col gap-6">
       <div>
-        <h2 className="font-display text-2xl font-bold tracking-[-0.02em] text-pine-900">Emergency lookup</h2>
+        <h2 className="font-display text-2xl font-bold tracking-normal text-pine-900">Emergency lookup</h2>
         <p className="mt-1 max-w-[60ch] text-ink-700">
           For when someone drops out or can’t buy their gift and you need to step in. It shows one person’s match, nobody else’s. Most
           exchanges never need it.

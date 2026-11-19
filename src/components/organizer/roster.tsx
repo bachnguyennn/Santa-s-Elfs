@@ -6,7 +6,7 @@ import { Alert } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader } from "@/components/ui/card";
-import { Dialog, DialogClose } from "@/components/ui/dialog";
+import { ConfirmDialog } from "@/components/ui/alert-dialog";
 import { apiFetch } from "@/lib/api-client";
 import type { GroupStatus, OrganizerParticipantDTO } from "@/lib/contracts";
 import { cn } from "@/lib/utils";
@@ -76,8 +76,8 @@ export function Roster({
   }
 
   return (
-    <div className="flex flex-col gap-5 rounded-2xl border-[2.5px] border-midnight bg-timber p-2.5 sm:p-3">
-      <div className="flex flex-col gap-5 rounded-xl bg-[#D9B98C] p-3 sm:p-5">
+    <div className="flex flex-col gap-5">
+      <div className="flex flex-col gap-5">
       {(error || notice) && (
         <div aria-live="polite">
           {error ? (
@@ -91,7 +91,7 @@ export function Roster({
       )}
 
       {pending.length > 0 && (
-        <Card className="relative -rotate-[0.4deg] bg-golden shadow-none">
+        <Card className="relative border-gold-500 bg-gold-200">
           <Pin className="-top-2.5 left-1/2 -translate-x-1/2" />
           <CardHeader
             title={`Waiting for you (${pending.length})`}
@@ -122,9 +122,7 @@ export function Roster({
         </Card>
       )}
 
-      <Card tone="plain" className="relative rotate-[0.2deg]">
-        <Pin className="-top-2.5 left-8" />
-        <Pin className="-top-2.5 right-8" />
+      <Card className="relative">
         <CardHeader
           title={`Taking part (${approved.length} of ${capacity})`}
           description={
@@ -164,7 +162,7 @@ export function Roster({
       </Card>
 
       {inactive.length > 0 && (
-        <details className="group rounded-[var(--radius-card)] border-2 border-midnight bg-cream-100 px-5 sm:px-6">
+        <details className="group rounded-lg border border-paper-line bg-cream-100 px-5 sm:px-6">
           <summary className="flex min-h-14 cursor-pointer list-none items-center justify-between gap-3 font-bold text-pine-900 [&::-webkit-details-marker]:hidden">
             Not taking part ({inactive.length})
             <span aria-hidden className="text-sm font-normal text-ink-500 group-open:hidden">
@@ -189,31 +187,21 @@ export function Roster({
       )}
 
       </div>
-      <Dialog
+      <ConfirmDialog
         open={removing !== null}
         onOpenChange={(o) => {
           if (!o) setRemoving(null);
         }}
         title={removing ? `Remove ${removing.name}?` : "Remove participant?"}
         description="Their private link stops working and they won’t be in the drawing. You can let them back in later, until names are drawn."
-        footer={
-          <>
-            <DialogClose asChild>
-              <Button variant="secondary">Keep them</Button>
-            </DialogClose>
-            <Button
-              variant="danger"
-              loading={!!removing && busy === `remove:${removing.id}`}
-              onClick={async () => {
-                if (!removing) return;
-                await decide(removing, "remove");
-                setRemoving(null);
-              }}
-            >
-              Remove {removing?.name}
-            </Button>
-          </>
-        }
+        cancelLabel="Keep them"
+        actionLabel={`Remove ${removing?.name ?? ""}`.trim()}
+        busy={!!removing && busy === `remove:${removing.id}`}
+        onAction={async () => {
+          if (!removing) return;
+          await decide(removing, "remove");
+          setRemoving(null);
+        }}
       />
     </div>
   );
@@ -222,7 +210,7 @@ export function Roster({
 function Row({ p, drawn, children }: { p: OrganizerParticipantDTO; drawn?: boolean; children?: React.ReactNode }) {
   const badge = STATUS_BADGE[p.status];
   return (
-    <li className="flex flex-col gap-3 border-t-2 border-dashed border-snow-shadow py-4 first:border-t-0 first:pt-1 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
+    <li className="flex flex-col gap-3 border-t border-line py-4 first:border-t-0 first:pt-1 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
       <div className="min-w-0">
         <p className="flex flex-wrap items-center gap-x-2 gap-y-1">
           <span className="text-lg leading-tight font-bold break-words text-midnight">{p.name}</span>

@@ -7,43 +7,42 @@ import { Spinner } from "./spinner";
 /**
  * OWNER: design agent. Props API is the contract: variant, size, asChild, loading.
  * variant:
- *  - primary   evergreen; ordinary actions and secondary steps (Approve, Save)
- *  - festive   cranberry; the ONE main action of an area (Start a group, Draw names now, Send letter)
- *  - secondary paper with an ink outline
- *  - ghost     text-only link look, quiet
- *  - danger    cranberry outline on paper; destructive, always confirm in a Dialog, kept apart from other actions
- *  - light     paper on evergreen grounds
+ *  - primary   wine pill on cream: actions inside rooms (Approve, Save, Next)
+ *  - festive   the same wine pill, used for the one main action of an area (Draw names, Send letter)
+ *  - secondary cream pill with a paper-line border
+ *  - ghost     teal text link: secondary actions
+ *  - danger    cherry outline; destructive, always confirmed in an AlertDialog, kept apart from other actions
+ *  - light     buttercream pill on oxblood: actions outside (Start a group)
  * Touch targets: every size is at least 44px tall.
  */
 export const buttonVariants = cva(
   [
-    "relative inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border-[2.5px] border-midnight font-sans font-bold whitespace-nowrap select-none",
-    "transition-[background-color,box-shadow,transform,color] duration-200 ease-[var(--ease-out-quint)]",
-    "hover:-translate-y-0.5 active:translate-y-0 active:duration-75",
+    "relative inline-flex min-h-12 items-center justify-center gap-2 rounded-full font-sans font-bold whitespace-nowrap select-none",
+    "transition-[background-color,box-shadow,transform,color] duration-200 ease-[var(--ease-workshop)]",
+    "hover:-translate-y-px active:translate-y-0 active:duration-75",
     "disabled:pointer-events-none disabled:opacity-55 aria-busy:cursor-progress",
     "[&_svg]:size-[1.1em] [&_svg]:shrink-0",
   ],
   {
     variants: {
       variant: {
-        // Village buttons: an ink outline and a crisp shadow down-right that flattens when pressed.
+        // Inside rooms: wine on cream. Lamplit contact shadow, pressed flat.
         primary:
-          "bg-evergreen text-paper shadow-[3px_4px_0_rgb(23_45_56/0.9)] hover:bg-evergreen-deep active:shadow-[1px_1px_0_rgb(23_45_56/0.9)]",
+          "bg-oxblood text-buttercream shadow-[0_2px_0_var(--color-oxblood-deep),0_8px_16px_-10px_rgb(48_28_34/0.6)] hover:bg-oxblood-soft active:shadow-none",
         festive:
-          "bg-cranberry text-paper shadow-[3px_4px_0_rgb(23_45_56/0.9)] hover:bg-cranberry-deep active:shadow-[1px_1px_0_rgb(23_45_56/0.9)]",
+          "bg-oxblood text-buttercream shadow-[0_2px_0_var(--color-oxblood-deep),0_8px_16px_-10px_rgb(48_28_34/0.6)] hover:bg-oxblood-soft active:shadow-none",
         secondary:
-          "bg-paper text-evergreen shadow-[3px_4px_0_rgb(23_45_56/0.9)] hover:bg-snow active:shadow-[1px_1px_0_rgb(23_45_56/0.9)]",
-        ghost:
-          "border-transparent text-evergreen underline decoration-2 underline-offset-4 hover:translate-y-0 hover:bg-paper",
-        danger:
-          "border-cranberry-deep bg-paper text-cranberry-deep shadow-[3px_4px_0_rgb(143_34_54/0.85)] hover:bg-berry-100 active:shadow-[1px_1px_0_rgb(143_34_54/0.85)]",
+          "border-2 border-paper-line bg-cream-50 text-teal hover:border-teal hover:bg-cream-100",
+        ghost: "min-h-11 rounded-lg px-2 text-teal underline decoration-2 underline-offset-4 hover:translate-y-0 hover:bg-cream-100",
+        danger: "border-2 border-cherry bg-cream-50 text-cherry hover:bg-cherry-wash",
+        // Outside, on oxblood: cream on wine.
         light:
-          "bg-paper text-evergreen shadow-[3px_4px_0_rgb(23_45_56/0.9)] hover:bg-golden active:shadow-[1px_1px_0_rgb(23_45_56/0.9)]",
+          "bg-buttercream text-oxblood shadow-[0_2px_0_#d9c49b,0_10px_20px_-12px_rgb(0_0_0/0.6)] hover:bg-[#fff6df] active:shadow-none",
       },
       size: {
         sm: "min-h-11 px-4 text-sm",
-        md: "min-h-12 px-5 text-base",
-        lg: "min-h-14 px-7 text-lg",
+        md: "min-h-12 px-6 text-base",
+        lg: "min-h-14 px-8 text-lg",
       },
     },
     defaultVariants: { variant: "primary", size: "md" },
@@ -54,6 +53,8 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
   asChild?: boolean;
   /** Disables the button, sets aria-busy and shows a spinner before the label. */
   loading?: boolean;
+  /** React 19 passes refs as props (used to focus Cancel in confirmations). */
+  ref?: React.Ref<HTMLButtonElement>;
 }
 
 export function Button({ className, variant, size, asChild, loading, disabled, children, ...props }: ButtonProps) {

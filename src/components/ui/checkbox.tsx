@@ -19,7 +19,7 @@ export function Checkbox({
         id={id}
         type="checkbox"
         aria-describedby={descId}
-        className="mt-[0.7rem] size-[1.375rem] shrink-0 cursor-pointer rounded-md accent-pine-700"
+        className="mt-[0.7rem] size-[1.375rem] shrink-0 cursor-pointer rounded-md accent-teal"
         {...props}
       />
       <div className="min-w-0 py-2.5">

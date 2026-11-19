@@ -4,7 +4,6 @@ import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { ProfileEditor } from "@/components/participant/profile-editor";
 import { Alert } from "@/components/ui/alert";
-import { GiftHouseDoor } from "@/components/village/doors";
 import { ParticipantShell, RoomHeader } from "@/components/village/participant-shell";
 import { isUuid } from "@/server/services/groups";
 import { getParticipantHome } from "@/server/services/participant";
@@ -27,8 +26,8 @@ export default async function ProfilePage({ params }: PageProps<"/p/[participant
   const readOnly = group.status === "closed";
 
   return (
-    <ParticipantShell participantId={participantId} className="bg-[#FBEFE3]">
-      <RoomHeader door={<GiftHouseDoor className="h-20 w-auto sm:h-28" />} title="Gift House" tone="bg-[#F7DCCB]">
+    <ParticipantShell participantId={participantId} className="bg-parchment">
+      <RoomHeader art="gift-house" position="28% 52%" title="Gift House">
         Your wishlist and a few words about you. Only the person who draws your name sees this, after the drawing.
       </RoomHeader>
       <div className="mx-auto w-full max-w-2xl px-4 py-8 sm:px-6 sm:py-10">

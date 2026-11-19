@@ -1,7 +1,7 @@
 import { ArrowRight } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Elf } from "@/components/brand/elf";
+import { ElfFigure } from "@/components/workshop/art";
 import { Sparkle } from "@/components/brand/motifs";
 import { PaperSlip } from "@/components/brand/paper-slip";
 import { budgetLabel, drawLabel, exchangeLabel, friendlyDrawError } from "@/components/organizer/format";
@@ -133,13 +133,13 @@ export default async function OrganizerDashboardPage({ params, searchParams }: P
       </aside>
 
       {/* ───────── The back room: careful tools, kept apart ───────── */}
-      <section aria-labelledby="backroom-title" className="rounded-2xl border-[2.5px] border-dashed border-cranberry-deep bg-paper/70 p-5 sm:p-6 lg:col-span-2">
+      <section aria-labelledby="backroom-title" className="rounded-lg border-2 border-dashed border-cherry/60 bg-cream-50/70 p-5 sm:p-6 lg:col-span-2">
         <h2 id="backroom-title" className="font-display text-lg font-bold text-cranberry-deep">
           The back room
         </h2>
         <p className="mt-1 max-w-prose text-[0.9375rem] text-midnight-soft">Tools you can’t undo. Each one asks you to confirm first.</p>
         <div className="mt-4 grid gap-4 md:grid-cols-2">
-          <div className="flex flex-col gap-2 rounded-xl border-2 border-snow-shadow bg-paper p-4">
+          <div className="flex flex-col gap-2 rounded-lg border border-paper-line bg-cream-50 p-4">
             <h3 className="font-bold">Emergency reveal</h3>
             <p className="text-sm text-midnight-soft">
               After the draw, look up one person’s match if they disappear. We email you a code, and it’s logged.
@@ -152,7 +152,7 @@ export default async function OrganizerDashboardPage({ params, searchParams }: P
               </Link>
             )}
           </div>
-          <div className="flex flex-col gap-2 rounded-xl border-2 border-snow-shadow bg-paper p-4">
+          <div className="flex flex-col gap-2 rounded-lg border border-paper-line bg-cream-50 p-4">
             <h3 className="font-bold">Close or delete this group</h3>
             <p className="text-sm text-midnight-soft">Deleting removes everyone’s wishlists and letters right away.</p>
             <Link href={`/o/${d.groupId}/settings#back-room`} className="inline-flex min-h-11 items-center self-start text-sm font-bold text-cranberry-deep underline decoration-2 underline-offset-4">
@@ -170,9 +170,9 @@ function CreatedBanner({ inviteUrl }: { inviteUrl: string }) {
   return (
     <PaperSlip tilt={-0.6} className="relative motion-safe:animate-unfold p-5 sm:p-7">
       <div className="flex items-start gap-4">
-        <Elf pose="wave" className="hidden h-28 shrink-0 sm:block" />
+        <ElfFigure className="hidden w-24 shrink-0 sm:block" />
         <div className="min-w-0 flex-1">
-          <h2 className="flex items-center gap-2 font-display text-2xl leading-tight font-extrabold tracking-[-0.02em] text-pine-900">
+          <h2 className="flex items-center gap-2 font-display text-2xl leading-tight font-bold tracking-normal text-pine-900">
             Your group is ready
             <Sparkle className="size-5 text-gold-500 motion-safe:animate-twinkle" />
           </h2>
@@ -191,8 +191,8 @@ function CreatedBanner({ inviteUrl }: { inviteUrl: string }) {
 function Bench({ children, className }: { children: React.ReactNode; className?: string }) {
   return (
     <section aria-label="Next step">
-      <div className={cn("rounded-2xl border-[2.5px] border-midnight bg-paper px-5 pt-5 pb-6 sm:px-7 sm:pt-6", className)}>{children}</div>
-      <div aria-hidden className="mx-2 h-4 rounded-b-xl border-[2.5px] border-t-0 border-midnight bg-timber" />
+      <div className={cn("rounded-t-lg border border-b-0 border-paper-line bg-cream-50 px-5 pt-5 pb-6 sm:px-8 sm:pt-7", className)}>{children}</div>
+      <div aria-hidden className="h-3 rounded-b-lg bg-[linear-gradient(#7a4a2a,#60371e)] shadow-[0_8px_14px_-8px_rgb(48_28_34/0.6)]" />
     </section>
   );
 }
@@ -211,7 +211,7 @@ function NextStep({ d }: { d: OrganizerDashboardDTO }) {
     const opened = approved.filter((p) => p.revealed).length;
     return (
       <Bench>
-        <h2 className="font-display text-2xl leading-tight font-extrabold tracking-[-0.02em]">The names are drawn</h2>
+        <h2 className="font-display text-[1.9rem] leading-tight font-bold tracking-normal text-oxblood">The names are drawn</h2>
         <p className="mt-1.5 text-midnight-soft">
           {opened === approved.length
             ? "Everyone has opened their envelope. Nothing left to do but wait for the gifts."
@@ -226,7 +226,7 @@ function NextStep({ d }: { d: OrganizerDashboardDTO }) {
   return (
     <Bench className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
       <div className="min-w-0">
-        <h2 className="font-display text-2xl leading-tight font-extrabold tracking-[-0.02em]">
+        <h2 className="font-display text-[1.9rem] leading-tight font-bold tracking-normal text-oxblood">
           {needed > 0 ? `${needed} more ${needed === 1 ? "person" : "people"} to go` : blocked ? "Your exclusions need a tweak" : "Ready when you are"}
         </h2>
         <p className="mt-1.5 max-w-[56ch] text-midnight-soft">
@@ -258,9 +258,9 @@ function Progress({ value, max, label }: { value: number; max: number; label: st
         aria-valuemin={0}
         aria-valuemax={max}
         aria-valuenow={value}
-        className="h-3 overflow-hidden rounded-full border-2 border-midnight bg-snow"
+        className="h-3 overflow-hidden rounded-full border border-paper-line bg-cream-100"
       >
-        <div className="h-full rounded-full bg-evergreen transition-[width] duration-500 ease-[var(--ease-out-expo)]" style={{ width: `${pct}%` }} />
+        <div className="h-full rounded-full bg-teal transition-[width] duration-500 ease-[var(--ease-out-expo)]" style={{ width: `${pct}%` }} />
       </div>
     </div>
   );

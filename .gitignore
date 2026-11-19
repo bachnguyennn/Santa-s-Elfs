@@ -59,3 +59,6 @@ next-env.d.ts
 /.cursor/
 /.codex/
 /.github/copilot-instructions.md
+
+# Design handoff for agents (prompts, specs, source art); shipped art lives in public/art
+/design/
