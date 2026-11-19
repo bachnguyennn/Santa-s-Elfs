@@ -163,8 +163,8 @@ export function VillageRoute({ stops = PUBLIC_STOPS, heading, intro }: { stops?:
         </div>
       </div>
 
-      {/* The conventional way: large, labelled links (the only way on phones, a shortcut elsewhere). */}
-      <nav aria-label="Village stops" className="mx-auto max-w-6xl px-4 pb-14 sm:hidden">
+      {/* The conventional way: large, labelled links, below 768px where the painted signs would crowd. */}
+      <nav aria-label="Village stops" className="mx-auto max-w-6xl px-4 pb-14 md:hidden">
         <ul className="grid gap-3">
           {stops.map((s) => (
             <li key={s.key}>
@@ -197,7 +197,7 @@ function StopLink({ stop }: { stop: StreetStop }) {
   );
 }
 
-/** A painted building with a hanging HTML sign: one link, one keyboard stop. Signs hide on phones. */
+/** A painted building with a hanging HTML sign: one link, one keyboard stop. Signs hide on phones (the sign tiles below do that job). */
 function StreetBuilding({ stop, lit, bellRef }: { stop: StreetStop; lit: boolean; bellRef?: React.Ref<HTMLSpanElement> }) {
   const { area } = stop;
   // The link covers just its building; the sign is placed relative to that area (it may hang above it).
@@ -207,7 +207,7 @@ function StreetBuilding({ stop, lit, bellRef }: { stop: StreetStop; lit: boolean
   const sign = (
     <span
       className={cn(
-        "building-sign absolute inline-flex items-center gap-2 rounded-md bg-teal px-3 py-1.5 whitespace-nowrap text-buttercream shadow-[0_3px_0_var(--color-walnut)]",
+        "building-sign absolute hidden items-center md:inline-flex gap-2 rounded-md bg-teal px-3 py-1.5 whitespace-nowrap text-buttercream shadow-[0_3px_0_var(--color-walnut)]",
         lit && "ring-2 ring-brass",
       )}
       // Signs near the right edge hang from their right end so they never run off the painting.

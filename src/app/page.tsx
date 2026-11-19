@@ -46,7 +46,8 @@ export default function Home() {
               </div>
             </div>
             <div className="relative overflow-hidden xl:overflow-visible">
-              <WorkshopScene className="-ml-[8%] w-[118%] sm:-ml-[4%] sm:w-[108%] xl:ml-0 xl:w-full" />
+              {/* Phones: a crop that keeps Santa (from ~9%) and the elf (to ~93%) both inside the frame. */}
+              <WorkshopScene className="-ml-[10%] w-[112%] sm:-ml-[4%] sm:w-[108%] xl:ml-0 xl:w-full" />
             </div>
           </div>
         </section>

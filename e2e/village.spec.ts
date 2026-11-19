@@ -54,7 +54,7 @@ test.describe("Village journeys", () => {
       await me.page.goto(`/p/${me.pid}`);
       // Phones use the large sign links under the panning street; wider screens use the painted building.
       const door =
-        width < 640
+        width < 768
           ? me.page.getByRole("navigation", { name: "Village stops" }).getByRole("link", { name: /Post Office/ })
           : me.page.locator("#post-office");
       await door.evaluate((el) => el.scrollIntoView({ block: "center" }));
