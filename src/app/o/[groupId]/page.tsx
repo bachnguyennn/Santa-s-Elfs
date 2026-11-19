@@ -76,7 +76,7 @@ export default async function OrganizerDashboardPage({ params, searchParams }: P
             as="h2"
             action={
               d.group.status === "open" ? (
-                <Link href={`/o/${groupId}/settings`} className="inline-flex min-h-11 items-center text-sm font-bold text-pine-600 underline">
+                <Link href={`/o/${groupId}/settings`} className="inline-flex min-h-11 min-w-11 items-center justify-center text-sm font-bold text-evergreen underline decoration-2 underline-offset-4">
                   Edit
                 </Link>
               ) : undefined
@@ -147,7 +147,7 @@ export default async function OrganizerDashboardPage({ params, searchParams }: P
             {d.group.status === "open" ? (
               <p className="text-sm font-bold text-midnight-soft">Available once names are drawn.</p>
             ) : (
-              <Link href={`/o/${d.groupId}/emergency`} className="self-start text-sm font-bold text-evergreen underline decoration-2 underline-offset-4">
+              <Link href={`/o/${d.groupId}/emergency`} className="inline-flex min-h-11 items-center self-start text-sm font-bold text-evergreen underline decoration-2 underline-offset-4">
                 Open the emergency reveal
               </Link>
             )}
@@ -155,7 +155,7 @@ export default async function OrganizerDashboardPage({ params, searchParams }: P
           <div className="flex flex-col gap-2 rounded-xl border-2 border-snow-shadow bg-paper p-4">
             <h3 className="font-bold">Close or delete this group</h3>
             <p className="text-sm text-midnight-soft">Deleting removes everyone’s wishlists and letters right away.</p>
-            <Link href={`/o/${d.groupId}/settings#back-room`} className="self-start text-sm font-bold text-cranberry-deep underline decoration-2 underline-offset-4">
+            <Link href={`/o/${d.groupId}/settings#back-room`} className="inline-flex min-h-11 items-center self-start text-sm font-bold text-cranberry-deep underline decoration-2 underline-offset-4">
               Go to close or delete
             </Link>
           </div>
