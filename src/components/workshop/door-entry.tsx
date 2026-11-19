@@ -2,8 +2,9 @@
 
 import Link from "next/link";
 import * as React from "react";
+import { preload } from "react-dom";
 import { cn } from "@/lib/utils";
-import { ArtImage } from "./art";
+import { ArtImage, artSrcSet } from "./art";
 
 /*
  * The Workshop entrance (SPEC motion score, "Start a group"). Clicking a Workshop entrance navigates
@@ -37,6 +38,13 @@ function consumeDeliberateEntry(): boolean {
 
 /** A real link to /new that also marks the arrival as a deliberate entry through the door. */
 export function WorkshopEntranceLink({ className, children, ...props }: Omit<React.ComponentProps<typeof Link>, "href">) {
+  // Fetch the threshold painting ahead of time, so the doorway never opens on an empty frame.
+  preload("/art/workshop-threshold-1024.webp", {
+    as: "image",
+    imageSrcSet: artSrcSet("workshop-threshold"),
+    imageSizes: "(min-width: 1100px) 1100px, 100vw",
+    fetchPriority: "low",
+  });
   return (
     <Link
       href="/new"
@@ -150,7 +158,18 @@ export function DoorArrival({ onOpened }: { onOpened: (how: "played" | "skipped"
     if (state !== "playing") return;
     skipRef.current?.focus({ preventScroll: true });
     const phone = window.matchMedia("(max-width: 640px)").matches;
-    const anims = [
+    let cancelled = false;
+    let anims: Animation[] = [];
+    const timers: number[] = [];
+    // Start once the painting is decoded (it is usually preloaded), but never wait more than 350 ms.
+    const img = rootRef.current?.querySelector("img");
+    const ready = Promise.race([img?.decode?.().catch(() => undefined) ?? Promise.resolve(), new Promise((r) => window.setTimeout(r, 350))]);
+    void ready.then(() => {
+      if (cancelled) return;
+      play();
+    });
+    function play() {
+    anims = [
       knobRef.current?.animate([{ transform: "rotate(0deg)" }, { transform: "rotate(12deg)" }], { duration: 300, easing: EASE, fill: "forwards" }),
       lightRef.current?.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 300, easing: EASE, fill: "forwards" }),
       doorRef.current?.animate([{ transform: "rotateY(0deg)" }, { transform: "rotateY(95deg)" }], {
@@ -164,17 +183,25 @@ export function DoorArrival({ onOpened }: { onOpened: (how: "played" | "skipped"
         easing: CAMERA,
         fill: "forwards",
       }),
-      rootRef.current?.animate([{ opacity: 1 }, { opacity: 1, offset: 0.7 }, { opacity: 0 }], { duration: 1300, easing: EASE, fill: "forwards" }),
+      // Linear overall, eased per segment: holds fully visible until 910 ms, then fades by 1300 ms.
+      rootRef.current?.animate([{ opacity: 1 }, { opacity: 1, offset: 0.7, easing: EASE }, { opacity: 0 }], {
+        duration: 1300,
+        easing: "linear",
+        fill: "forwards",
+      }),
     ].filter(Boolean) as Animation[];
     // At 1000 ms the desk takes over (invitation slides in, field focused); the overlay fades until 1300 ms.
-    const t1 = window.setTimeout(() => {
-      if (rootRef.current) rootRef.current.style.pointerEvents = "none";
-      notify("played");
-    }, 1000);
-    const t2 = window.setTimeout(() => setState("done"), 1300);
+    timers.push(
+      window.setTimeout(() => {
+        if (rootRef.current) rootRef.current.style.pointerEvents = "none";
+        notify("played");
+      }, 1000),
+      window.setTimeout(() => setState("done"), 1300),
+    );
+    }
     return () => {
-      window.clearTimeout(t1);
-      window.clearTimeout(t2);
+      cancelled = true;
+      timers.forEach((t) => window.clearTimeout(t));
       anims.forEach((a) => a.cancel());
     };
   }, [state, notify]);
@@ -185,7 +212,7 @@ export function DoorArrival({ onOpened }: { onOpened: (how: "played" | "skipped"
       <p role="status" className="sr-only">
         Opening the Workshop door. Your form is ready below.
       </p>
-      <Doorway priority cameraRef={cameraRef} doorRef={doorRef} knobRef={knobRef} lightRef={lightRef} className="max-w-[min(100vw,1100px,160vh)]" />
+      <Doorway priority cameraRef={cameraRef} doorRef={doorRef} knobRef={knobRef} lightRef={lightRef} className="w-[175vw] max-w-none shrink-0 sm:w-full sm:max-w-[min(100vw,1100px,160vh)]" />
       <button
         ref={skipRef}
         type="button"

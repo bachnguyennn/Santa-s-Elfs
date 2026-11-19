@@ -32,21 +32,22 @@ export function WorkshopScene({ className, children }: { className?: string; chi
     running.current.forEach((a) => a.cancel());
     const elf = elfRef.current?.animate(
       [
-        { transform: "rotate(0deg) translateX(0)" },
-        { transform: "rotate(-2deg) translateX(1.5%)", offset: 0.29 }, // pull the ribbon taut, 180 ms
-        { transform: "rotate(-5deg) translateX(1.5%)", offset: 0.55 }, // bow snaps, 160 ms
+        { transform: "rotate(0deg) translateX(0)", easing: EASE },
+        { transform: "rotate(-2deg) translateX(1.5%)", offset: 0.29, easing: EASE }, // pull the ribbon taut, 180 ms
+        { transform: "rotate(-5deg) translateX(1.5%)", offset: 0.55, easing: EASE }, // bow snaps, 160 ms
         { transform: "rotate(0deg) translateX(0)" }, // tip back and settle, 280 ms
       ],
-      { duration: 620, easing: EASE },
+      // Linear overall so the offsets above are real times; each segment eases on its own.
+      { duration: 620, easing: "linear" },
     );
     const spark = sparkRef.current?.animate(
       [
         { opacity: 0, transform: "scale(0.4) rotate(0deg)" },
         { opacity: 0, transform: "scale(0.4) rotate(0deg)", offset: 0.29 },
-        { opacity: 1, transform: "scale(1.1) rotate(25deg)", offset: 0.55 },
+        { opacity: 1, transform: "scale(1.1) rotate(25deg)", offset: 0.55, easing: EASE },
         { opacity: 0, transform: "scale(0.9) rotate(45deg)" },
       ],
-      { duration: 620, easing: EASE },
+      { duration: 620, easing: "linear" },
     );
     running.current = [elf, spark].filter(Boolean) as Animation[];
   }

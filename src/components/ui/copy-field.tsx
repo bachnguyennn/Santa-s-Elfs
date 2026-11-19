@@ -56,17 +56,22 @@ export function CopyField({
     const ease = "cubic-bezier(0.22, 1, 0.36, 1)";
     letterRef.current?.animate(
       [
-        { transform: "translate(0,0) scaleY(1)", opacity: 1 },
-        { transform: "translate(0,0) scaleY(0.55)", opacity: 1, offset: 0.52 },
+        { transform: "translate(0,0) scaleY(1)", opacity: 1, easing: ease },
+        { transform: "translate(0,0) scaleY(0.55)", opacity: 1, offset: 0.52, easing: ease },
         { transform: "translate(14px,6px) scaleY(0.55)", opacity: 0 },
       ],
-      { duration: 420, easing: ease },
+      { duration: 420, easing: "linear" },
     );
-    flagRef.current?.animate([{ transform: "rotate(0deg)" }, { transform: "rotate(-80deg)" }, { transform: "rotate(-80deg)" }, { transform: "rotate(0deg)" }], {
-      duration: 1800,
-      delay: 420,
-      easing: ease,
-    });
+    // Flag up over 120 ms, held, then back down.
+    flagRef.current?.animate(
+      [
+        { transform: "rotate(0deg)", easing: ease },
+        { transform: "rotate(-80deg)", offset: 0.07 },
+        { transform: "rotate(-80deg)", offset: 0.85, easing: ease },
+        { transform: "rotate(0deg)" },
+      ],
+      { duration: 1800, delay: 420, easing: "linear" },
+    );
   }
 
   return (

@@ -193,10 +193,11 @@ function StreetBuilding({ stop, lit, bellRef }: { stop: StreetStop; lit: boolean
   const sign = (
     <span
       className={cn(
-        "building-sign absolute inline-flex -translate-x-1/2 items-center gap-2 rounded-md bg-teal px-3 py-1.5 whitespace-nowrap text-buttercream shadow-[0_3px_0_var(--color-walnut)]",
+        "building-sign absolute inline-flex items-center gap-2 rounded-md bg-teal px-3 py-1.5 whitespace-nowrap text-buttercream shadow-[0_3px_0_var(--color-walnut)]",
         lit && "ring-2 ring-brass",
       )}
-      style={{ left: `${signLeft}%`, top: `${signTop}%` }}
+      // Signs near the right edge hang from their right end so they never run off the painting.
+      style={{ left: `${signLeft}%`, top: `${signTop}%`, translate: stop.sign.x > 75 ? "-88% 0" : "-50% 0" }}
     >
       {bellRef && (
         <span ref={bellRef} aria-hidden className="inline-block origin-top">
